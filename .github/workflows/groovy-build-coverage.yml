@@ -1,0 +1,166 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Build and test for coverage
+
+on:
+  push:
+    branches:
+      - master
+      - GROOVY_*
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    if: >-
+      contains(github.event.head_commit.message || '', 'GROOVY-') ||
+      contains(github.event.pull_request.title || '', 'GROOVY-')
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    env:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          # SonarCloud needs full history (not a shallow clone) so it can
+          # attribute issues/coverage to the right commits via SCM blame.
+          fetch-depth: 0
+      - uses: actions/setup-java@v5.7.0
+        with:
+          distribution: 'zulu'
+          java-version: 21
+          check-latest: true
+      # The Gradle dependency cache below covers ~/.gradle/caches/modules-2
+      # but NOT ~/.groovy/grapes,
+      # which is where @Grab-resolved artifacts (used by tests like
+      # GenericsSTCTest, MethodReferenceTest, …) land. Caching it makes
+      # the build resilient to transient Maven Central / CDN outages:
+      # once an artifact has been resolved on any prior run, subsequent
+      # runs reuse it from cache and don't re-hit the network.
+      #
+      # Same key prefix as `groovy-build-test.yml` so the two workflows
+      # share their accumulated Grape cache.
+      - name: "🍇 Cache @Grab artifacts (~/.groovy/grapes + ~/.m2/repository)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.groovy/grapes
+            ~/.m2/repository
+          key: ${{ runner.os }}-grape-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-grape-
+      # Cache downloaded dependency jars/poms + wrapper dists, keyed per
+      # branch; see groovy-build-test.yml (lts job) for the full rationale.
+      # The `coverage` key segment keeps a dedicated lineage: this job also
+      # resolves jacoco/sonar jars that no other workflow populates, and
+      # under the shared `build` key the faster-finishing groovy-build-test
+      # jobs would usually win the save race, pinning a cache without them.
+      # The `build` prefix below is a cold-start fallback only.
+      - name: "🗄 Cache Gradle dependencies (~/.gradle/caches/modules-2 + wrapper)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper
+          key: gradle-deps-${{ runner.os }}-coverage-${{ github.base_ref || github.ref_name }}-${{ hashFiles('versions.properties', 'gradle/wrapper/gradle-wrapper.properties', 'settings.gradle', 'build-logic/build.gradle') }}
+          restore-keys: |
+            gradle-deps-${{ runner.os }}-coverage-${{ github.base_ref || github.ref_name }}-
+            gradle-deps-${{ runner.os }}-build-${{ github.base_ref || github.ref_name }}-
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        # The action's own caching is disabled: dependency jars and wrapper
+        # dists are cached by the explicit branch-keyed step above instead.
+        with:
+          cache-disabled: true
+      - name: "🌡 Pre-warm @Grab artifacts via Maven"
+        shell: bash
+        run: |
+          set +e
+          coords=$(grep -rhEo "@Grab\(\s*(value\s*=\s*)?['\"][^'\"]+['\"]" src/test subprojects/*/src/test 2>/dev/null \
+            | sed -E "s/.*@Grab\(\s*(value\s*=\s*)?['\"]([^'\"]+)['\"].*/\2/" \
+            | grep -E '^[a-zA-Z0-9._-]+:[a-zA-Z0-9._-]+:[a-zA-Z0-9._+-]+$' \
+            | sort -u)
+          [ -z "$coords" ] && { echo "No @Grab coords — skipping"; exit 0; }
+          n=$(printf '%s\n' "$coords" | wc -l | tr -d ' ')
+          echo "Pre-warming $n coords"
+          ok=0; fail=0
+          while IFS= read -r c; do
+            if mvn -B -q dependency:get -Dartifact="$c" -Dtransitive=true >/dev/null 2>&1; then
+              ok=$((ok+1))
+            else
+              fail=$((fail+1)); echo "  ⚠ $c"
+            fi
+          done <<< "$coords"
+          echo "Pre-warm: $ok ok / $fail failed"
+          exit 0
+        timeout-minutes: 15
+      - name: Test with Gradle
+        run: ./gradlew -Pgroovy.grape.bridge-cache=true -Pcoverage=true jacocoAllReport
+        timeout-minutes: 60
+      # See the lts job in groovy-build-test.yml for rationale: this workflow
+      # saves into the same `<os>-grape-` cache lineage, so scrub Ivy's transient
+      # `exists=false` negative markers and any zip-corrupt jars (plus their
+      # ivydata markers) just before actions/cache saves, so a one-off resolution
+      # miss or a torn jar copy can't be persisted and replayed on later runs.
+      - name: "🧹 Scrub poisoned Grape negative-cache markers and corrupt jars before save"
+        if: always()
+        shell: bash
+        run: |
+          dir=~/.groovy/grapes
+          [ -d "$dir" ] || { echo "No $dir — nothing to scrub."; exit 0; }
+          deleted=0
+          while IFS= read -r f; do
+            echo "poisoned marker: $f"
+            grep -E 'exists=false' "$f" | sed 's/^/    /'
+            rm -f "$f"
+            deleted=$((deleted + 1))
+          done < <(grep -rlE --include='ivydata-*.properties' 'exists=false' "$dir" 2>/dev/null)
+          echo "Scrubbed $deleted poisoned ivydata marker(s) before cache save."
+          corrupt=0
+          while IFS= read -r jar; do
+            if ! unzip -tqq "$jar" >/dev/null 2>&1; then
+              echo "corrupt jar: $jar"
+              rm -f "$jar" "$(dirname "$jar")"/../ivydata-*.properties
+              corrupt=$((corrupt + 1))
+            fi
+          done < <(find "$dir" -name '*.jar' 2>/dev/null)
+          echo "Scrubbed $corrupt corrupt jar(s) before cache save."
+      # Coverage upload is best-effort: fork PRs run without secrets and
+      # codecov-action falls back to a tokenless upload that can fail/be
+      # rate-limited. A failed upload must not fail the build or skip the
+      # Sonar step that follows it.
+      - name: Upload coverage to Codecov
+        continue-on-error: true
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+      # SonarCloud needs SONARCLOUD_TOKEN, which GitHub does not expose to
+      # pull_request runs from forks. The Sonar Gradle plugin has no
+      # tokenless fallback, so it would always fail on fork PRs — skip it
+      # there cleanly instead.
+      - name: SonarCloud analysis (with coverage)
+        if: ${{ !github.event.pull_request.head.repo.fork }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+        run: ./gradlew -Pcoverage=true sonar
+        timeout-minutes: 20

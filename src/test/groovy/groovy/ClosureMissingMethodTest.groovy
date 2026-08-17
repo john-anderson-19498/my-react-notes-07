@@ -1,0 +1,125 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy
+
+import org.junit.jupiter.api.Test
+
+import static groovy.test.GroovyAssert.assertScript
+import static groovy.test.GroovyAssert.shouldFail
+
+final class ClosureMissingMethodTest {
+
+    @Test
+    void testInScript() {
+        assertScript '''
+            int count = 0
+
+            def foo = {
+                ++count
+                bar()
+            }
+            def baz = {
+                foo()
+            }
+
+            try {
+                baz()
+                assert false
+            } catch (org.codehaus.groovy.runtime.InvokerInvocationException iie) {
+                assert iie.cause.method == 'bar'
+                assert count == 1
+            } catch (MissingMethodException mme) {
+                assert mme.method == 'bar'
+                assert count == 1
+            }
+        '''
+    }
+
+    @Test
+    void testInMethod() {
+        int count = 0
+
+        def foo = {
+            ++count
+            bar()
+        }
+        def baz = {
+            foo()
+        }
+
+        def mme = shouldFail(MissingMethodException) {
+            baz()
+        }
+        assert mme.method == 'bar'
+        assert count == 1
+    }
+
+    @Test
+    void testWithMetaClassInScript() {
+        assertScript '''
+            int count = 0
+
+            def foo = {
+                ++count
+                bar()
+            }
+            def baz = {
+                foo()
+            }
+
+            def emc = new ExpandoMetaClass(baz.getClass())
+            emc.initialize()
+            baz.metaClass = emc
+
+            try {
+                baz()
+                assert false
+            } catch (org.codehaus.groovy.runtime.InvokerInvocationException iie) {
+                assert iie.cause.method == 'bar'
+                assert count == 1
+            } catch (MissingMethodException mme) {
+                assert mme.method == 'bar'
+                assert count == 1
+            }
+        '''
+    }
+
+    @Test
+    void testWithMetaClassInMethod() {
+        int count = 0
+
+        def foo = {
+            ++count
+            bar()
+        }
+        def baz = {
+            foo()
+        }
+
+        def emc = new ExpandoMetaClass(baz.getClass())
+        emc.initialize()
+        baz.metaClass = emc
+
+        def mme = shouldFail(MissingMethodException) {
+            baz()
+        }
+        assert mme.method == 'bar'
+        assert count == 1
+    }
+}

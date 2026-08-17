@@ -1,0 +1,259 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
+import org.apache.groovy.gradle.DistributionExtension
+import org.apache.groovy.gradle.DocGDK
+import org.apache.groovy.gradle.GenerateGDKMocks
+
+plugins {
+    id 'jvm-ecosystem'
+    id 'org.apache.groovy-common'
+    id 'org.apache.groovy-aggregating-project'
+    id 'org.apache.groovy-doc-aggregator'
+    id 'org.asciidoctor.jvm.pdf'
+}
+
+def distributionExtension = project.extensions.create('distribution', DistributionExtension, project)
+
+configurations {
+    baseProjects {
+        canBeConsumed = false
+        canBeResolved = false
+    }
+    distributions {
+        extendsFrom baseProjects
+        canBeConsumed = false
+        canBeResolved = false
+    }
+    distributionsRuntimeClasspath {
+        canBeConsumed = false
+        canBeResolved = true
+        extendsFrom distributions
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.LIBRARY))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling, Bundling.EXTERNAL))
+            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements, LibraryElements.JAR))
+            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, Usage.JAVA_RUNTIME))
+            attribute(Attribute.of("org.apache.groovy.internal", Boolean), false)
+        }
+    }
+    doc
+    allAsciidoc {
+        extendsFrom baseProjects
+        canBeConsumed = false
+        canBeResolved = true
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, DocsType.USER_MANUAL))
+        }
+    }
+    docgeneratorTool {
+        canBeConsumed = false
+        canBeResolved = true
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.LIBRARY))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling, Bundling.EXTERNAL))
+            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements, LibraryElements.JAR))
+            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, Usage.JAVA_RUNTIME))
+        }
+    }
+    allSources {
+        extendsFrom baseProjects
+    }
+    allSourcesRuntimeClasspath {
+        extendsFrom baseProjects
+    }
+}
+
+def baseProjectPaths = rootProject.allprojects.findAll {
+    it.pluginManager.hasPlugin('org.apache.groovy-base')
+}*.path
+
+dependencies {
+    baseProjectPaths.each {
+        baseProjects(project(it))
+    }
+    // also include optional features from main module
+    distributions(project(":")) {
+        capabilities {
+            requireCapability 'org.apache.groovy:groovy-xstream-ast'
+        }
+    }
+    distributions(project(":")) {
+        capabilities {
+            requireCapability 'org.apache.groovy:groovy-grapes'
+        }
+    }
+    distributions(project(":")) {
+        capabilities {
+            requireCapability 'org.apache.groovy:groovy-logging'
+        }
+    }
+    doc projects.groovyAll
+    docgeneratorTool projects.groovyDocgenerator
+}
+
+def generateGDKMocks = tasks.register('generateGDKMocks', GenerateGDKMocks) {
+    classpath.from configurations.docgeneratorTool
+    classes.set(distributionExtension.docgeneratorClasses)
+}
+
+def docGDK = tasks.register('docGDK', DocGDK) {
+    classpath.from configurations.docgeneratorTool
+    mocksDirectory.set(generateGDKMocks.flatMap { it.outputDirectory })
+}
+
+def distBin = tasks.register('distBin', Zip) {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+    archiveBaseName = 'apache-groovy'
+    archiveAppendix = 'binary'
+    into("groovy-${project.version}") {
+        with distributionExtension.distSpec
+    }
+    allprojects {
+        if (project.name in ['groovy', 'groovy-test']) {
+            distBin.dependsOn(grooidjar)
+        }
+    }
+}
+
+def distSdk = tasks.register("distSdk", Zip) {
+    def groovyBundleVersion = sharedConfiguration.groovyBundleVersion.get()
+    description = 'Generates the binary, sources, documentation and full distributions'
+    archiveBaseName = 'apache-groovy'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveAppendix = 'sdk'
+    into "groovy-${project.version}"
+    from rootProject.file("licenses/LICENSE-SDK")
+    from rootProject.file("notices/NOTICE-SDK")
+    rename '^([A-Z]+)-([^.]*)', '$1'
+    with distributionExtension.distSpec
+    into('doc') {
+        with distributionExtension.docSpec
+    }
+    into('src') {
+        with distributionExtension.srcSpec
+    }
+    doFirst {
+        def av = project.version.toString()
+        if ((av.endsWith('SNAPSHOT') && !groovyBundleVersion.endsWith('SNAPSHOT'))
+                || (!av.endsWith('SNAPSHOT') && groovyBundleVersion.endsWith('SNAPSHOT'))) {
+            throw new GradleException("Incoherent versions. Found groovyVersion=$av and groovyBundleVersion=${versions.groovyBundle}")
+        }
+    }
+}
+
+def distDoc = tasks.register('distDoc', Zip) {
+    //dependsOn: doc
+    archiveBaseName = 'apache-groovy'
+    archiveAppendix = 'docs'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    into("groovy-${project.version}") {
+        with distributionExtension.docSpec
+    }
+}
+
+def distSrc = tasks.register('distSrc', Zip) {
+    archiveBaseName = 'apache-groovy'
+    archiveAppendix = 'src'
+    into("groovy-${project.version}")
+    with distributionExtension.srcSpec
+}
+
+tasks.register('dist') {
+    dependsOn distSrc, distSdk, distDoc, distBin
+}
+
+def installGroovyExtraLibs = configurations.detachedConfiguration(
+    dependencies.create("org.slf4j:slf4j-simple:${versions.slf4j}")
+)
+installGroovyExtraLibs.transitive = false
+
+tasks.register("installGroovy", Sync) {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+    def installDir = sharedConfiguration.installationDirectory.orElse(layout.buildDirectory.dir("install").get().asFile)
+    description = 'Generates a groovy distribution into an install directory'
+    doLast {
+        logger.lifecycle "Groovy installed under ${installDir.get()}"
+    }
+    with distributionExtension.distSpec
+    into('lib') {
+        from installGroovyExtraLibs
+    }
+    into installDir
+}
+
+tasks.register("doc") {
+    dependsOn 'javadocAll', 'groovydocAll', 'docGDK', 'asciidocAll', 'asciidoctorPdf'
+}
+
+tasks.register("asciidocAll", Copy) {
+    from configurations.allAsciidoc
+    from tasks.named('asciidoctor')
+    into layout.buildDirectory.dir("asciidocAll/html5")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.named('asciidoctorPdf') {
+    baseDirFollowsSourceFile()
+    logDocuments = true
+    sourceDir = file('src/spec/doc')
+    outputDir = layout.buildDirectory.dir("asciidocAll/pdf")
+}
+
+// The Groovy distribution module isn't a Java library
+// so we create a custom publication
+def factory = objects.newInstance(Services).softwareComponentFactory
+def component = factory.adhoc('groovyDistribution')
+components.add(component)
+
+def bin = configurations.create("distributionBinary") {
+    canBeConsumed = true
+    canBeResolved = false
+    attributes {
+        attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, "application"))
+    }
+    outgoing {
+        artifacts {
+            artifact tasks.named('distBin')
+        }
+    }
+}
+
+component.addVariantsFromConfiguration(bin) {
+    mapToOptional()
+}
+
+def sdkElements = configurations.create("sdkElements") {
+    canBeConsumed = false
+    canBeResolved = false
+    outgoing {
+        artifacts {
+            artifact tasks.named('distSrc')
+            artifact tasks.named('distDoc')
+            artifact tasks.named('distSdk')
+        }
+    }
+}
+
+// the signing extension lives on the root project; configure it explicitly
+// rather than via the implicit parent-project method lookup removed in Gradle 10
+rootProject.signing {
+    sign sdkElements
+}

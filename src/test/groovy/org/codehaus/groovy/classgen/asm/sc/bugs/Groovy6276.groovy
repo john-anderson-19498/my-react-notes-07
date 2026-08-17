@@ -1,0 +1,66 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.codehaus.groovy.classgen.asm.sc.bugs
+
+import groovy.transform.stc.StaticTypeCheckingTestCase
+import org.codehaus.groovy.classgen.asm.sc.StaticCompilationTestSupport
+import org.junit.jupiter.api.Test
+
+final class Groovy6276 extends StaticTypeCheckingTestCase implements StaticCompilationTestSupport {
+
+    @Test
+    void testOuterClassMethodCall() {
+        assertScript '''
+            class Outer {
+                private int outerField = 1
+                private int outerMethod() {2}
+                        int outerProperty = 3
+                class Inner {
+                    void m() {
+                        assert outerField         == 1 // #1
+                        assert outerMethod()      == 2 // #2
+                        assert outerProperty      == 3 // #3
+                        assert getOuterProperty() == 3 // #4
+                    }
+                }
+                void test() {
+                    new Inner().m()
+                }
+            }
+            new Outer().test()
+        '''
+    }
+
+    @Test
+    void testAccessPrivateMethodFromClosure() {
+        assertScript '''
+            class Outer {
+                private int f(int x) {
+                    2*x
+                }
+                int test() {
+                    (Integer) [1,2,3].collect { // closure is inner class
+                        f(it)
+                    }.sum()
+                }
+            }
+            new Outer().test()
+        '''
+    }
+}

@@ -1,0 +1,205 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy
+
+import org.junit.jupiter.api.Test
+
+import static org.junit.jupiter.api.Assertions.assertEquals
+
+/**
+ * Tests for the spread dot operator. For example, {@code list*.name} works
+ * like: <pre>
+ * list.collect { it?.name }
+ * </pre>
+ */
+final class SpreadDotTest {
+
+    @Test
+    void testSpreadDot1() {
+        def map = [A: 'one', B: 'two', C: 'three']
+
+        assert map*.key == ['A', 'B', 'C']
+        assert map*.value*.size() == [3, 3, 5]
+        assert map.collect { entry -> entry.value.size() } == [3, 3, 5]
+    }
+
+    @Test
+    void testSpreadDot2() {
+        def m1 = [a:   1, b:   2]
+        def m2 = [a:  11, b:  22]
+        def m3 = [a: 111, b: 222]
+
+        def x = [m1, m2, m3]
+        assert x == [m1, m2, m3]
+        assert x*.a == [1, 11, 111]
+        assert x*.'a' == [1, 11, 111]
+
+        x << null
+        assert x == [m1, m2, m3, null]
+        assert x*.a == [1, 11, 111, null]
+        assert x*.'a' == [1, 11, 111, null]
+
+        Date checkDate = new Date()
+        def d = new SpreadDotDemo()
+        x << d
+        assert x*.'a'[4] >= checkDate
+        assert x == [m1, m2, m3, null, d]
+
+        def y = new SpreadDotDemo2()
+        assert y.a == 'Attribute Get a'
+        assert y.'a' == 'Attribute Get a'
+
+        x << y
+        assert x == [m1, m2, m3, null, d, y]
+        assert x*.'a'[5] == 'Attribute Get a'
+    }
+
+    @Test
+    void testSpreadDot3() {
+        def a = new SpreadDotDemo()
+        def b = new SpreadDotDemo2()
+        def x = [a, b]
+
+        assert x*.fnB('1') == [a.fnB('1'), b.fnB('1')]
+        assert [a, b]*.fnB() == [a.fnB(), b.fnB()]
+    }
+
+    @Test
+    void testSpreadDotArrays1() {
+        def a = new SpreadDotDemo()
+        def b = new SpreadDotDemo2()
+        Object[] x = [a, b]
+
+        assert x*.fnB('1') == [a.fnB('1'), b.fnB('1')]
+        assert [a, b]*.fnB() == [a.fnB(), b.fnB()]
+
+        int[] nums = [3, 4, 5]
+        assert nums*.toString() == ['3', '4', '5']
+
+        boolean[] answers = [true, false, true]
+        assert answers*.toString() == ['true', 'false', 'true']
+
+        String[] pets = ['ant', 'bear', 'camel']
+        assert pets*.length() == nums
+    }
+
+    @Test
+    void testSpreadDotArrays2() {
+        def books = [Book1, Book2, Book3] as Object[]
+
+        books*.metaClass*.foo = { "Hello, ${delegate.class.simpleName}".toString() }
+
+        assertEquals('Hello, Book1', new Book1().foo())
+        assertEquals('Hello, Book2', new Book2().foo())
+        assertEquals('Hello, Book3', new Book3().foo())
+    }
+
+    @Test
+    void testSpreadDotAdvanced() {
+        assertEquals([3, 3], ['cat', 'dog']*.size())
+        assertEquals([3, 3], (['cat', 'dog'] as Vector)*.size())
+        assertEquals([3, 3], (['cat', 'dog'] as String[])*.size())
+        assertEquals([3, 3], (['cat', 'dog'] as Vector).elements()*.size())
+        assertEquals([1, 1, 1], 'zoo'*.size())
+        assertEquals(Object, new Object().getClass())
+        assertEquals([Object], new Object()*.getClass())
+        assertEquals('Large', new Shirt().size())
+        assertEquals(['Large'], new Shirt()*.size())
+    }
+
+    @Test
+    void testSpreadDotAttribute() {
+        def s = new Singlet()
+        assert s.size == 1
+        assert s.@size == 12
+        def wardrobe = [s, s]
+        assert wardrobe*.size == [1, 1]
+        assert wardrobe*.@size == [12, 12]
+    }
+
+    @Test
+    void testSpreadDotMultiLine() {
+        def x = [a: 1, b: 2]
+        def y = x
+                *.value
+                *.toString()
+        assert y == ['1', '2']
+        def z = x
+                *.value
+                .sum()
+        assert z == 3
+
+        x = [new Singlet(), new Singlet()]
+        y = x
+                *.@size
+        assert y == [12, 12]
+    }
+
+    //--------------------------------------------------------------------------
+
+    static class SpreadDotDemo {
+        Date getA() {
+            return new Date()
+        }
+
+        String fnB() {
+            return 'bb'
+        }
+
+        String fnB(String m) {
+            return "BB$m"
+        }
+    }
+
+    static class SpreadDotDemo2 {
+        String getAttribute(String key) {
+            return "Attribute $key"
+        }
+
+        String get(String key) {
+            return getAttribute("Get $key")
+        }
+
+        String fnB() {
+            return 'cc'
+        }
+
+        String fnB(String m) {
+            return "CC$m"
+        }
+    }
+
+    static class Book1 {
+    }
+
+    static class Book2 {
+    }
+
+    static class Book3 {
+    }
+
+    static class Shirt {
+        def size() { 'Large' }
+    }
+
+    static class Singlet {
+        private size = 12
+        def getSize() {1}
+    }
+}

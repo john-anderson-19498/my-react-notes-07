@@ -1,0 +1,73 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+plugins {
+    id 'org.apache.groovy-library'
+}
+
+repositories {
+// For testing new JLine versions
+//    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':')
+    implementation projects.groovyConsole
+    implementation projects.groovyTemplates
+    implementation projects.groovyXml
+    implementation projects.groovyJson
+    implementation projects.groovyNio
+    testImplementation projects.groovyTest
+    testImplementation projects.groovyCsv         // for /slurp .csv default coverage
+    testImplementation projects.groovyMarkdown    // for /slurp .md default coverage
+    testImplementation projects.groovyTestJunit6  // for @ForkedJvm in CSV fallback tests
+    implementation "net.java.dev.jna:jna:${versions.jna}"
+    implementation "org.jline:jansi:${versions.jline}"
+    implementation "org.jline:jline-builtins:${versions.jline}"
+    implementation "org.jline:jline-reader:${versions.jline}"
+    implementation "org.jline:jline-console:${versions.jline}"
+    implementation "org.jline:jline-terminal-jni:${versions.jline}"
+    implementation("org.jline:jline-terminal:${versions.jline}") {
+//        exclude(group: 'junit', module: 'junit')
+    }
+}
+
+plugins.withId('eclipse') {
+    eclipse.classpath.file.whenMerged {
+        entries.removeAll { entry -> entry.path in ['/groovy-xml', '/groovy-swing', '/groovy-templates'] }
+    }
+}
+
+// Forward -Djunit.network from the Gradle invocation to the test JVM so that
+// @EnabledIfSystemProperty in network-gated tests (e.g. SlurpCsvFallbackTest)
+// can see it.
+tasks.named('test') {
+    def network = System.getProperty('junit.network')
+    if (network) {
+        systemProperty 'junit.network', network
+    }
+}
+
+tasks.named('rat') {
+    excludes << '**/jline/GroovyEngine.java' // BSD license as per NOTICE/LICENSE files
+    excludes << '**/jline/ObjectInspector.groovy' // BSD license as per NOTICE/LICENSE files
+    excludes << '**/jline/Utils.groovy' // BSD license as per NOTICE/LICENSE files
+    excludes << '**/jline/JrtJavaBasePackages.java' // BSD license as per NOTICE/LICENSE files
+    excludes << '**/jline/PackageHelper.java' // BSD license as per NOTICE/LICENSE files
+}

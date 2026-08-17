@@ -1,0 +1,156 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+import org.apache.groovy.gradle.DocAggregationExtension
+
+/*
+    This plugin declares a component type corresponding to the "groovy-all" component.
+    Groovy all is basically a platform which aggregates _some_ of the Groovy modules,
+    but not all. In that sense it's different from the Groovy BOM, which is a platform
+    which references all Groovy modules.
+
+    It also aggregates docs and sources but does NOT provide an "uber" jar.
+ */
+plugins {
+    id 'org.apache.groovy-common'
+    id 'org.apache.groovy-documented'
+}
+
+def docAggregation = extensions.create('docAggregation', DocAggregationExtension)
+
+configurations {
+    allSources {
+        canBeConsumed = false
+        canBeResolved = true
+        transitive = false
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling, Bundling.EXTERNAL))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, DocsType.SOURCES))
+            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, "aggregation"))
+        }
+    }
+    allSourcesRuntimeClasspath {
+        canBeConsumed = false
+        canBeResolved = true
+        attributes {
+            attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.LIBRARY))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling, Bundling.EXTERNAL))
+            attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, "javadocClasspath"))
+        }
+    }
+}
+
+dependencies {
+    attributesSchema {
+        attribute(Usage.USAGE_ATTRIBUTE) {
+            compatibilityRules.add(JavadocClasspathCompatibilityRule)
+        }
+    }
+}
+
+def sourcesAllJar = tasks.register("sourcesAllJar", Jar) {
+    dependsOn ':generateGrammarSource'
+    from configurations.allSources
+    archiveClassifier = 'sources'
+    metaInf {
+        // the aggregated sources include the third-party-derived source files
+        // covered by the source distribution's LICENSE and NOTICE
+        from rootProject.file('LICENSE')
+        from rootProject.file('NOTICE')
+    }
+}
+
+def javadocAll = tasks.register("javadocAll", Javadoc) {
+    destinationDir = layout.buildDirectory.dir("alljavadoc").get().asFile
+    source configurations.allSources
+    classpath = configurations.allSourcesRuntimeClasspath + configurations.allSources
+    docAggregation.excludedFromJavadocs.each {
+        exclude it
+    }
+    options {
+        // Javadoc's {@snippet file=...} tag (JEP 413, JDK 18+) resolves
+        // external files via <snippet-path-entry>/<pkg>/snippet-files/<file>,
+        // falling back to <source-path-entry>/<pkg>/snippet-files/<file>.
+        // The aggregator feeds .java files from many modules directly, so
+        // Javadoc's default source-path inference doesn't cover each
+        // module's per-package snippet-files/ directory. Feed both paths
+        // explicitly when Javadoc supports the flag.
+        if (JavaVersion.current() >= JavaVersion.VERSION_18) {
+            def sourceDirs = configurations.allSources.asPath
+            addStringOption('-source-path', sourceDirs)
+            addStringOption('-snippet-path', sourceDirs)
+        }
+    }
+}
+
+def javadocAllJar = tasks.register("javadocAllJar", Jar) {
+    from javadocAll
+    archiveClassifier = 'javadoc'
+    metaInf {
+        // javadoc output bundles the JDK tool's own JS libraries (jquery etc.)
+        // whose licenses ship in the tool-generated legal/ directory
+        from(rootProject.file('licenses/LICENSE-BASE')) {
+            rename 'LICENSE-BASE', 'LICENSE'
+        }
+        from(rootProject.file('notices/NOTICE-BASE')) {
+            rename 'NOTICE-BASE', 'NOTICE'
+        }
+    }
+}
+
+def groovydocAll = tasks.register("groovydocAll", Groovydoc) {
+    destinationDir = layout.buildDirectory.dir("allgroovydoc").get().asFile
+    source = configurations.allSources
+    classpath = configurations.allSourcesRuntimeClasspath
+    includeAuthor = false
+    processScripts = false
+    includeMainForScripts = false
+    // GroovydocAntPlugin consumes this to produce the Ant task's sourcepath:
+    // configurations.allSources resolves to source directories (see
+    // sourcesForAggregation in groovy-core.gradle), so we pass the directories
+    // rather than the flattened file tree Gradle would otherwise infer.
+    ext.groovydocSourceDirs = configurations.allSources
+}
+
+def groovydocAllJar = tasks.register("groovydocAllJar", Jar) {
+    from groovydocAll
+    archiveClassifier = 'groovydoc'
+    metaInf {
+        // generated groovydoc bundles prism assets and a normalize-derived stylesheet
+        from(rootProject.file('licenses/LICENSE-DOCSJAR')) {
+            rename 'LICENSE-DOCSJAR', 'LICENSE'
+        }
+        from(rootProject.file('notices/NOTICE-BASE')) {
+            rename 'NOTICE-BASE', 'NOTICE'
+        }
+        into('licenses') {
+            from rootProject.file('licenses/normalize-stylesheet-license.txt')
+            from rootProject.file('licenses/prism-license.txt')
+        }
+    }
+}
+
+class JavadocClasspathCompatibilityRule implements AttributeCompatibilityRule<Usage> {
+    @Override
+    void execute(CompatibilityCheckDetails<Usage> details) {
+        if (details.consumerValue.name == 'javadocClasspath' && details.producerValue.name == Usage.JAVA_RUNTIME) {
+            details.compatible()
+        }
+    }
+}

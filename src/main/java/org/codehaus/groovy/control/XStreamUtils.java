@@ -1,0 +1,81 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.codehaus.groovy.control;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.net.URI;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
+
+/**
+ * Serializes AST structures to XML for debugging.
+ */
+public abstract class XStreamUtils {
+
+    private static final System.Logger LOGGER = System.getLogger(XStreamUtils.class.getName());
+
+    /**
+     * Serializes the supplied AST object to an XML file next to the named source.
+     *
+     * @param name the source name or URI used to derive the XML file name
+     * @param ast the AST object to serialize
+     */
+    public static void serialize(final String name, final Object ast) {
+        if (name == null || name.isEmpty()) return;
+
+        XStream xstream = new XStream(new StaxDriver());
+        FileWriter astFileWriter = null;
+        try {
+            File astFile = astFile(name);
+            if (astFile == null) {
+                LOGGER.log(WARNING, "File-name for writing {0} AST could not be determined!", name);
+                return;
+            }
+            astFileWriter = new FileWriter(astFile, false);
+            xstream.toXML(ast, astFileWriter);
+            LOGGER.log(DEBUG, "Written AST to {0}.xml", name);
+
+        } catch (Exception e) {
+            LOGGER.log(WARNING, "Couldn''t write to " + name + ".xml", e);
+        } finally {
+            DefaultGroovyMethods.closeQuietly(astFileWriter);
+        }
+    }
+
+    /**
+     * Takes the incoming file-name and checks whether this is a URI using the <tt>file:</tt> protocol or a non-URI and treats
+     * it accordingly.
+     *
+     * @return a file-name {@link java.io.File} representation or <tt>null</tt> if the file-name was in an invalid URI format
+     */
+    private static File astFile(final String uriOrFileName) {
+        try {
+            final String astFileName = uriOrFileName + ".xml";
+            return uriOrFileName.startsWith("file:") ? new File(URI.create(astFileName)) : new File(astFileName);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+}

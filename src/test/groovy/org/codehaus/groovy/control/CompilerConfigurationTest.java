@@ -1,0 +1,472 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.codehaus.groovy.control;
+
+import groovy.junit6.plugin.ForkedJvm;
+import org.codehaus.groovy.control.customizers.ImportCustomizer;
+import org.codehaus.groovy.control.messages.WarningMessage;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * Make sure CompilerConfiguration works.
+ */
+public final class CompilerConfigurationTest {
+
+    @Test
+    public void testDefaultConstructor() {
+        CompilerConfiguration config = CompilerConfiguration.DEFAULT;
+
+        assertEquals(WarningMessage.LIKELY_ERRORS, config.getWarningLevel());
+        assertEquals(Boolean.getBoolean("groovy.output.debug"), config.getDebug());
+        assertEquals(Boolean.getBoolean("groovy.output.verbose"), config.getVerbose());
+        assertEquals(10, config.getTolerance());
+        assertEquals(100, config.getMinimumRecompilationInterval());
+        assertEquals(System.getProperty("file.encoding", CompilerConfiguration.DEFAULT_SOURCE_ENCODING), config.getSourceEncoding());
+        assertEquals(CompilerConfiguration.DEFAULT_TARGET_BYTECODE, config.getTargetBytecode());
+        assertFalse(config.getRecompileGroovySource());
+        assertEquals(Collections.emptyList(), config.getClasspath());
+        assertEquals(".groovy", config.getDefaultScriptExtension());
+        assertNull(config.getJointCompilationOptions());
+        assertNotNull(config.getPluginFactory());
+        assertNull(config.getScriptBaseClass());
+        assertNull(config.getTargetDirectory());
+        assertFalse(config.isClassTagPreemptionDisabled()); // GROOVY-12115
+        // GROOVY-9192: parser error recovery is opt-in
+        assertFalse(config.isErrorRecoveryEnabled());
+        assertEquals("errorRecovery", CompilerConfiguration.ERROR_RECOVERY);
+    }
+
+    @Test
+    public void testErrorRecoveryOptimizationOption() {
+        CompilerConfiguration config = new CompilerConfiguration();
+        assertFalse(config.isErrorRecoveryEnabled());
+
+        config.getOptimizationOptions().put(CompilerConfiguration.ERROR_RECOVERY, Boolean.TRUE);
+        assertTrue(config.isErrorRecoveryEnabled());
+
+        config.getOptimizationOptions().put(CompilerConfiguration.ERROR_RECOVERY, Boolean.FALSE);
+        assertFalse(config.isErrorRecoveryEnabled());
+
+        CompilerConfiguration copy = new CompilerConfiguration(config);
+        assertFalse(copy.isErrorRecoveryEnabled());
+        copy.getOptimizationOptions().put(CompilerConfiguration.ERROR_RECOVERY, Boolean.TRUE);
+        assertTrue(copy.isErrorRecoveryEnabled());
+    }
+
+    @Test
+    @ForkedJvm(systemProperties = {
+            "groovy.warnings=PaRaNoiA",
+            "groovy.output.verbose=trUE",
+            "groovy.mem.stub=true",
+            "groovy.generate.stub.in.memory=true",
+            "groovy.recompile.minimumInterval=867892345"})
+    public void testSetViaSystemProperties() {
+        // Properties are set on the JVM command line via @ForkedJvm; the
+        // forked child reads them through the normal System.getProperties()
+        // path the production code uses, and parent-JVM state stays clean
+        // for all the other (read-only) tests in this class.
+        assertEquals("PaRaNoiA", System.getProperty("groovy.warnings"));
+
+        CompilerConfiguration config = new CompilerConfiguration(System.getProperties());
+
+        assertEquals(WarningMessage.PARANOIA, config.getWarningLevel());
+        assertFalse(config.getDebug());
+        assertTrue(config.getVerbose());
+        assertEquals(10, config.getTolerance());
+        assertEquals(867892345, config.getMinimumRecompilationInterval());
+        assertEquals(CompilerConfiguration.DEFAULT.getSourceEncoding(), config.getSourceEncoding());
+        assertEquals(CompilerConfiguration.DEFAULT.getTargetBytecode(), config.getTargetBytecode());
+        assertFalse(config.getRecompileGroovySource());
+        assertEquals(Collections.emptyList(), config.getClasspath());
+        assertEquals(".groovy", config.getDefaultScriptExtension());
+        assertNotNull(config.getJointCompilationOptions());
+        assertTrue((Boolean) config.getJointCompilationOptions().get(CompilerConfiguration.MEM_STUB));
+        assertNotNull(config.getPluginFactory());
+        assertNull(config.getScriptBaseClass());
+        assertNull(config.getTargetDirectory());
+    }
+
+    @Test
+    public void testCopyConstructor1() {
+        CompilerConfiguration init = new CompilerConfiguration();
+        init.setWarningLevel(WarningMessage.POSSIBLE_ERRORS);
+        init.setDebug(true);
+        init.setParameters(true);
+        init.setVerbose(false);
+        init.setTolerance(720);
+        init.setMinimumRecompilationInterval(234);
+        init.setScriptBaseClass("blarg.foo.WhatSit");
+        init.setSourceEncoding("LEAD-123");
+        init.setTargetBytecode(CompilerConfiguration.JDK17);
+        init.setRecompileGroovySource(true);
+        init.setClasspath("File1" + File.pathSeparator + "Somewhere");
+        File targetDirectory = new File("A wandering path");
+        init.setTargetDirectory(targetDirectory);
+        init.setDefaultScriptExtension(".jpp");
+        init.setJointCompilationOptions(Collections.singletonMap("somekey", "somevalue"));
+        init.addCompilationCustomizers(new ImportCustomizer().addStarImports("groovy.transform"));
+        ParserPluginFactory pluginFactory = ParserPluginFactory.antlr4();
+        init.setPluginFactory(pluginFactory);
+        init.setLogClassgen(true);
+        init.setLogClassgenStackTraceMaxDepth(100);
+
+        assertEquals(WarningMessage.POSSIBLE_ERRORS, init.getWarningLevel());
+        assertTrue(init.getDebug());
+        assertTrue(init.getParameters());
+        assertFalse(init.getVerbose());
+        assertEquals(720, init.getTolerance());
+        assertEquals(234, init.getMinimumRecompilationInterval());
+        assertEquals("blarg.foo.WhatSit", init.getScriptBaseClass());
+        assertEquals("LEAD-123", init.getSourceEncoding());
+        assertEquals(CompilerConfiguration.JDK17, init.getTargetBytecode());
+        assertTrue(init.getRecompileGroovySource());
+        assertEquals("File1", init.getClasspath().get(0));
+        assertEquals("Somewhere", init.getClasspath().get(1));
+        assertEquals(targetDirectory, init.getTargetDirectory());
+        assertEquals(".jpp", init.getDefaultScriptExtension());
+        assertEquals("somevalue", init.getJointCompilationOptions().get("somekey"));
+        assertNull(init.getJointCompilationOptions().get(CompilerConfiguration.MEM_STUB));
+        assertEquals(pluginFactory, init.getPluginFactory());
+        assertEquals(1, init.getCompilationCustomizers().size());
+        assertTrue(init.isLogClassgen());
+        assertEquals(100, init.getLogClassgenStackTraceMaxDepth());
+
+        //
+
+        CompilerConfiguration config = new CompilerConfiguration(init);
+
+        assertEquals(WarningMessage.POSSIBLE_ERRORS, config.getWarningLevel());
+        assertTrue(config.getDebug());
+        assertFalse(config.getVerbose());
+        assertEquals(720, config.getTolerance());
+        assertEquals(234, config.getMinimumRecompilationInterval());
+        assertEquals("blarg.foo.WhatSit", config.getScriptBaseClass());
+        assertEquals("LEAD-123", config.getSourceEncoding());
+        assertEquals(CompilerConfiguration.JDK17, config.getTargetBytecode());
+        assertTrue(config.getRecompileGroovySource());
+        assertEquals("File1", config.getClasspath().get(0));
+        assertEquals("Somewhere", config.getClasspath().get(1));
+        assertEquals(targetDirectory, config.getTargetDirectory());
+        assertEquals(".jpp", config.getDefaultScriptExtension());
+        assertEquals("somevalue", config.getJointCompilationOptions().get("somekey"));
+        assertEquals(pluginFactory, config.getPluginFactory());
+        assertTrue(config.isLogClassgen());
+        assertEquals(100, config.getLogClassgenStackTraceMaxDepth());
+        assertEquals(1, config.getCompilationCustomizers().size());
+    }
+
+    @Test
+    public void testCopyConstructorWithoutCustomizers() {
+        CompilerConfiguration init = new CompilerConfiguration();
+        init.setScriptBaseClass("blarg.foo.WhatSit");
+        init.setSourceEncoding("LEAD-123");
+        init.setTargetBytecode(CompilerConfiguration.JDK17);
+        init.addCompilationCustomizers(new ImportCustomizer().addStarImports("groovy.transform"));
+        assertEquals(1, init.getCompilationCustomizers().size());
+
+        CompilerConfiguration withCustomizers = new CompilerConfiguration(init, true);
+        assertEquals(1, withCustomizers.getCompilationCustomizers().size());
+
+        CompilerConfiguration withoutCustomizers = new CompilerConfiguration(init, false);
+        assertTrue(withoutCustomizers.getCompilationCustomizers().isEmpty());
+
+        // everything other than the customizers is copied either way
+        assertEquals("blarg.foo.WhatSit", withoutCustomizers.getScriptBaseClass());
+        assertEquals("LEAD-123", withoutCustomizers.getSourceEncoding());
+        assertEquals(CompilerConfiguration.JDK17, withoutCustomizers.getTargetBytecode());
+
+        // the source configuration is left alone
+        assertEquals(1, init.getCompilationCustomizers().size());
+    }
+
+    @Test
+    public void testCopyConstructor2() {
+        final CompilerConfiguration init = new CompilerConfiguration();
+
+        init.setWarningLevel(WarningMessage.POSSIBLE_ERRORS);
+        init.setDebug(false);
+        init.setParameters(false);
+        init.setVerbose(true);
+        init.setTolerance(55);
+        init.setMinimumRecompilationInterval(975);
+        init.setScriptBaseClass("");
+        init.setSourceEncoding("Gutenberg");
+        init.setTargetBytecode(CompilerConfiguration.JDK17);
+        init.setRecompileGroovySource(false);
+        init.setClasspath("");
+        File targetDirectory = new File("A wandering path");
+        init.setTargetDirectory(targetDirectory);
+        init.setLogClassgen(true);
+        init.setLogClassgenStackTraceMaxDepth(100);
+        ParserPluginFactory pluginFactory = ParserPluginFactory.antlr4();
+        init.setPluginFactory(pluginFactory);
+        init.setDefaultScriptExtension(".jpp");
+
+        assertEquals(WarningMessage.POSSIBLE_ERRORS, init.getWarningLevel());
+        assertFalse(init.getDebug());
+        assertFalse(init.getParameters());
+        assertTrue(init.getVerbose());
+        assertEquals(55, init.getTolerance());
+        assertEquals(975, init.getMinimumRecompilationInterval());
+        assertEquals("", init.getScriptBaseClass());
+        assertEquals("Gutenberg", init.getSourceEncoding());
+        assertEquals(CompilerConfiguration.JDK17, init.getTargetBytecode());
+        assertFalse(init.getRecompileGroovySource());
+        assertEquals(Collections.emptyList(), init.getClasspath());
+        assertEquals(targetDirectory, init.getTargetDirectory());
+        assertTrue(init.isLogClassgen());
+        assertEquals(100, init.getLogClassgenStackTraceMaxDepth());
+        assertEquals(pluginFactory, init.getPluginFactory());
+        assertEquals(".jpp", init.getDefaultScriptExtension());
+        assertNull(init.getJointCompilationOptions());
+
+        //
+
+        CompilerConfiguration config = new CompilerConfiguration(init);
+
+        assertEquals(WarningMessage.POSSIBLE_ERRORS, config.getWarningLevel());
+        assertFalse(config.getDebug());
+        assertTrue(config.getVerbose());
+        assertEquals(55, config.getTolerance());
+        assertEquals(975, config.getMinimumRecompilationInterval());
+        assertEquals("", config.getScriptBaseClass());
+        assertEquals("Gutenberg", config.getSourceEncoding());
+        assertEquals(CompilerConfiguration.JDK17, config.getTargetBytecode());
+        assertFalse(config.getRecompileGroovySource());
+        assertEquals(Collections.emptyList(), config.getClasspath());
+        assertEquals(targetDirectory, config.getTargetDirectory());
+        assertTrue(config.isLogClassgen());
+        assertEquals(100, config.getLogClassgenStackTraceMaxDepth());
+        assertEquals(pluginFactory, config.getPluginFactory());
+        assertEquals(".jpp", config.getDefaultScriptExtension());
+        assertNull(config.getJointCompilationOptions());
+    }
+
+    @Test // GROOVY-12115
+    public void testClassTagPreemptionDisabled() {
+        CompilerConfiguration init = new CompilerConfiguration();
+        // default is false: the API author's declared intent is honoured
+        assertFalse(init.isClassTagPreemptionDisabled());
+
+        // the setter flips the flag and the copy constructor round-trips it
+        init.setClassTagPreemptionDisabled(true);
+        CompilerConfiguration config = new CompilerConfiguration(init);
+        assertTrue(config.isClassTagPreemptionDisabled());
+
+        // the copy is independent of the original
+        config.setClassTagPreemptionDisabled(false);
+        assertTrue(init.isClassTagPreemptionDisabled());
+    }
+
+    @Test // GROOVY-12115
+    public void testClassTagPreemptionDisabledSystemProperty() {
+        System.setProperty("groovy.classtag.preemption.disable", "true");
+        try {
+            assertTrue(new CompilerConfiguration().isClassTagPreemptionDisabled());
+        } finally {
+            System.clearProperty("groovy.classtag.preemption.disable");
+        }
+        assertFalse(new CompilerConfiguration().isClassTagPreemptionDisabled());
+    }
+
+    @Test
+    public void testDefaultConfigurationIsImmutable() {
+        CompilerConfiguration config = CompilerConfiguration.DEFAULT;
+
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setClasspath("");
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.addCompilationCustomizers(new ImportCustomizer());
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setDebug(false);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setDefaultScriptExtension(".jpp");
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setLogClassgen(true);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setLogClassgenStackTraceMaxDepth(100);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setMinimumRecompilationInterval(975);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setParameters(false);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setPluginFactory(ParserPluginFactory.antlr4());
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setRecompileGroovySource(false);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setScriptBaseClass("");
+        });
+        assertThrows(UnsupportedOperationException.class, () -> { // GROOVY-12115
+            config.setClassTagPreemptionDisabled(true);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setSourceEncoding("Gutenberg");
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setTargetBytecode("11");
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setTargetDirectory(new File("path"));
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setTolerance(55);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setVerbose(true);
+        });
+        assertThrows(UnsupportedOperationException.class, () -> {
+            config.setWarningLevel(WarningMessage.POSSIBLE_ERRORS);
+        });
+    }
+
+    @Test // GROOVY-10278
+    public void testTargetVersion() {
+        CompilerConfiguration config = new CompilerConfiguration();
+        String[] inputs = {"1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "5" , "6" , "7" , "8" , "9" , "9.0", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"};
+        String[] expect = {"17" , "17" , "17" , "17" , "17" , "17" , "17" , "17", "17", "17", "17", "17", "17" , "17", "17", "17", "17", "17", "17", "17", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "27"};
+        assertArrayEquals(expect, Arrays.stream(inputs).map(v -> { config.setTargetBytecode(v); return config.getTargetBytecode(); }).toArray(String[]::new));
+    }
+
+    @Test // GROOVY-11792
+    public void testForInPerIterationCaptureEnabledByDefault() {
+        CompilerConfiguration config = new CompilerConfiguration();
+        assertTrue(config.isForInPerIterationCaptureEnabled());
+    }
+
+    @Test // GROOVY-11792
+    public void testForInPerIterationCaptureCanBeDisabled() {
+        CompilerConfiguration config = new CompilerConfiguration();
+        config.setForInPerIterationCaptureEnabled(false);
+        assertFalse(config.isForInPerIterationCaptureEnabled());
+        config.setForInPerIterationCaptureEnabled(true);
+        assertTrue(config.isForInPerIterationCaptureEnabled());
+    }
+
+    @Test // GROOVY-11792
+    public void testForInPerIterationCaptureNotClearedByAllFalse() {
+        CompilerConfiguration config = new CompilerConfiguration();
+        config.setForInPerIterationCaptureEnabled(false);
+        config.getOptimizationOptions().put("all", Boolean.FALSE);
+        // optimization "all" must not re-enable or clear the language-compat field
+        assertFalse(config.isForInPerIterationCaptureEnabled());
+        config.setForInPerIterationCaptureEnabled(true);
+        config.getOptimizationOptions().put("all", Boolean.FALSE);
+        assertTrue(config.isForInPerIterationCaptureEnabled());
+    }
+
+    @Test // GROOVY-11792
+    public void testForInPerIterationCaptureCopyConstructor() {
+        CompilerConfiguration src = new CompilerConfiguration();
+        src.setForInPerIterationCaptureEnabled(false);
+        CompilerConfiguration copy = new CompilerConfiguration(src);
+        assertFalse(copy.isForInPerIterationCaptureEnabled());
+        src.setForInPerIterationCaptureEnabled(true);
+        // copy is independent
+        assertFalse(copy.isForInPerIterationCaptureEnabled());
+        assertTrue(new CompilerConfiguration(src).isForInPerIterationCaptureEnabled());
+    }
+
+    @Test // GROOVY-11792
+    public void testForInPerIterationCaptureViaConfigureProperties() {
+        CompilerConfiguration config = new CompilerConfiguration();
+        Properties props = new Properties();
+        props.setProperty("groovy.forin.per.iteration.capture", "false");
+        config.configure(props);
+        assertFalse(config.isForInPerIterationCaptureEnabled());
+        props.setProperty("groovy.forin.per.iteration.capture", "true");
+        config.configure(props);
+        assertTrue(config.isForInPerIterationCaptureEnabled());
+    }
+
+    @Test // GROOVY-11792
+    @ForkedJvm(systemProperties = {"groovy.forin.per.iteration.capture=false"})
+    public void testForInPerIterationCaptureDisabledViaSystemProperty() {
+        CompilerConfiguration config = new CompilerConfiguration(System.getProperties());
+        assertFalse(config.isForInPerIterationCaptureEnabled());
+    }
+
+    @Test // GROOVY-11792
+    public void testDefaultConfigurationForInPerIterationCaptureIsImmutable() {
+        assertThrows(UnsupportedOperationException.class, () ->
+                CompilerConfiguration.DEFAULT.setForInPerIterationCaptureEnabled(false));
+        assertTrue(CompilerConfiguration.DEFAULT.isForInPerIterationCaptureEnabled());
+    }
+
+    @Test // GROOVY-12204
+    public void testTargetPhaseDefaultsToAll() {
+        CompilerConfiguration config = new CompilerConfiguration();
+        assertEquals(Phases.ALL, config.getTargetPhase());
+    }
+
+    @Test // GROOVY-12204
+    public void testTargetPhaseSetterAndClamping() {
+        CompilerConfiguration config = new CompilerConfiguration();
+        config.setTargetPhase(Phases.INSTRUCTION_SELECTION);
+        assertEquals(Phases.INSTRUCTION_SELECTION, config.getTargetPhase());
+        config.setTargetPhase(CompilePhase.CANONICALIZATION);
+        assertEquals(Phases.CANONICALIZATION, config.getTargetPhase());
+        config.setTargetPhase(0); // below INITIALIZATION: clamped
+        assertEquals(Phases.INITIALIZATION, config.getTargetPhase());
+        config.setTargetPhase(42); // above ALL: clamped
+        assertEquals(Phases.ALL, config.getTargetPhase());
+    }
+
+    @Test // GROOVY-12204
+    public void testTargetPhaseCopyConstructor() {
+        CompilerConfiguration src = new CompilerConfiguration();
+        src.setTargetPhase(Phases.INSTRUCTION_SELECTION);
+        CompilerConfiguration copy = new CompilerConfiguration(src);
+        assertEquals(Phases.INSTRUCTION_SELECTION, copy.getTargetPhase());
+        src.setTargetPhase(Phases.ALL);
+        // copy is independent
+        assertEquals(Phases.INSTRUCTION_SELECTION, copy.getTargetPhase());
+    }
+
+    @Test // GROOVY-12204
+    public void testDefaultConfigurationTargetPhaseIsImmutable() {
+        assertThrows(UnsupportedOperationException.class, () ->
+                CompilerConfiguration.DEFAULT.setTargetPhase(Phases.INSTRUCTION_SELECTION));
+        assertThrows(UnsupportedOperationException.class, () ->
+                CompilerConfiguration.DEFAULT.setTargetPhase(CompilePhase.INSTRUCTION_SELECTION));
+        assertEquals(Phases.ALL, CompilerConfiguration.DEFAULT.getTargetPhase());
+    }
+}

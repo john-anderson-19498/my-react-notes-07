@@ -1,0 +1,432 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Build and test
+
+on:
+  push:
+    branches:
+      - master
+      - GROOVY_*
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+
+jobs:
+  lts:
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [17, 21, 25]
+        os: [ubuntu-latest]
+        include:
+          - java: 17
+            os: windows-latest
+            env-no-color: '1'
+          - java: 17
+            os: macos-latest
+          - java: 25
+            os: ubuntu-latest
+            junit-network: '-Djunit.network=true'
+    runs-on: ${{ matrix.os }}
+    env:
+      NO_COLOR: ${{ matrix.env-no-color }}
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v7.0.1
+      - name: "☕️ Setup JDK"
+        uses: actions/setup-java@v5.7.0
+        with:
+          distribution: 'zulu'
+          java-version: |
+            ${{ matrix.java }}
+            21
+          check-latest: true
+      # The Gradle dependency cache below covers ~/.gradle/caches/modules-2
+      # but NOT ~/.groovy/grapes,
+      # which is where @Grab-resolved artifacts (used by tests like
+      # GenericsSTCTest, MethodReferenceTest, …) land. Caching it makes the
+      # build resilient to transient Maven Central / CDN outages: once an
+      # artifact has been resolved on any prior run, subsequent runs reuse
+      # it from cache and don't re-hit the network.
+      #
+      # Key strategy: per-run key + prefix restore-keys. Each run saves a
+      # fresh entry; the next run finds the most recent via prefix
+      # fallback. The cache grows with new @Grab coordinates over time and
+      # never gets invalidated by older ones being removed.
+      - name: "🍇 Cache @Grab artifacts (~/.groovy/grapes + ~/.m2/repository)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          # ~/.groovy/grapes is what Grape/Ivy reads from at test time (via the
+          # bridge in org.apache.groovy-tested.gradle). ~/.m2/repository is what
+          # the pre-warm step below populates with mvn dependency:get — the bridge
+          # also copies it into the test JVM's isolated localm2 root.
+          path: |
+            ~/.groovy/grapes
+            ~/.m2/repository
+          key: ${{ runner.os }}-grape-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-grape-
+      # Explicit Gradle dependency cache, same approach as the @Grab cache
+      # above (and as grails-core#15935). setup-gradle's built-in cache (any
+      # provider) only writes from the default branch — so maintenance
+      # branches (GROOVY_*) always ran cold — and stores the whole Gradle
+      # User Home as one entry keyed on build-file hashes, so any build
+      # change forced a full re-download from Maven Central. Instead cache
+      # just the downloaded jars/poms and wrapper dists, keyed per branch so
+      # each release branch keeps its own warm cache, with a prefix
+      # restore-key so a version bump restores the previous entry and only
+      # downloads the delta.
+      #
+      # An exact key hit skips re-saving, so unchanged runs don't churn the
+      # repo's 10GB cache quota. That is also why the `build` key segment
+      # separates cache lineages per workflow family
+      # (build/coverage/perf/joint): under one shared key, deps unique to
+      # e.g. JMH or coverage runs would never be persisted. Conversely, jobs
+      # that resolve only a small subset of the build deps (rat check,
+      # action validation) restore this lineage but never save to it, so a
+      # fast subset job can't pin a thin cache under a fresh key.
+      - name: "🗄 Cache Gradle dependencies (~/.gradle/caches/modules-2 + wrapper)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper
+          key: gradle-deps-${{ runner.os }}-build-${{ github.base_ref || github.ref_name }}-${{ hashFiles('versions.properties', 'gradle/wrapper/gradle-wrapper.properties', 'settings.gradle', 'build-logic/build.gradle') }}
+          restore-keys: |
+            gradle-deps-${{ runner.os }}-build-${{ github.base_ref || github.ref_name }}-
+      - name: "🐘 Setup Gradle"
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        # The action's own caching (MIT-licensed 'basic' or the proprietary
+        # v6+ 'enhanced' provider) is disabled: dependency jars and wrapper
+        # dists are cached by the explicit branch-keyed step above instead.
+        with:
+          cache-disabled: true
+      - name: "🔍 Setup TestLens"
+        uses: testlens-app/setup-testlens@d29a2be31512b3aeda3adcef09fbe0d55af90c51 # v1.9.4
+      # Pre-warm the @Grab artifact cache by fetching each unique Maven-shorthand
+      # coordinate referenced in test sources via `mvn dependency:get`. Maven uses
+      # Apache HttpClient (vs Ivy's java.net.URLConnection), so it currently
+      # passes Cloudflare's WAF in front of Maven Central while Ivy gets HTTP 404.
+      # Once any run succeeds, actions/cache saves ~/.m2/repository for the next
+      # run, and the org.apache.groovy-tested.gradle bridge copies the artifacts
+      # into each test task's isolated localm2 root so tests stay off the network.
+      # Failures here are non-fatal — Ivy will retry at test time and may succeed
+      # on any individual artifact even when bursts are throttled.
+      - name: "🌡 Pre-warm @Grab artifacts via Maven"
+        shell: bash
+        run: |
+          set +e
+          coords=$(grep -rhEo "@Grab\(\s*(value\s*=\s*)?['\"][^'\"]+['\"]" src/test subprojects/*/src/test 2>/dev/null \
+            | sed -E "s/.*@Grab\(\s*(value\s*=\s*)?['\"]([^'\"]+)['\"].*/\2/" \
+            | grep -E '^[a-zA-Z0-9._-]+:[a-zA-Z0-9._-]+:[a-zA-Z0-9._+-]+$' \
+            | sort -u)
+          if [ -z "$coords" ]; then
+            echo "No @Grab coords discovered — skipping pre-warm"
+            exit 0
+          fi
+          n=$(printf '%s\n' "$coords" | wc -l | tr -d ' ')
+          echo "Pre-warming $n @Grab coords via mvn dependency:get"
+          ok=0; fail=0
+          while IFS= read -r coord; do
+            if mvn -B -q dependency:get -Dartifact="$coord" -Dtransitive=true >/dev/null 2>&1; then
+              ok=$((ok+1))
+            else
+              fail=$((fail+1))
+              echo "  ⚠ $coord"
+            fi
+          done <<< "$coords"
+          echo "Pre-warm complete: $ok ok / $fail failed (failures retried by Ivy at test time)"
+          exit 0
+        timeout-minutes: 15
+      - name: "🏃Test with Gradle"
+        run: ./gradlew test ${{ matrix.junit-network }} -Pgroovy.grape.bridge-cache=true -Ptarget.java.home="$JAVA_HOME_${{ matrix.java }}_${{ runner.arch }}"
+        shell: bash
+        timeout-minutes: 60
+      # Ivy records a transient "not found" (e.g. an HTTP 404 from the CDN/WAF in
+      # front of Maven Central) as `...exists=false` inside ivydata-*.properties.
+      # If such a marker is saved into the cache it is restored and replayed on
+      # every later run, turning a one-off blip into a sticky `unresolved
+      # dependency` failure (e.g. the guava @Grab tests in GenericsSTCTest). Delete
+      # only those negative markers here — just before actions/cache's post-step
+      # saves ~/.groovy/grapes — so all JARs/POMs and good resolution state are
+      # preserved and a transient miss never becomes persistent. Runs on success
+      # or failure so poison written by a failing run is scrubbed too.
+      #
+      # Additionally validate every cached jar's zip integrity: a jar truncated
+      # by a copy race or a mid-copy timeout kill would otherwise be saved and
+      # replayed on every later run — Ivy trusts cached files without any
+      # integrity re-check (seen as GenericsSTCTest#testMockito failing with
+      # NoClassDefFoundError on a torn byte-buddy jar). Corrupt jars are deleted
+      # together with the module's ivydata markers so Ivy re-resolves cleanly.
+      - name: "🧹 Scrub poisoned Grape negative-cache markers and corrupt jars before save"
+        if: always()
+        shell: bash
+        run: |
+          dir=~/.groovy/grapes
+          [ -d "$dir" ] || { echo "No $dir — nothing to scrub."; exit 0; }
+          deleted=0
+          while IFS= read -r f; do
+            echo "poisoned marker: $f"
+            grep -E 'exists=false' "$f" | sed 's/^/    /'
+            rm -f "$f"
+            deleted=$((deleted + 1))
+          done < <(grep -rlE --include='ivydata-*.properties' 'exists=false' "$dir" 2>/dev/null)
+          echo "Scrubbed $deleted poisoned ivydata marker(s) before cache save."
+          corrupt=0
+          while IFS= read -r jar; do
+            if ! unzip -tqq "$jar" >/dev/null 2>&1; then
+              echo "corrupt jar: $jar"
+              rm -f "$jar" "$(dirname "$jar")"/../ivydata-*.properties
+              corrupt=$((corrupt + 1))
+            fi
+          done < <(find "$dir" -name '*.jar' 2>/dev/null)
+          echo "Scrubbed $corrupt corrupt jar(s) before cache save."
+      - name: "🚀Upload reports"
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: build-reports-${{ matrix.os }}-${{ matrix.java }}
+          path: '**/build/reports/'
+
+  additional:
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [18, 19, 20, 22, 23, 24, 26]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v7.0.1
+      - name: "☕️ Setup JDK"
+        uses: actions/setup-java@v5.7.0
+        with:
+          distribution: 'zulu'
+          java-version: |
+            ${{ matrix.java }}
+            21
+          check-latest: true
+      # See the lts job for rationale; same prefix lets both jobs share
+      # the cache.
+      - name: "🍇 Cache @Grab artifacts (~/.groovy/grapes + ~/.m2/repository)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.groovy/grapes
+            ~/.m2/repository
+          key: ${{ runner.os }}-grape-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-grape-
+      # See the lts job for the Gradle dependency cache rationale.
+      - name: "🗄 Cache Gradle dependencies (~/.gradle/caches/modules-2 + wrapper)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper
+          key: gradle-deps-${{ runner.os }}-build-${{ github.base_ref || github.ref_name }}-${{ hashFiles('versions.properties', 'gradle/wrapper/gradle-wrapper.properties', 'settings.gradle', 'build-logic/build.gradle') }}
+          restore-keys: |
+            gradle-deps-${{ runner.os }}-build-${{ github.base_ref || github.ref_name }}-
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        # The action's own caching is disabled: dependency jars and wrapper
+        # dists are cached by the explicit branch-keyed step above instead.
+        with:
+          cache-disabled: true
+      - name: "🌡 Pre-warm @Grab artifacts via Maven"
+        shell: bash
+        run: |
+          set +e
+          coords=$(grep -rhEo "@Grab\(\s*(value\s*=\s*)?['\"][^'\"]+['\"]" src/test subprojects/*/src/test 2>/dev/null \
+            | sed -E "s/.*@Grab\(\s*(value\s*=\s*)?['\"]([^'\"]+)['\"].*/\2/" \
+            | grep -E '^[a-zA-Z0-9._-]+:[a-zA-Z0-9._-]+:[a-zA-Z0-9._+-]+$' \
+            | sort -u)
+          [ -z "$coords" ] && { echo "No @Grab coords — skipping"; exit 0; }
+          n=$(printf '%s\n' "$coords" | wc -l | tr -d ' ')
+          echo "Pre-warming $n coords"
+          ok=0; fail=0
+          while IFS= read -r c; do
+            if mvn -B -q dependency:get -Dartifact="$c" -Dtransitive=true >/dev/null 2>&1; then
+              ok=$((ok+1))
+            else
+              fail=$((fail+1)); echo "  ⚠ $c"
+            fi
+          done <<< "$coords"
+          echo "Pre-warm: $ok ok / $fail failed"
+          exit 0
+        timeout-minutes: 15
+      - name: "🏃Test with Gradle"
+        run: ./gradlew test -Pgroovy.grape.bridge-cache=true -Ptarget.java.home="$JAVA_HOME_${{ matrix.java }}_X64"
+        timeout-minutes: 60
+      # See the lts job for rationale: drop only Ivy's transient `exists=false`
+      # negative markers just before actions/cache saves, so a one-off resolution
+      # miss can't be cached and replayed as a sticky failure on later runs, and
+      # delete any zip-corrupt jars (plus their ivydata markers) so a torn copy
+      # can't be persisted either.
+      - name: "🧹 Scrub poisoned Grape negative-cache markers and corrupt jars before save"
+        if: always()
+        shell: bash
+        run: |
+          dir=~/.groovy/grapes
+          [ -d "$dir" ] || { echo "No $dir — nothing to scrub."; exit 0; }
+          deleted=0
+          while IFS= read -r f; do
+            echo "poisoned marker: $f"
+            grep -E 'exists=false' "$f" | sed 's/^/    /'
+            rm -f "$f"
+            deleted=$((deleted + 1))
+          done < <(grep -rlE --include='ivydata-*.properties' 'exists=false' "$dir" 2>/dev/null)
+          echo "Scrubbed $deleted poisoned ivydata marker(s) before cache save."
+          corrupt=0
+          while IFS= read -r jar; do
+            if ! unzip -tqq "$jar" >/dev/null 2>&1; then
+              echo "corrupt jar: $jar"
+              rm -f "$jar" "$(dirname "$jar")"/../ivydata-*.properties
+              corrupt=$((corrupt + 1))
+            fi
+          done < <(find "$dir" -name '*.jar' 2>/dev/null)
+          echo "Scrubbed $corrupt corrupt jar(s) before cache save."
+
+  # Canary job: run the test suite against an upcoming, not-yet-released JDK.
+  # setup-java has no first-class EA distribution, so we download the OpenJDK
+  # EA archive ourselves and install it via `distribution: 'jdkfile'` (which
+  # extracts/caches it and sets JAVA_HOME). We capture that JAVA_HOME as the
+  # *test target*, then set up a stable LTS JDK afterwards so Gradle itself
+  # runs on a GA build. `fail-fast: false` keeps EA breakage from failing the
+  # rest of the matrix. NOTE: the EA build number bumps ~weekly, so the URL
+  # below goes stale — refresh it (and java-version) from https://jdk.java.net/27/.
+  ea:
+    if: github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - jdk-url: "https://download.java.net/java/early_access/jdk27/33/GPL/openjdk-27-ea+33_linux-x64_bin.tar.gz"
+            jdk-version: "27.0.0-ea.33"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v7.0.1
+      - name: "⬇️ Download EA JDK"
+        run: wget -nv -O "$RUNNER_TEMP/java_package.tar.gz" "${{ matrix.jdk-url }}"
+      - name: "☕️ Setup EA JDK (test target)"
+        uses: actions/setup-java@v5.7.0
+        with:
+          distribution: 'jdkfile'
+          jdkFile: ${{ runner.temp }}/java_package.tar.gz
+          java-version: ${{ matrix.jdk-version }}
+      - name: "📌 Capture EA JAVA_HOME"
+        shell: bash
+        run: echo "EA_JAVA_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
+      - name: "☕️ Setup build JDK"
+        # Last setup-java wins, so Gradle runs on this stable LTS JDK while the
+        # tests target the EA JDK captured above via -Ptarget.java.home.
+        uses: actions/setup-java@v5.7.0
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          check-latest: true
+      # See the lts job for rationale; same prefix lets all jobs share the cache.
+      - name: "🍇 Cache @Grab artifacts (~/.groovy/grapes + ~/.m2/repository)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.groovy/grapes
+            ~/.m2/repository
+          key: ${{ runner.os }}-grape-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-grape-
+      # See the lts job for the Gradle dependency cache rationale.
+      - name: "🗄 Cache Gradle dependencies (~/.gradle/caches/modules-2 + wrapper)"
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper
+          key: gradle-deps-${{ runner.os }}-build-${{ github.base_ref || github.ref_name }}-${{ hashFiles('versions.properties', 'gradle/wrapper/gradle-wrapper.properties', 'settings.gradle', 'build-logic/build.gradle') }}
+          restore-keys: |
+            gradle-deps-${{ runner.os }}-build-${{ github.base_ref || github.ref_name }}-
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        # The action's own caching is disabled: dependency jars and wrapper
+        # dists are cached by the explicit branch-keyed step above instead.
+        with:
+          cache-disabled: true
+      - name: "🌡 Pre-warm @Grab artifacts via Maven"
+        shell: bash
+        run: |
+          set +e
+          coords=$(grep -rhEo "@Grab\(\s*(value\s*=\s*)?['\"][^'\"]+['\"]" src/test subprojects/*/src/test 2>/dev/null \
+            | sed -E "s/.*@Grab\(\s*(value\s*=\s*)?['\"]([^'\"]+)['\"].*/\2/" \
+            | grep -E '^[a-zA-Z0-9._-]+:[a-zA-Z0-9._-]+:[a-zA-Z0-9._+-]+$' \
+            | sort -u)
+          [ -z "$coords" ] && { echo "No @Grab coords — skipping"; exit 0; }
+          n=$(printf '%s\n' "$coords" | wc -l | tr -d ' ')
+          echo "Pre-warming $n coords"
+          ok=0; fail=0
+          while IFS= read -r c; do
+            if mvn -B -q dependency:get -Dartifact="$c" -Dtransitive=true >/dev/null 2>&1; then
+              ok=$((ok+1))
+            else
+              fail=$((fail+1)); echo "  ⚠ $c"
+            fi
+          done <<< "$coords"
+          echo "Pre-warm: $ok ok / $fail failed"
+          exit 0
+        timeout-minutes: 15
+      - name: "🏃Test with Gradle"
+        run: ./gradlew test -Pgroovy.grape.bridge-cache=true -Ptarget.java.home="$EA_JAVA_HOME"
+        shell: bash
+        timeout-minutes: 60
+      # See the lts job for rationale: drop only Ivy's transient `exists=false`
+      # negative markers just before actions/cache saves, so a one-off resolution
+      # miss can't be cached and replayed as a sticky failure on later runs, and
+      # delete any zip-corrupt jars (plus their ivydata markers) so a torn copy
+      # can't be persisted either.
+      - name: "🧹 Scrub poisoned Grape negative-cache markers and corrupt jars before save"
+        if: always()
+        shell: bash
+        run: |
+          dir=~/.groovy/grapes
+          [ -d "$dir" ] || { echo "No $dir — nothing to scrub."; exit 0; }
+          deleted=0
+          while IFS= read -r f; do
+            echo "poisoned marker: $f"
+            grep -E 'exists=false' "$f" | sed 's/^/    /'
+            rm -f "$f"
+            deleted=$((deleted + 1))
+          done < <(grep -rlE --include='ivydata-*.properties' 'exists=false' "$dir" 2>/dev/null)
+          echo "Scrubbed $deleted poisoned ivydata marker(s) before cache save."
+          corrupt=0
+          while IFS= read -r jar; do
+            if ! unzip -tqq "$jar" >/dev/null 2>&1; then
+              echo "corrupt jar: $jar"
+              rm -f "$jar" "$(dirname "$jar")"/../ivydata-*.properties
+              corrupt=$((corrupt + 1))
+            fi
+          done < <(find "$dir" -name '*.jar' 2>/dev/null)
+          echo "Scrubbed $corrupt corrupt jar(s) before cache save."
+      - name: "🚀Upload reports"
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: build-reports-ea
+          path: '**/build/reports/'

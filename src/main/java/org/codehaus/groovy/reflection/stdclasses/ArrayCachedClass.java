@@ -1,0 +1,90 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.codehaus.groovy.reflection.stdclasses;
+
+import groovy.lang.GString;
+import org.codehaus.groovy.reflection.CachedClass;
+import org.codehaus.groovy.reflection.ClassInfo;
+import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
+
+import java.lang.reflect.Array;
+
+/**
+ * Provides optimized reflection caching for Java arrays.
+ * Handles type coercion including conversion of boxed arrays to primitive arrays,
+ * and {@link GString} arrays to {@link String} arrays.
+ */
+public class ArrayCachedClass extends CachedClass {
+    /**
+     * Constructs a cached class representation for the given array class.
+     *
+     * @param klazz the array class to cache
+     * @param classInfo the class information associated with this cached class
+     */
+    public ArrayCachedClass(Class klazz, ClassInfo classInfo) {
+        super(klazz, classInfo);
+    }
+
+    /**
+     * Coerces the given argument to the appropriate array type.
+     * Converts boxed arrays to primitive arrays if needed, and
+     * {@link GString} arrays to {@link String} arrays.
+     *
+     * @param argument the argument to coerce
+     * @return the coerced argument, or the original argument if no coercion is needed
+     */
+    @Override
+    public Object coerceArgument(Object argument) {
+        Class argumentClass = argument.getClass();
+        if (argumentClass.getName().charAt(0) != '[') return argument;
+        Class argumentComponent = argumentClass.getComponentType();
+
+        Class paramComponent = getTheClass().getComponentType();
+        if (paramComponent.isPrimitive()) {
+            argument = convertToPrimitiveArray(argument, paramComponent);
+        } else if (paramComponent == String.class && argument instanceof GString[] strings) {
+            String[] ret = new String[strings.length];
+            for (int i = 0; i < strings.length; i++) {
+                ret[i] = strings[i].toString();
+            }
+            argument = ret;
+        } else if (paramComponent==Object.class && argumentComponent.isPrimitive()){
+            argument = DefaultTypeTransformation.primitiveArrayBox(argument);
+        }
+        return argument;
+    }
+
+    /**
+     * Converts a boxed object array (e.g. Integer[]) to a primitive array (e.g. int[]).
+     * If the source is already the correct primitive array type, it is returned as-is.
+     */
+    private static Object convertToPrimitiveArray(Object array, Class<?> primitiveType) {
+        if (array.getClass().getComponentType() == primitiveType) return array;
+        Object[] source = (Object[]) array;
+        int length = source.length;
+        Object result = Array.newInstance(primitiveType, length);
+        for (int i = 0; i < length; i++) {
+            if (source[i] != null) {
+                Array.set(result, i, DefaultTypeTransformation.castToType(source[i], primitiveType));
+            }
+        }
+        return result;
+    }
+
+}

@@ -1,0 +1,570 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy.json;
+
+import groovy.transform.NamedParam;
+import org.apache.groovy.json.internal.BaseJsonParser;
+import org.apache.groovy.json.internal.JsonFastParser;
+import org.apache.groovy.json.internal.JsonParserCharArray;
+import org.apache.groovy.json.internal.JsonParserLax;
+import org.apache.groovy.json.internal.JsonParserUsingCharacterSource;
+import org.codehaus.groovy.runtime.DefaultGroovyMethodsSupport;
+import org.codehaus.groovy.runtime.ResourceGroovyMethods;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
+
+/**
+ * This has the same interface as the original JsonSlurper written for version 1.8.0, but its
+ * implementation has completely changed. It is now up to 20x faster than before, and its speed
+ * competes and often substantially exceeds popular common JSON parsers circa Jan, 2014.
+ * <p />
+ * JSON slurper parses text or reader content into a data structure of lists and maps.
+ * <p>
+ * Example usage:
+ * <code><pre class="language-groovy groovyTestCase">
+ * def slurper = new groovy.json.JsonSlurper()
+ * def result = slurper.parseText('{"person":{"name":"Guillaume","age":33,"pets":["dog","cat"]}}')
+ *
+ * assert result.person.name == "Guillaume"
+ * assert result.person.age == 33
+ * assert result.person.pets.size() == 2
+ * assert result.person.pets[0] == "dog"
+ * assert result.person.pets[1] == "cat"
+ * </pre></code>
+ *
+ * JsonSlurper can use several types of JSON parsers. Please read the documentation for
+ * JsonParserType. There are relaxed mode parsers, large file parser, and index overlay parsers.
+ * Don't worry, it is all groovy. JsonSlurper will just work, but understanding the different parser
+ * types may allow you to drastically improve the performance of your JSON parsing.
+ * <p />
+ *
+ * Index overlay parsers (INDEX_OVERLAY and LAX) are the fastest JSON parsers.
+ * However they are not the default for a good reason.
+ * Index overlay parsers  has pointers (indexes really) to original char buffer.
+ * Care must be used if putting parsed maps into a long term cache as members of map
+ * maybe index overlay objects pointing to original buffer.
+ * You can mitigate these risks by using chop and lazy chop properties.
+ * <p />
+ * Chop eagerly dices up the buffer so each Value element points to a small copy of the original buffer.
+ * <p />
+ * Lazy Chop dices up the buffer when a list get or map get is called so if an GPath expression or
+ * such is applied.
+ * <p />
+ * You do not need chop or lazy chop if you are NOT putting the map into a long term cache.
+ * You do not need chop or lazy chop if you are doing object de-serialization.
+ * Recommendation is to use INDEX_OVERLAY for JSON buffers under 2MB.
+ * The maxSizeForInMemory is set to 2MB and any file over 2MB will use a parser designed for
+ * large files, which is slower than the INDEX_OVERLAY, LAX, and CHAR_BUFFER parsers, but
+ * faster than most commonly used JSON parsers on the JVM for most use cases circa January 2014.
+ * <p />
+ * To enable the INDEX_OVERLAY parser do this:
+ *
+ * <code><pre>
+ *             parser = new JsonSlurper().setType(JsonParserType.INDEX_OVERLAY);
+ * </pre></code>
+ * <p>
+ * {@code JsonSlurper} reads the whole document into memory and does not bound total input size (only
+ * nesting depth, via {@link #setMaxNestingDepth(int)}). For very large documents, bound the input size
+ * before parsing, or use a streaming / Jackson-based parser instead; Groovy interoperates cleanly with
+ * Jackson (the {@code groovy-yaml}/{@code groovy-toml}/{@code groovy-csv} slurpers are already
+ * Jackson-backed).
+ *
+ * @see groovy.json.JsonParserType
+ * @since 1.8.0
+ */
+public class JsonSlurper {
+
+    private int maxSizeForInMemory = 2000000;
+    private boolean chop = false;
+    private boolean lazyChop = true;
+    private boolean checkDates = true;
+    private int maxNestingDepth = Integer.getInteger("groovy.json.maxNestingDepth", BaseJsonParser.DEFAULT_MAX_NESTING_DEPTH);
+
+    private JsonParserType type = JsonParserType.CHAR_BUFFER;
+
+    /**
+     * The threshold (in characters) that selects which parser strategy the {@code File}-based parse
+     * methods use: documents smaller than this are parsed in memory, larger ones use a windowing
+     * buffer parser.
+     * <p>
+     * <strong>This is a parser-strategy selector, not a size limit.</strong> It does not reject or
+     * cap input &mdash; an oversized document is still parsed in full (by the windowing parser).
+     * It is consulted <em>only</em> by the {@link java.io.File}-based parse methods; the
+     * {@link #parse(Reader)}, {@link #parse(InputStream)} and {@code parse(URL)} entry points ignore
+     * it and buffer their entire input into memory regardless of this value. To bound untrusted
+     * input, limit its size yourself before parsing (and cap nesting via
+     * {@link #setMaxNestingDepth(int)} or the {@code groovy.json.maxNestingDepth} system property).
+     *
+     * @return the in-memory vs windowing-parser selection threshold
+     * @since 2.3
+     */
+    public int getMaxSizeForInMemory() {
+        return maxSizeForInMemory;
+    }
+
+    /**
+     * Sets the threshold that selects which parser strategy the {@code File}-based parse methods use
+     * (see {@link #getMaxSizeForInMemory()}).
+     * <p>
+     * <strong>This selects a parser strategy; it does not limit or reject input.</strong> Setting it
+     * gives no DoS protection: it is not consulted by {@link #parse(Reader)},
+     * {@link #parse(InputStream)} or {@code parse(URL)}, and even the {@code File}-based methods still
+     * parse documents larger than the threshold. Bound untrusted input by its size before parsing,
+     * and cap nesting via {@link #setMaxNestingDepth(int)} or {@code groovy.json.maxNestingDepth}.
+     *
+     * @param maxSizeForInMemory the in-memory vs windowing-parser selection threshold
+     * @return this {@code JsonSlurper} instance
+     * @since 2.3
+     */
+    public JsonSlurper setMaxSizeForInMemory(int maxSizeForInMemory) {
+        this.maxSizeForInMemory = maxSizeForInMemory;
+        return this;
+    }
+
+    /** Parser type.
+     * @since 2.3
+     * @see groovy.json.JsonParserType
+     * @return  type
+     */
+    public JsonParserType getType() {
+        return type;
+    }
+
+    /** Parser type.
+     * @since 2.3
+     * @see groovy.json.JsonParserType
+     * @return  JsonSlurper
+     */
+    public JsonSlurper setType(JsonParserType type) {
+        this.type = type;
+        return this;
+    }
+
+    /** Turns on buffer chopping for index overlay.
+     * @since 2.3
+     * @see groovy.json.JsonParserType
+     * @return  chop on or off
+     */
+    public boolean isChop() {
+        return chop;
+    }
+
+    /** Turns on buffer chopping for index overlay.
+     * @since 2.3
+     * @see groovy.json.JsonParserType
+     * @return  JsonSlurper
+     */
+    public JsonSlurper setChop(boolean chop) {
+        this.chop = chop;
+        return this;
+    }
+
+    /** Turns on buffer lazy chopping for index overlay.
+     * @see groovy.json.JsonParserType
+     * @return  on or off
+     * @since 2.3
+     */
+    public boolean isLazyChop() {
+        return lazyChop;
+    }
+
+    /** Turns on buffer lazy chopping for index overlay.
+     * @see groovy.json.JsonParserType
+     * @return  JsonSlurper
+     * @since 2.3
+     */
+    public JsonSlurper setLazyChop(boolean lazyChop) {
+        this.lazyChop = lazyChop;
+        return this;
+    }
+
+    /**
+     * Determine if slurper will automatically parse strings it recognizes as dates. Index overlay only.
+     * @return on or off
+     * @since 2.3
+     */
+    public boolean isCheckDates() {
+        return checkDates;
+    }
+
+    /**
+     * Determine if slurper will automatically parse strings it recognizes as dates. Index overlay only.
+     * @return on or off
+     * @since 2.3
+     */
+    public JsonSlurper setCheckDates(boolean checkDates) {
+        this.checkDates = checkDates;
+        return this;
+    }
+
+    /**
+     * The maximum nesting depth of arrays/objects the parser will accept before throwing a
+     * {@link JsonException}. This guards the recursive-descent parsers against a small but
+     * deeply-nested document driving a {@link StackOverflowError}. A value of {@code 0} or less
+     * disables the check (restoring the previous, unbounded behaviour). Defaults to
+     * {@link org.apache.groovy.json.internal.BaseJsonParser#DEFAULT_MAX_NESTING_DEPTH}, and can
+     * be overridden globally with the {@code groovy.json.maxNestingDepth} system property.
+     *
+     * @return the maximum nesting depth
+     * @since 6.0.0
+     */
+    public int getMaxNestingDepth() {
+        return maxNestingDepth;
+    }
+
+    /**
+     * Sets the maximum nesting depth of arrays/objects the parser will accept before throwing a
+     * {@link JsonException}. A value of {@code 0} or less disables the check.
+     *
+     * @param maxNestingDepth maximum number of nested arrays/objects to allow
+     * @return this {@code JsonSlurper}
+     * @since 6.0.0
+     */
+    public JsonSlurper setMaxNestingDepth(int maxNestingDepth) {
+        this.maxNestingDepth = maxNestingDepth;
+        return this;
+    }
+
+    /**
+     * Parse a text representation of a JSON data structure
+     *
+     * @param text JSON text to parse
+     * @return a data structure of lists and maps
+     */
+    public Object parseText(String text) {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException("Text must not be null or empty");
+        }
+        return createParser().parse(text);
+    }
+
+    /**
+     * Parse a JSON data structure from content from a reader
+     *
+     * @param reader reader over a JSON content
+     * @return a data structure of lists and maps
+     */
+    public Object parse(Reader reader) {
+        if (reader == null) {
+            throw new IllegalArgumentException("Reader must not be null");
+        }
+
+        Object content;
+        JsonParser parser = createParser();
+        content = parser.parse(reader);
+        return content;
+    }
+
+    /**
+     * Parse a JSON data structure from content from an inputStream
+     *
+     * @param inputStream stream over a JSON content
+     * @return a data structure of lists and maps
+     * @since 2.3
+     */
+    public Object parse(InputStream inputStream) {
+        if (inputStream == null) {
+            throw new IllegalArgumentException("inputStream must not be null");
+        }
+
+        Object content;
+        JsonParser parser = createParser();
+        content = parser.parse(inputStream);
+        return content;
+    }
+
+    /**
+     * Parse a JSON data structure from content from an inputStream
+     *
+     * @param inputStream stream over a JSON content
+     * @param charset charset
+     * @return a data structure of lists and maps
+     * @since 2.3
+     */
+    public Object parse(InputStream inputStream, String charset) {
+        if (inputStream == null) {
+            throw new IllegalArgumentException("inputStream must not be null");
+        }
+        if (charset == null) {
+            throw new IllegalArgumentException("charset must not be null");
+        }
+
+        Object content;
+        content = createParser().parse(inputStream, charset);
+        return content;
+    }
+
+    /**
+     * Parse a JSON data structure from content from a byte array.
+     *
+     * @param bytes buffer of JSON content
+     * @param charset charset
+     * @return a data structure of lists and maps
+     * @since 2.3
+     */
+    public Object parse(byte [] bytes, String charset) {
+        if (bytes == null) {
+            throw new IllegalArgumentException("bytes must not be null");
+        }
+
+        if (charset == null) {
+            throw new IllegalArgumentException("charset must not be null");
+        }
+
+        Object content;
+        content = createParser().parse(bytes, charset);
+        return content;
+    }
+
+    /**
+     * Parse a JSON data structure from content from a byte array.
+     *
+     * @param bytes buffer of JSON content
+     * @return a data structure of lists and maps
+     * @since 2.3
+     */
+    public Object parse(byte [] bytes) {
+        if (bytes == null) {
+            throw new IllegalArgumentException("bytes must not be null");
+        }
+
+        Object content;
+        content = createParser().parse(bytes);
+        return content;
+    }
+
+    /**
+     * Parse a JSON data structure from content from a char array.
+     *
+     * @param chars buffer of JSON content
+     * @return a data structure of lists and maps
+     * @since 2.3
+     */
+    public Object parse(char [] chars) {
+        if (chars == null) {
+            throw new IllegalArgumentException("chars must not be null");
+        }
+
+        Object content;
+        content = createParser().parse(chars);
+        return content;
+    }
+
+    private JsonParser createParser() {
+        BaseJsonParser parser = switch (type) {
+            case LAX -> new JsonParserLax(false, chop, lazyChop, checkDates);
+            case CHAR_BUFFER -> new JsonParserCharArray();
+            case CHARACTER_SOURCE -> new JsonParserUsingCharacterSource();
+            case INDEX_OVERLAY -> new JsonFastParser(false, chop, lazyChop, checkDates);
+            default -> new JsonParserCharArray();
+        };
+        parser.setMaxNestingDepth(maxNestingDepth);
+        return parser;
+    }
+
+    /**
+     * Parse a JSON data structure from content within a given Path.
+     *
+     * @param path {@link Path} containing JSON content
+     * @return a data structure of lists and maps
+     */
+    public Object parse(Path path) throws IOException {
+        return parse(Files.newInputStream(path));
+    }
+
+    /**
+     * Parse a JSON data structure from content within a given Path.
+     *
+     * @param path {@link Path} containing JSON content
+     * @param charset the charset for this File
+     * @return a data structure of lists and maps
+     */
+    public Object parse(Path path, String charset) throws IOException {
+        return parse(Files.newInputStream(path), charset);
+    }
+
+    /**
+     * Parse a JSON data structure from content within a given File.
+     *
+     * @param file File containing JSON content
+     * @return a data structure of lists and maps
+     * @since 2.2.0
+     */
+    public Object parse(File file) {
+        return parseFile(file, null);
+    }
+
+    /**
+     * Parse a JSON data structure from content within a given File.
+     *
+     * @param file File containing JSON content
+     * @param charset the charset for this File
+     * @return a data structure of lists and maps
+     * @since 2.2.0
+     */
+    public Object parse(File file, String charset) {
+        return parseFile(file, charset);
+    }
+
+    private Object parseFile(File file, String charset) {
+        if (file.length() < maxSizeForInMemory) {
+            return createParser().parse(file, charset);
+        } else {
+            JsonParserUsingCharacterSource parser = new JsonParserUsingCharacterSource();
+            parser.setMaxNestingDepth(maxNestingDepth);
+            return parser.parse(file, charset);
+        }
+    }
+
+    /**
+     * Parse a JSON data structure from content at a given URL.
+     *
+     * @param url URL containing JSON content
+     * @return a data structure of lists and maps
+     * @since 2.2.0
+     */
+    public Object parse(URL url) {
+        return parseURL(url, null);
+    }
+
+    /**
+     * Parse a JSON data structure from content at a given URL.
+     *
+     * @param url URL containing JSON content
+     * @param params connection parameters
+     * @return a data structure of lists and maps
+     * @since 2.2.0
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public Object parse(URL url, Map params) {
+        return parseURL(url, params);
+    }
+
+    /**
+     * Parse a JSON data structure from content at a given URL. Convenience variant when using Groovy named parameters for the connection params.
+     *
+     * @param params connection parameters
+     * @param url URL containing JSON content
+     * @return a data structure of lists and maps
+     * @since 2.2.0
+     */
+    public Object parse(
+            @NamedParam(value = "connectTimeout", type = Integer.class)
+            @NamedParam(value = "readTimeout", type = Integer.class)
+            @NamedParam(value = "useCaches", type = Boolean.class)
+            @NamedParam(value = "allowUserInteraction", type = Boolean.class)
+            @NamedParam(value = "requestProperties", type = Map.class)
+            Map<String, ?> params,
+            URL url
+    ) {
+        return parseURL(url, params);
+    }
+
+    private Object parseURL(
+            URL url,
+            @NamedParam(value = "connectTimeout", type = Integer.class)
+            @NamedParam(value = "readTimeout", type = Integer.class)
+            @NamedParam(value = "useCaches", type = Boolean.class)
+            @NamedParam(value = "allowUserInteraction", type = Boolean.class)
+            @NamedParam(value = "requestProperties", type = Map.class)
+            Map<String, ?> params
+    ) {
+        Reader reader = null;
+        try {
+            if (params == null || params.isEmpty()) {
+                reader = ResourceGroovyMethods.newReader(url);
+            } else {
+                reader = ResourceGroovyMethods.newReader(url, params);
+            }
+            return createParser().parse(reader);
+        } catch (IOException ioe) {
+            throw new JsonException("Unable to process url: " + url.toString(), ioe);
+        } finally {
+            if (reader != null) {
+                DefaultGroovyMethodsSupport.closeWithWarning(reader);
+            }
+        }
+    }
+
+    /**
+     * Parse a JSON data structure from content at a given URL.
+     *
+     * @param url URL containing JSON content
+     * @param charset the charset for this File
+     * @return a data structure of lists and maps
+     * @since 2.2.0
+     */
+    public Object parse(URL url, String charset) {
+        return parseURL(url, null, charset);
+    }
+
+    /**
+     * Parse a JSON data structure from content at a given URL.
+     *
+     * @param url URL containing JSON content
+     * @param params connection parameters
+     * @param charset the charset for this File
+     * @return a data structure of lists and maps
+     * @since 2.2.0
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public Object parse(URL url, Map params, String charset) {
+        return parseURL(url, params, charset);
+    }
+
+    /**
+     * Parse a JSON data structure from content at a given URL. Convenience variant when using Groovy named parameters for the connection params.
+     *
+     * @param params connection parameters
+     * @param url URL containing JSON content
+     * @param charset the charset for this File
+     * @return a data structure of lists and maps
+     * @since 2.2.0
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public Object parse(Map params, URL url, String charset) {
+        return parseURL(url, params, charset);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private Object parseURL(URL url, Map params, String charset) {
+        Reader reader = null;
+        try {
+            if (params == null || params.isEmpty()) {
+                reader = ResourceGroovyMethods.newReader(url, charset);
+            } else {
+                reader = ResourceGroovyMethods.newReader(url, params, charset);
+            }
+            return parse(reader);
+        } catch (IOException ioe) {
+            throw new JsonException("Unable to process url: " + url.toString(), ioe);
+        } finally {
+            if (reader != null) {
+                DefaultGroovyMethodsSupport.closeWithWarning(reader);
+            }
+        }
+    }
+}

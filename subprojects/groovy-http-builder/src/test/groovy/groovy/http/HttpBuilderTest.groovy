@@ -1,0 +1,588 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy.http
+
+import com.sun.net.httpserver.HttpServer
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+
+import static org.junit.jupiter.api.Assertions.assertThrows
+
+import java.nio.charset.StandardCharsets
+import java.time.Duration
+import java.util.concurrent.atomic.AtomicReference
+
+class HttpBuilderTest {
+
+    private HttpServer server
+    private URI rootUri
+
+    @BeforeEach
+    void setup() {
+        server = HttpServer.create(new InetSocketAddress('127.0.0.1', 0), 0)
+        server.createContext('/hello') { exchange ->
+            String body = "method=${exchange.requestMethod};query=${exchange.requestURI.rawQuery};ua=${exchange.requestHeaders.getFirst('User-Agent')}"
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        server.createContext('/echo') { exchange ->
+            String requestBody = exchange.requestBody.getText(StandardCharsets.UTF_8.name())
+            String body = "method=${exchange.requestMethod};header=${exchange.requestHeaders.getFirst('X-Trace')};body=${requestBody}"
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(201, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        server.createContext('/json') { exchange ->
+            String requestBody = exchange.requestBody.getText(StandardCharsets.UTF_8.name())
+            String contentType = exchange.requestHeaders.getFirst('Content-Type')
+            String body = /{"ok":true,"contentType":"${contentType}","requestBody":${requestBody}}/
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.responseHeaders.add('Content-Type', 'application/json')
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        server.createContext('/xml') { exchange ->
+            String body = '<repo><name>groovy</name><license>Apache License 2.0</license></repo>'
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.responseHeaders.add('Content-Type', 'application/xml')
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        server.createContext('/plain') { exchange ->
+            String body = 'just text'
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.responseHeaders.add('Content-Type', 'text/plain')
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        server.createContext('/form') { exchange ->
+            String requestBody = exchange.requestBody.getText(StandardCharsets.UTF_8.name())
+            String contentType = exchange.requestHeaders.getFirst('Content-Type')
+            String body = "method=${exchange.requestMethod};contentType=${contentType};body=${requestBody}"
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        server.createContext('/html') { exchange ->
+            String body = '<!DOCTYPE html><html><head><link rel="preconnect" crossorigin></head><body><span class="b lic">Apache License 2.0</span></body></html>'
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.responseHeaders.add('Content-Type', 'text/html; charset=UTF-8')
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        server.createContext('/redirect-target') { exchange ->
+            String body = 'redirect reached'
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        server.createContext('/redirect-me') { exchange ->
+            exchange.responseHeaders.add('Location', '/redirect-target')
+            exchange.sendResponseHeaders(302, -1)
+            exchange.close()
+        }
+        server.start()
+        rootUri = URI.create("http://127.0.0.1:${server.address.port}/")
+    }
+
+    @AfterEach
+    void cleanup() {
+        server?.stop(0)
+    }
+
+    @Test
+    void getsWithBaseUriDefaultHeadersAndQueryDsl() {
+        HttpBuilder http = HttpBuilder.http {
+            baseUri rootUri
+            connectTimeout Duration.ofSeconds(2)
+            requestTimeout Duration.ofSeconds(2)
+            header 'User-Agent', 'groovy-http-builder-test'
+        }
+
+        HttpResult result = http.get('/hello') {
+            query lang: 'groovy', page: 1
+        }
+
+        assert result.status == 200
+        assert result.body.contains('method=GET')
+        assert result.body.contains('lang=groovy')
+        assert result.body.contains('page=1')
+        assert result.body.contains('ua=groovy-http-builder-test')
+    }
+
+    @Test
+    void getsUsingStringBaseUriFactoryWithoutClosureConfig() {
+        HttpBuilder http = HttpBuilder.http(rootUri.toString())
+
+        HttpResult result = http.get('/hello') {
+            query page: 1
+        }
+
+        assert result.status == 200
+        assert result.body.contains('method=GET')
+        assert result.body.contains('page=1')
+    }
+
+    @Test
+    void relativeUriWithoutBaseUriConfiguredThrows() {
+        HttpBuilder http = HttpBuilder.http {
+            header 'User-Agent', 'groovy-http-builder-test'
+        }
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException) {
+            http.get('/hello')
+        }
+
+        assert error.message == 'Request URI must be absolute when no baseUri is configured'
+    }
+
+    @Test
+    void omittedUriWithoutBaseUriConfiguredThrows() {
+        HttpBuilder http = HttpBuilder.http {
+            header 'User-Agent', 'groovy-http-builder-test'
+        }
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException) {
+            http.get()
+        }
+
+        assert error.message == 'URI must be provided when no baseUri is configured'
+    }
+
+    @Test
+    void relativeBaseUriConfiguredInClosureThrows() {
+        IllegalArgumentException error = assertThrows(IllegalArgumentException) {
+            HttpBuilder.http {
+                baseUri '/api'
+            }
+        }
+
+        assert error.message == 'baseUri must be an absolute URI with scheme and host'
+    }
+
+    @Test
+    void relativeBaseUriConfiguredViaStringFactoryThrows() {
+        IllegalArgumentException error = assertThrows(IllegalArgumentException) {
+            HttpBuilder.http('/api')
+        }
+
+        assert error.message == 'baseUri must be an absolute URI with scheme and host'
+    }
+
+    @Test
+    void queryDslUsesRfc3986StyleEncoding() {
+        HttpBuilder http = HttpBuilder.http(rootUri.toString())
+
+        HttpResult result = http.get('/hello') {
+            query 'sp ace', 'a b'
+            query 'plus', 'c+d'
+            query 'marks', '~*'
+            query 'empty', null
+        }
+
+        assert result.status == 200
+        assert result.body.contains('query=sp%20ace=a%20b&plus=c%2Bd&marks=~%2A&empty=')
+    }
+
+    @Test
+    void postsWithBodyAndPerRequestHeader() {
+        HttpBuilder http = HttpBuilder.http {
+            baseUri rootUri
+        }
+
+        HttpResult result = http.post('/echo') {
+            header 'X-Trace', 'trace-42'
+            text 'hello from DSL'
+        }
+
+        assert result.status == 201
+        assert result.body == 'method=POST;header=trace-42;body=hello from DSL'
+    }
+
+    @Test
+    void formHookEncodesBodyAndSetsDefaultContentType() {
+        HttpBuilder http = HttpBuilder.http(rootUri.toString())
+
+        HttpResult result = http.post('/form') {
+            form([username: 'admin', password: 'p@ss word'])
+        }
+
+        assert result.status == 200
+        assert result.body == 'method=POST;contentType=application/x-www-form-urlencoded;body=username=admin&password=p%40ss+word'
+    }
+
+    @Test
+    void perRequestHeaderOverridesDefaultHeader() {
+        HttpBuilder http = HttpBuilder.http {
+            baseUri rootUri
+            connectTimeout Duration.ofSeconds(2)
+            requestTimeout Duration.ofSeconds(2)
+            header 'User-Agent', 'default-ua'
+        }
+        HttpResult result = http.get('/hello') {
+            header 'User-Agent', 'overridden-ua'
+        }
+        assert result.status == 200
+        assert result.body.contains('ua=overridden-ua')
+        assert !result.body.contains('ua=default-ua')
+    }
+
+    @Test
+    void jsonHookSerializesRequestAndParsesResponse() {
+        HttpBuilder http = HttpBuilder.http {
+            baseUri rootUri
+        }
+
+        HttpResult result = http.post('/json') {
+            json([name: 'Groovy', version: 6])
+        }
+
+        assert result.status == 200
+        Map payload = (Map) result.getJson()
+        assert payload.ok == true
+        assert payload.contentType == 'application/json'
+        assert payload.requestBody.name == 'Groovy'
+        assert payload.requestBody.version == 6
+
+        Map parsed = (Map) result.parsed
+        assert parsed.ok == true
+    }
+
+    @Test
+    void xmlHookParsesResponseBody() {
+        HttpBuilder http = HttpBuilder.http(rootUri.toString())
+
+        HttpResult result = http.get('/xml')
+
+        assert result.status == 200
+        def xml = result.xml
+        assert xml.name.text() == 'groovy'
+        assert xml.license.text() == 'Apache License 2.0'
+
+        def parsed = result.parsed
+        assert parsed.name.text() == 'groovy'
+    }
+
+    @Test
+    void parsedFallsBackToRawBodyForUnsupportedContentType() {
+        HttpBuilder http = HttpBuilder.http(rootUri.toString())
+
+        HttpResult result = http.get('/plain')
+
+        assert result.status == 200
+        assert result.parsed == 'just text'
+    }
+
+    @Test
+    void htmlHookParsesMalformedHtmlViaJsoup() {
+        HttpBuilder http = HttpBuilder.http(rootUri.toString())
+
+        HttpResult result = http.get('/html')
+
+        assert result.status == 200
+        assert result.html.select('span.b.lic').text() == 'Apache License 2.0'
+        assert result.parsed.select('span.b.lic').text() == 'Apache License 2.0'
+    }
+
+    @Test
+    void followsRedirectsWhenFlagEnabled() {
+        HttpBuilder noRedirectClient = HttpBuilder.http {
+            baseUri rootUri
+        }
+        HttpResult noRedirect = noRedirectClient.get('/redirect-me')
+        assert noRedirect.status == 302
+
+        HttpBuilder redirectClient = HttpBuilder.http {
+            baseUri rootUri
+            followRedirects true
+        }
+        HttpResult redirected = redirectClient.get('/redirect-me')
+        assert redirected.status == 200
+        assert redirected.body == 'redirect reached'
+    }
+
+    @Test
+    void confineToBaseUriAllowsRequestsUnderTheBasePath() {
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+        }
+        server.createContext('/api/hello') { exchange ->
+            byte[] bytes = 'ok'.getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+
+        HttpResult result = http.get('hello')
+
+        assert result.status == 200
+        assert result.body == 'ok'
+    }
+
+    @Test
+    void confineToBaseUriRejectsAbsolutePathEscapingTheBasePath() {
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+        }
+
+        // absolute path replaces the whole path, walking out of /api/
+        assertThrows(SecurityException) { http.get('/admin') }
+    }
+
+    @Test
+    void confineToBaseUriRejectsDotDotTraversal() {
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/v2/"
+            confineToBaseUri true
+        }
+
+        assertThrows(SecurityException) { http.get('../v1/secrets') }
+    }
+
+    @Test
+    void confineToBaseUriRejectsAbsoluteCrossOriginUri() {
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+        }
+
+        assertThrows(SecurityException) { http.get('http://evil.example.com/api/steal') }
+    }
+
+    @Test
+    void confineToBaseUriRequiresABaseUri() {
+        assertThrows(IllegalArgumentException) {
+            HttpBuilder.http { confineToBaseUri true }
+        }
+    }
+
+    @Test
+    void confineToBaseUriFollowsSameOriginRedirectWithinBasePath() {
+        redirect('/api/start', 302, '/api/landing')
+        text('/api/landing', 'landed')
+
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+            followRedirects true
+        }
+
+        HttpResult result = http.get('start')
+
+        assert result.status == 200
+        assert result.body == 'landed'
+    }
+
+    @Test
+    void confineToBaseUriRejectsRedirectThatEscapesTheBasePath() {
+        redirect('/api/leave', 302, '/elsewhere')
+
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+            followRedirects true
+        }
+
+        assertThrows(SecurityException) { http.get('leave') }
+    }
+
+    @Test
+    void confineToBaseUriRejectsCrossOriginRedirect() {
+        redirect('/api/away', 302, 'http://another.invalid/api/landing')
+
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+            followRedirects true
+        }
+
+        assertThrows(SecurityException) { http.get('away') }
+    }
+
+    @Test
+    void confineToBaseUriFollowsRedirectDowngradingPostToGetOn303() {
+        redirect('/api/submit', 303, '/api/result')
+        server.createContext('/api/result') { exchange ->
+            byte[] bytes = "method=${exchange.requestMethod}".getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+            followRedirects true
+        }
+
+        HttpResult result = http.post('submit') { json([a: 1]) }
+
+        assert result.status == 200
+        assert result.body == 'method=GET'
+    }
+
+    @Test
+    void confineToBaseUriFollowsRedirectOnAsyncPath() {
+        redirect('/api/go', 302, '/api/done')
+        text('/api/done', 'async-landed')
+
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+            followRedirects true
+        }
+
+        HttpResult result = http.getAsync('go').get()
+
+        assert result.status == 200
+        assert result.body == 'async-landed'
+    }
+
+    @Test
+    void confineToBaseUriTreatsExplicitDefaultPortAsSameOrigin() {
+        // base omits the port (implicit 80); the request states :80 explicitly.
+        // These are the same origin once ports are normalized, so confinement
+        // must NOT reject the request. We cannot reach a live server on port 80
+        // from this test, so we only assert the failure (if any) is a connection
+        // error rather than a SecurityException from the confinement check.
+        HttpBuilder http = HttpBuilder.http {
+            baseUri 'http://127.0.0.1/api/'
+            confineToBaseUri true
+            connectTimeout Duration.ofMillis(250)
+        }
+
+        Throwable thrown = null
+        try {
+            http.get('http://127.0.0.1:80/api/hello')
+        } catch (Throwable t) {
+            thrown = t
+        }
+
+        assert !(thrown instanceof SecurityException),
+                'an explicit default port must be treated as the same origin, not a confinement escape'
+    }
+
+    @Test
+    void confineToBaseUriPreservesNonPostMethodAcrossRedirectOn301() {
+        // Aligns with HttpClient.Redirect.NORMAL: 301/302 downgrade only POST to
+        // GET; other methods (here PUT) keep their method and body.
+        redirect('/api/put-src', 301, '/api/put-dst')
+        server.createContext('/api/put-dst') { exchange ->
+            String requestBody = exchange.requestBody.getText(StandardCharsets.UTF_8.name())
+            byte[] bytes = "method=${exchange.requestMethod};body=${requestBody}".getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+            followRedirects true
+        }
+
+        HttpResult result = http.put('put-src') { json([a: 1]) }
+
+        assert result.status == 200
+        assert result.body == 'method=PUT;body={"a":1}'
+    }
+
+    @Test
+    void confineToBaseUriDowngradesPostToGetOn302() {
+        // The POST-to-GET downgrade on 301/302 is retained, matching NORMAL.
+        redirect('/api/post-src', 302, '/api/post-dst')
+        server.createContext('/api/post-dst') { exchange ->
+            byte[] bytes = "method=${exchange.requestMethod}".getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/"
+            confineToBaseUri true
+            followRedirects true
+        }
+
+        HttpResult result = http.post('post-src') { json([a: 1]) }
+
+        assert result.status == 200
+        assert result.body == 'method=GET'
+    }
+
+    @Test
+    void appendedQueryKeepsPercentEncodedPathSegments() {
+        AtomicReference<URI> seen = capture('/encoded')
+        HttpBuilder http = HttpBuilder.http { baseUri rootUri }
+
+        http.get('/encoded/a%2Fb') { query page: 1 }
+
+        assert seen.get().rawPath == '/encoded/a%2Fb'
+    }
+
+    @Test
+    void appendedQueryKeepsExistingEncodedQueryValues() {
+        AtomicReference<URI> seen = capture('/existing')
+        HttpBuilder http = HttpBuilder.http { baseUri rootUri }
+
+        http.get('/existing?filter=a%26admin%3D1') { query page: 1 }
+
+        assert seen.get().rawQuery == 'filter=a%26admin%3D1&page=1'
+    }
+
+    @Test
+    void confinedRequestWithQueryStaysInsideTheBasePath() {
+        AtomicReference<URI> seen = capture('/api')
+        HttpBuilder http = HttpBuilder.http {
+            baseUri "${rootUri}api/v2/"
+            confineToBaseUri true
+        }
+
+        http.get('..%2Fadmin') { query page: 1 }
+
+        assert seen.get().rawPath == '/api/v2/..%2Fadmin'
+    }
+
+    private AtomicReference<URI> capture(String path) {
+        AtomicReference<URI> seen = new AtomicReference<>()
+        server.createContext(path) { exchange ->
+            seen.set(exchange.requestURI)
+            byte[] bytes = 'ok'.getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+        seen
+    }
+
+    private void redirect(String path, int status, String location) {
+        server.createContext(path) { exchange ->
+            exchange.responseHeaders.add('Location', location)
+            exchange.sendResponseHeaders(status, -1)
+            exchange.close()
+        }
+    }
+
+    private void text(String path, String body) {
+        server.createContext(path) { exchange ->
+            byte[] bytes = body.getBytes(StandardCharsets.UTF_8)
+            exchange.sendResponseHeaders(200, bytes.length)
+            exchange.responseBody.withCloseable { it.write(bytes) }
+        }
+    }
+}

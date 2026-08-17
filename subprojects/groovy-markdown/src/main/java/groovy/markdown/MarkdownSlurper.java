@@ -1,0 +1,427 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy.markdown;
+
+import org.apache.groovy.lang.annotation.Incubating;
+import org.commonmark.node.BlockQuote;
+import org.commonmark.node.BulletList;
+import org.commonmark.node.Code;
+import org.commonmark.node.Emphasis;
+import org.commonmark.node.FencedCodeBlock;
+import org.commonmark.node.HardLineBreak;
+import org.commonmark.node.Heading;
+import org.commonmark.node.HtmlBlock;
+import org.commonmark.node.HtmlInline;
+import org.commonmark.node.Image;
+import org.commonmark.node.IndentedCodeBlock;
+import org.commonmark.node.Link;
+import org.commonmark.node.ListItem;
+import org.commonmark.node.Node;
+import org.commonmark.node.OrderedList;
+import org.commonmark.node.Paragraph;
+import org.commonmark.node.SoftLineBreak;
+import org.commonmark.node.StrongEmphasis;
+import org.commonmark.node.Text;
+import org.commonmark.node.ThematicBreak;
+import org.commonmark.parser.Parser;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+/**
+ * Parses <a href="https://commonmark.org/">CommonMark</a> Markdown into a
+ * {@link MarkdownDocument} backed by nested lists and maps.
+ * <p>
+ * Usage:
+ * <pre><code class="language-groovy groovyTestCase">
+ * def doc = new groovy.markdown.MarkdownSlurper().parseText('# Hello')
+ * assert doc.headings[0].text == 'Hello'
+ * </code></pre>
+ *
+ * GFM-style tables are supported via an optional extension. Call
+ * {@link #enableTables(boolean) enableTables(true)} after adding
+ * {@code org.commonmark:commonmark-ext-gfm-tables} to the runtime classpath.
+ *
+ * <h2>Untrusted input</h2>
+ * Prefer parsing Markdown from trusted sources. Like the sibling {@code JsonSlurper} and
+ * {@code XmlSlurper}, this is a convenience parser, not a security boundary, and the safest
+ * posture is not to feed it attacker-controlled input. If you must, bound the input by size
+ * yourself before parsing and treat the parsed result defensively.
+ * <p>
+ * As a backstop for that case, a small but deeply nested document &mdash; which could otherwise
+ * drive a recursive parse into a {@link StackOverflowError} &mdash; is reported as a
+ * {@link MarkdownRuntimeException} rather than a raw {@link Error}. There are two independent
+ * vectors, on opposite sides of the CommonMark boundary, and both are covered:
+ * <ul>
+ *   <li><b>Block/container nesting</b> (e.g. {@code '>' * 50000}). CommonMark parses
+ *       blocks iteratively and returns a very deep tree; the overflow would happen in
+ *       this slurper's own recursive walk. {@link #setMaxNestingDepth(int) maxNestingDepth}
+ *       bounds this at parse time (via CommonMark's {@code maxOpenBlockParsers}) and rejects
+ *       any document nested deeper than the limit.</li>
+ *   <li><b>Inline emphasis nesting</b> (e.g. {@code ('*' * 50000) + 'a' + ('*' * 50000)}).
+ *       Bounded at parse time via CommonMark's {@code maxInlineNesting} (aligned with
+ *       {@link #setMaxNestingDepth(int) maxNestingDepth}); over-limit nesting is degraded to
+ *       plain text and the resulting tree is then rejected by the same depth check used for
+ *       blocks. A {@link StackOverflowError} catch remains as a last-resort backstop if the
+ *       limit is disabled.</li>
+ * </ul>
+ * This nesting cap is a robustness backstop, not a licence to treat the parser as hardened.
+ *
+ * @since 6.0.0
+ */
+@Incubating
+public class MarkdownSlurper {
+
+    private static final String TABLES_EXT_CLASS = "org.commonmark.ext.gfm.tables.TablesExtension";
+
+    /**
+     * Default maximum nesting depth of block/inline elements accepted before a
+     * {@link MarkdownRuntimeException} is thrown. Matches the default nesting cap of the
+     * sibling {@code JsonSlurper}.
+     */
+    public static final int DEFAULT_MAX_NESTING_DEPTH = 1000;
+
+    private boolean tablesEnabled;
+
+    /**
+     * Maximum nesting depth permitted while converting a parsed document. A value of {@code 0}
+     * or less disables the check. Defaults to {@link #DEFAULT_MAX_NESTING_DEPTH}, overridable
+     * globally via the {@code groovy.markdown.maxNestingDepth} system property.
+     */
+    private int maxNestingDepth = Integer.getInteger("groovy.markdown.maxNestingDepth", DEFAULT_MAX_NESTING_DEPTH);
+
+    /**
+     * Returns the maximum block/container and inline nesting depth the parser will accept.
+     *
+     * @return the maximum nesting depth, or a value {@code <= 0} when the limit is disabled
+     */
+    public int getMaxNestingDepth() {
+        return maxNestingDepth;
+    }
+
+    /**
+     * Sets the maximum block/container and inline nesting depth. Over-limit nesting is bounded at
+     * parse time (via CommonMark's {@code maxOpenBlockParsers} and {@code maxInlineNesting}) and
+     * rejected with a {@link MarkdownRuntimeException}. A value of {@code 0} or less disables the
+     * limit (CommonMark's caps are raised to {@link Integer#MAX_VALUE}); a
+     * {@link StackOverflowError} from pathological input is still reported as a
+     * {@link MarkdownRuntimeException}.
+     *
+     * @param maxNestingDepth maximum number of nested elements to allow
+     */
+    public void setMaxNestingDepth(int maxNestingDepth) {
+        this.maxNestingDepth = maxNestingDepth;
+    }
+
+    /**
+     * Enable GFM-style tables. Requires {@code commonmark-ext-gfm-tables} on the classpath.
+     *
+     * @param enable whether to enable table parsing
+     * @return this slurper for chaining
+     * @throws MarkdownRuntimeException if {@code enable} is true but the extension jar is missing
+     */
+    public MarkdownSlurper enableTables(boolean enable) {
+        if (enable) {
+            try {
+                Class.forName(TABLES_EXT_CLASS);
+            } catch (ClassNotFoundException | LinkageError e) {
+                throw new MarkdownRuntimeException(
+                        "GFM tables extension not on classpath. Add 'org.commonmark:commonmark-ext-gfm-tables' to enable tables.",
+                        e);
+            }
+        }
+        this.tablesEnabled = enable;
+        return this;
+    }
+
+    /**
+     * Parses Markdown text into a {@link MarkdownDocument}.
+     *
+     * @param md the Markdown text to parse
+     * @return the parsed document, or an empty document when the input is null or empty
+     */
+    public MarkdownDocument parseText(String md) {
+        if (md == null || md.isEmpty()) {
+            return new MarkdownDocument(List.of());
+        }
+        return parse(new StringReader(md));
+    }
+
+    /**
+     * Parses Markdown content from a reader.
+     *
+     * @param reader the reader supplying Markdown content
+     * @return the parsed document
+     */
+    public MarkdownDocument parse(Reader reader) {
+        try {
+            Node doc = buildParser().parseReader(reader);
+            checkNestingDepth(doc);
+            return new MarkdownDocument(blocksToList(doc));
+        } catch (StackOverflowError e) {
+            // Last-resort backstop when the nesting limit is disabled (maxNestingDepth <= 0) or
+            // some other recursive path still overflows. CommonMark 0.30+ caps inline nesting via
+            // maxInlineNesting (wired in buildParser), so the historical ('*' * N) + 'a' + ('*' * N)
+            // vector no longer reaches here under the default limit. Catching the Error is safe:
+            // parse() builds a fresh parser and tree per call, so a half-unwound stack leaves no
+            // shared state to corrupt.
+            //
+            // The catch body must do near-zero work: the stack is still near-exhausted here, so
+            // constructing the exception inline (its stack-trace capture needs headroom) overflows
+            // again. Breaking out and throwing below, after the try frame has unwound, is safe.
+        } catch (IOException e) {
+            throw new MarkdownRuntimeException(e);
+        }
+        // Reached only via the StackOverflowError path, with the deep frames now unwound.
+        throw new MarkdownRuntimeException("Markdown input is too deeply nested to parse");
+    }
+
+    /**
+     * Parses Markdown content from an input stream. The caller remains
+     * responsible for closing the stream.
+     *
+     * @param stream the input stream supplying Markdown content
+     * @return the parsed document
+     */
+    public MarkdownDocument parse(InputStream stream) {
+        return parse(new InputStreamReader(stream, StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Parses Markdown content from a file.
+     *
+     * @param file the file to read
+     * @return the parsed document
+     * @throws IOException if the file cannot be read
+     */
+    public MarkdownDocument parse(File file) throws IOException {
+        return parse(file.toPath());
+    }
+
+    /**
+     * Parses Markdown content from a path.
+     *
+     * @param path the path to read
+     * @return the parsed document
+     * @throws IOException if the path cannot be read
+     */
+    public MarkdownDocument parse(Path path) throws IOException {
+        try (InputStream stream = Files.newInputStream(path)) {
+            return parse(new InputStreamReader(stream, StandardCharsets.UTF_8));
+        }
+    }
+
+    private Parser buildParser() {
+        Parser.Builder b = Parser.builder();
+        if (maxNestingDepth > 0) {
+            // Bound block/container and inline nesting at parse time so CommonMark returns a
+            // shallow tree (excess nesting degrades to text) regardless of input depth. This keeps
+            // parse-time memory/CPU bounded and the subsequent recursive walk safe. The caps are
+            // expressed in open-block-parser / inline-nesting units, ~2 shallower than the resulting
+            // AST depth (Document / Paragraph wrapping), so an over-limit document still parses
+            // deeper than maxNestingDepth and is then rejected by checkNestingDepth rather than
+            // being silently truncated. CommonMark 0.30+ defaults both to 100; we raise them to
+            // maxNestingDepth so the slurper's single limit controls both vectors.
+            b.maxOpenBlockParsers(maxNestingDepth);
+            b.maxInlineNesting(maxNestingDepth);
+        } else {
+            // Limit disabled: remove CommonMark's built-in defaults (100 as of 0.30) so that
+            // maxNestingDepth <= 0 is a true "no cap". Pathological input may then StackOverflow;
+            // parse() converts that to MarkdownRuntimeException.
+            b.maxOpenBlockParsers(Integer.MAX_VALUE);
+            b.maxInlineNesting(Integer.MAX_VALUE);
+        }
+        if (tablesEnabled) {
+            b.extensions(TableSupport.extensions());
+        }
+        return b.build();
+    }
+
+    /**
+     * Verifies that no node in the parsed tree is nested deeper than {@link #maxNestingDepth} and
+     * throws a {@link MarkdownRuntimeException} otherwise. The walk that builds the result
+     * ({@link #blocksToList}/{@link #nodeToMap}, and the text extraction in {@link #appendText})
+     * recurses once per nesting level, so a deeply nested document would overflow the stack; this
+     * iterative pre-check fails fast instead, mirroring the nesting-depth cap of the sibling
+     * {@code JsonSlurper}. {@code buildParser()} already caps block and inline nesting at parse
+     * time, so an over-limit document arrives here bounded to {@code maxNestingDepth}-ish nodes —
+     * still deeper than the limit (by Document / Paragraph wrapping), so it is rejected here.
+     *
+     * @param root the root node of the parsed document
+     */
+    private void checkNestingDepth(Node root) {
+        if (maxNestingDepth <= 0) {
+            return;
+        }
+        List<Node> nodes = new ArrayList<>();
+        List<Integer> depths = new ArrayList<>();
+        for (Node child = root.getFirstChild(); child != null; child = child.getNext()) {
+            nodes.add(child);
+            depths.add(1);
+        }
+        while (!nodes.isEmpty()) {
+            Node node = nodes.remove(nodes.size() - 1);
+            int depth = depths.remove(depths.size() - 1);
+            if (depth > maxNestingDepth) {
+                throw new MarkdownRuntimeException("Maximum Markdown nesting depth of " + maxNestingDepth + " exceeded");
+            }
+            for (Node child = node.getFirstChild(); child != null; child = child.getNext()) {
+                nodes.add(child);
+                depths.add(depth + 1);
+            }
+        }
+    }
+
+    private List<Map<String, Object>> blocksToList(Node parent) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Node n = parent.getFirstChild(); n != null; n = n.getNext()) {
+            result.add(nodeToMap(n));
+        }
+        return result;
+    }
+
+    private Map<String, Object> nodeToMap(Node node) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        if (node instanceof Heading h) {
+            m.put("type", "heading");
+            m.put("level", h.getLevel());
+            m.put("text", textOf(h));
+            m.put("children", blocksToList(h));
+        } else if (node instanceof Paragraph) {
+            m.put("type", "paragraph");
+            m.put("children", blocksToList(node));
+        } else if (node instanceof FencedCodeBlock fcb) {
+            m.put("type", "code_block");
+            m.put("lang", fcb.getInfo() == null ? "" : fcb.getInfo());
+            m.put("text", fcb.getLiteral());
+        } else if (node instanceof IndentedCodeBlock) {
+            m.put("type", "code_block");
+            m.put("lang", "");
+            m.put("text", ((IndentedCodeBlock) node).getLiteral());
+        } else if (node instanceof BulletList) {
+            m.put("type", "list");
+            m.put("ordered", false);
+            m.put("items", listItems(node));
+        } else if (node instanceof OrderedList ol) {
+            m.put("type", "list");
+            m.put("ordered", true);
+            Integer start = ol.getMarkerStartNumber();
+            m.put("start", start == null ? 1 : start);
+            m.put("items", listItems(node));
+        } else if (node instanceof ListItem) {
+            m.put("type", "list_item");
+            m.put("text", textOf(node));
+            m.put("children", blocksToList(node));
+        } else if (node instanceof BlockQuote) {
+            m.put("type", "block_quote");
+            m.put("children", blocksToList(node));
+        } else if (node instanceof ThematicBreak) {
+            m.put("type", "thematic_break");
+        } else if (node instanceof HtmlBlock) {
+            m.put("type", "html_block");
+            m.put("text", ((HtmlBlock) node).getLiteral());
+        } else if (node instanceof HtmlInline) {
+            m.put("type", "html_inline");
+            m.put("text", ((HtmlInline) node).getLiteral());
+        } else if (node instanceof Text) {
+            m.put("type", "text");
+            m.put("value", ((Text) node).getLiteral());
+        } else if (node instanceof Code) {
+            m.put("type", "inline_code");
+            m.put("text", ((Code) node).getLiteral());
+        } else if (node instanceof Emphasis) {
+            m.put("type", "emphasis");
+            m.put("children", blocksToList(node));
+        } else if (node instanceof StrongEmphasis) {
+            m.put("type", "strong");
+            m.put("children", blocksToList(node));
+        } else if (node instanceof Link l) {
+            m.put("type", "link");
+            m.put("href", l.getDestination());
+            m.put("title", l.getTitle());
+            m.put("text", textOf(l));
+            m.put("children", blocksToList(l));
+        } else if (node instanceof Image img) {
+            m.put("type", "image");
+            m.put("src", img.getDestination());
+            m.put("title", img.getTitle());
+            m.put("alt", textOf(img));
+        } else if (node instanceof HardLineBreak) {
+            m.put("type", "hard_line_break");
+        } else if (node instanceof SoftLineBreak) {
+            m.put("type", "soft_line_break");
+        } else {
+            if (tablesEnabled) {
+                Map<String, Object> tableMap = TableSupport.tryConvertTable(node);
+                if (tableMap != null) return tableMap;
+            }
+            m.put("type", node.getClass().getSimpleName().toLowerCase(Locale.ROOT));
+            List<Map<String, Object>> children = blocksToList(node);
+            if (!children.isEmpty()) m.put("children", children);
+        }
+        return m;
+    }
+
+    private List<Map<String, Object>> listItems(Node listNode) {
+        List<Map<String, Object>> items = new ArrayList<>();
+        for (Node n = listNode.getFirstChild(); n != null; n = n.getNext()) {
+            if (n instanceof ListItem) items.add(nodeToMap(n));
+        }
+        return items;
+    }
+
+    /**
+     * Extracts the plain-text content represented by the supplied node and
+     * its descendants.
+     *
+     * @param node the node to flatten
+     * @return the extracted text
+     */
+    static String textOf(Node node) {
+        StringBuilder sb = new StringBuilder();
+        appendText(node, sb);
+        return sb.toString();
+    }
+
+    private static void appendText(Node node, StringBuilder sb) {
+        for (Node n = node.getFirstChild(); n != null; n = n.getNext()) {
+            if (n instanceof Text) {
+                sb.append(((Text) n).getLiteral());
+            } else if (n instanceof Code) {
+                sb.append(((Code) n).getLiteral());
+            } else if (n instanceof HardLineBreak || n instanceof SoftLineBreak) {
+                sb.append(' ');
+            } else {
+                appendText(n, sb);
+            }
+        }
+    }
+}

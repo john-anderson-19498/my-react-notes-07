@@ -1,0 +1,93 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.codehaus.groovy.classgen.asm.sc.bugs
+
+import groovy.transform.stc.StaticTypeCheckingTestCase
+import org.codehaus.groovy.classgen.asm.sc.StaticCompilationTestSupport
+import org.junit.jupiter.api.RepeatedTest
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty
+
+import static org.junit.jupiter.api.Assertions.fail
+import org.codehaus.groovy.control.CompilerConfiguration;
+
+final class ReproducibleBytecodeBugs extends StaticTypeCheckingTestCase implements StaticCompilationTestSupport {
+
+    // GROOVY-8142
+    @RepeatedTest(100)
+    void testShouldProduceDeterministicBytecode() {
+        assertScript '''
+            interface Project {
+                File file()
+            }
+            interface FileOperations {
+                File file()
+            }
+            interface ProjectInternal extends Project, FileOperations {
+            }
+            class Check {
+                void test(ProjectInternal p) {
+                    def f = p.file()
+                }
+            }
+
+            def c = new Check()
+        '''
+
+        assert astTrees['Check'][1].contains('INVOKEINTERFACE FileOperations.file ()Ljava/io/File;')
+    }
+
+    // GROOVY-8148
+    @DisabledIfSystemProperty(named = CompilerConfiguration.CLOSURE_PACKING, matches = 'true',
+        disabledReason = 'asserts the pre-pack generated closure-class bytecode shape; superseded when GEP-27 closure packing is enabled')
+    @RepeatedTest(100)
+    void testShouldAlwaysAddClosureSharedVariablesInSameOrder() {
+        assertScript '''
+            class Check {
+                void test() {
+                    def xx = true
+                    def moot = "bar"
+                    def kr = [:]
+                    def zorg = []
+                    def cl = {
+                        def (x,y,z,t) = [xx, moot, kr , zorg]
+                    }
+                }
+            }
+
+            def c = new Check()
+        '''
+
+        def bytecode = astTrees['Check$_test_closure1'][1]
+        assertOrdered bytecode,
+                'PUTFIELD Check$_test_closure1.xx',
+                'PUTFIELD Check$_test_closure1.moot',
+                'PUTFIELD Check$_test_closure1.kr',
+                'PUTFIELD Check$_test_closure1.zorg'
+    }
+
+    private static void assertOrdered(String bytecode, String... strings) {
+        int start = 0
+        strings.eachWithIndex { string, index ->
+            start = bytecode.indexOf(string, start)
+            if (start == -1) {
+                fail("Element [$string] not found in order (expected to find it at index $index)")
+            }
+        }
+    }
+}

@@ -1,0 +1,231 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy.xml
+
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+
+import static org.junit.jupiter.api.Assertions.assertEquals
+
+
+class XmlNodePrinterTest {
+
+    StringWriter writer
+    PrintWriter pw
+    XmlNodePrinter printer
+    XmlParser parser
+
+    def namespaceInput = """\
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <Locator xmlns="http://www.foo.com/webservices/AddressBook">
+      <Address>
+        1000 Main St
+      </Address>
+    </Locator>
+  </soap:Body>
+</soap:Envelope>
+"""
+
+    def attributeWithNamespaceInput = """\
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <Locator xmlns="http://www.foo.com/webservices/AddressBook">
+      <Address ns1:type="Home" xmlns:ns1="http://www.foo.com/webservices/Address" ns2:country="AU" xmlns:ns2="http://www.foo.com/webservices/Address">
+        1000 Main St
+      </Address>
+    </Locator>
+  </soap:Body>
+</soap:Envelope>
+"""
+
+    def namespaceWithSpecialUriInput = """\
+<foo:Envelope xmlns:foo="http://x/a?b=1&amp;c=2&lt;d">
+  <foo:Body>text</foo:Body>
+</foo:Envelope>
+"""
+
+    def namespaceWithSpecialUriOutput = """\
+<foo:Envelope xmlns:foo="http://x/a?b=1&amp;c=2&lt;d">
+  <foo:Body>
+    text
+  </foo:Body>
+</foo:Envelope>
+"""
+
+    def noNamespaceInputVerbose = """\
+<Envelope>
+  <Body>
+    <Locator>
+      <Address>
+        1000 Main St
+      </Address>
+    </Locator>
+  </Body>
+</Envelope>
+"""
+
+    def noNamespaceInputCompact = """\
+<Envelope>
+  <Body>
+    <Locator>
+      <Address>1000 Main St</Address>
+    </Locator>
+  </Body>
+</Envelope>
+"""
+
+    def attributeInput = """<Field Text="&lt;html&gt;&quot;Some &apos;Text&apos;&quot;&lt;/html&gt;" />"""
+    def attributeExpectedOutputQuot = """<Field Text="&lt;html&gt;&quot;Some 'Text'&quot;&lt;/html&gt;"/>\n"""
+    def attributeExpectedOutputApos = """<Field Text='&lt;html&gt;"Some &apos;Text&apos;"&lt;/html&gt;'/>\n"""
+
+    def tagWithSpecialChars = """<Field>\n  &lt;&amp;&gt;'"\n</Field>\n"""
+
+    def attributeWithNewlineInput = "<Field Text=\"Some&#10;Text&#10;&#13;\"/>"
+    def attributeWithNewlineExpectedOutput = "<Field Text=\"Some&#10;Text&#10;&#13;\"/>\n"
+
+    def emptyTagExpanded = "<tag></tag>\n"
+    def emptyTagCompact = "<tag/>\n"
+
+    @BeforeEach
+    void setUp() {
+        writer = new StringWriter()
+        pw = new PrintWriter(writer)
+        printer = new XmlNodePrinter(pw, "  ")
+        parser = new XmlParser()
+        parser.setTrimWhitespace(true)
+    }
+
+    private void setUpNoindentingPrinter() {
+        printer = new XmlNodePrinter(new IndentPrinter(pw, "", false))
+        printer.preserveWhitespace = true
+    }
+
+    @Test
+    void namespacesDefault() {
+        checkRoundtrip namespaceInput, namespaceInput
+    }
+
+    @Test
+    void namespacesPreserving() {
+        parser.trimWhitespace = false
+        parser.keepIgnorableWhitespace = true
+        setUpNoindentingPrinter()
+        checkRoundtrip namespaceInput, namespaceInput.trim()
+    }
+
+    @Test
+    void namespacesDisabledOnParsing() {
+        parser = new XmlParser(false, false)
+        parser.trimWhitespace = true
+        checkRoundtrip namespaceInput, namespaceInput
+    }
+
+    @Test
+    void namespacesDisabledOnPrinting() {
+        printer.namespaceAware = false
+        checkRoundtrip namespaceInput, noNamespaceInputVerbose
+    }
+
+    @Test
+    void withoutNamespacesVerboseInDefaultOut() {
+        checkRoundtrip noNamespaceInputVerbose, noNamespaceInputVerbose
+    }
+
+    @Test
+    void withoutNamespacesVerbosePreserving() {
+        parser.trimWhitespace = false
+        parser.keepIgnorableWhitespace = true
+        setUpNoindentingPrinter()
+        checkRoundtrip noNamespaceInputVerbose, noNamespaceInputVerbose.trim()
+    }
+
+    @Test
+    void withoutNamespacesVerboseInPreserveOut() {
+        printer.preserveWhitespace = true
+        checkRoundtrip noNamespaceInputVerbose, noNamespaceInputCompact
+    }
+
+    @Test
+    void withoutNamespacesCompactInPreserveOut() {
+        printer.preserveWhitespace = true
+        checkRoundtrip noNamespaceInputCompact, noNamespaceInputCompact
+    }
+
+    @Test
+    void noExpandOfEmptyElements() {
+        checkRoundtrip emptyTagExpanded, emptyTagCompact
+    }
+
+    @Test
+    void expandEmptyElements() {
+        printer.expandEmptyElements = true
+        checkRoundtrip emptyTagExpanded, emptyTagExpanded
+    }
+
+    @Test
+    void withoutNamespacesCompactInDefaultOut() {
+        checkRoundtrip noNamespaceInputCompact, noNamespaceInputVerbose
+    }
+
+    @Test
+    void attributeWithQuot() {
+        printer = new XmlNodePrinter(pw, "  ", "\"")
+        checkRoundtrip attributeInput, attributeExpectedOutputQuot
+    }
+
+    @Test
+    void attributeWithApos() {
+        printer = new XmlNodePrinter(pw, "  ", "'")
+        checkRoundtrip attributeInput, attributeExpectedOutputApos
+    }
+
+    @Test
+    void attributeWithNewline() {
+        checkRoundtrip attributeWithNewlineInput, attributeWithNewlineExpectedOutput
+    }
+
+    @Test
+    void contentWithSpecialSymbolsApos() {
+        printer = new XmlNodePrinter(pw, "  ", "'")
+        checkRoundtrip tagWithSpecialChars, tagWithSpecialChars
+    }
+
+    @Test
+    void contentWithSpecialSymbolsQuot() {
+        printer = new XmlNodePrinter(pw, "  ", "\"")
+        checkRoundtrip tagWithSpecialChars, tagWithSpecialChars
+    }
+
+    @Test
+    void attributeWithNamespaceInput() {
+        checkRoundtrip attributeWithNamespaceInput, attributeWithNamespaceInput
+    }
+
+    @Test
+    void namespaceUriWithSpecialCharsEscaped() {
+        checkRoundtrip namespaceWithSpecialUriInput, namespaceWithSpecialUriOutput
+    }
+
+    private checkRoundtrip(String intext, String outtext) {
+        def root = parser.parseText(intext)
+        printer.print(root)
+        assertEquals outtext, writer.toString()
+    }
+}

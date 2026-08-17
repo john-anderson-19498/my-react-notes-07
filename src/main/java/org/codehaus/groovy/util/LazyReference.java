@@ -1,0 +1,101 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.codehaus.groovy.util;
+
+import java.io.Serial;
+
+/**
+ * Soft reference with lazy initialization under lock
+ */
+public abstract class LazyReference<T> extends LockableObject {
+    private static final ManagedReference INIT = new ManagedReference(ReferenceType.HARD,null,null){};
+    private static final ManagedReference NULL_REFERENCE = new ManagedReference(ReferenceType.HARD,null,null){};
+    @Serial private static final long serialVersionUID = -828564509716680325L;
+    private ManagedReference<T> reference = INIT;
+    private final ReferenceBundle bundle;
+
+    /**
+     * Creates a lazily initialized reference that stores computed values using the supplied bundle.
+     *
+     * @param bundle the reference strategy to use after initialization
+     */
+    public LazyReference(ReferenceBundle bundle) {
+        this.bundle = bundle;
+    }
+
+    /**
+     * Returns the current value, initializing or recreating it when necessary.
+     *
+     * @return the current value, which may be {@code null}
+     */
+    public T get() {
+        ManagedReference<T> resRef = reference;
+        if (resRef == INIT) return getLocked(false);
+        if (resRef == NULL_REFERENCE) return null;
+        T res = resRef.get();
+        // res== null means it got collected
+        if (res==null) return getLocked(true);
+        return res;
+    }
+
+    private T getLocked (boolean force) {
+        lock ();
+        try {
+            ManagedReference<T> resRef = reference;
+            if (!force && resRef != INIT) return resRef.get();
+            T res = initValue();
+            if (res == null) {
+                reference = NULL_REFERENCE;
+            } else {
+                reference = new ManagedReference<T>(bundle,res);
+            }
+            return res;
+        } finally {
+            unlock();
+        }
+    }
+
+    /**
+     * Discards the cached state so the next {@link #get()} call recomputes it.
+     */
+    public void clear() {
+        reference = INIT;
+    }
+
+    /**
+     * Computes the value to cache for future {@link #get()} calls.
+     *
+     * @return the value to cache, or {@code null} to cache a null result
+     */
+    public abstract T initValue();
+
+    /**
+     * Returns the current cached value as a string, or {@code <null>} when no value is available.
+     *
+     * @return a string form of the cached value
+     */
+    @Override
+    public String toString() {
+        T res = reference.get();
+        if (res == null)
+          return "<null>";
+        else
+          return res.toString();
+    }
+}

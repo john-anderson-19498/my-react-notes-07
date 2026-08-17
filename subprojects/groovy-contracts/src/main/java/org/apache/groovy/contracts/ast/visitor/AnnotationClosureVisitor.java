@@ -1,0 +1,860 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.apache.groovy.contracts.ast.visitor;
+
+import groovy.contracts.Ensures;
+import groovy.contracts.Requires;
+import org.apache.groovy.contracts.ClassInvariantViolation;
+import org.apache.groovy.contracts.PostconditionViolation;
+import org.apache.groovy.contracts.PreconditionViolation;
+import org.apache.groovy.contracts.annotations.meta.ContractElement;
+import org.apache.groovy.contracts.annotations.meta.Postcondition;
+import org.apache.groovy.contracts.classgen.asm.ContractClosureWriter;
+import org.apache.groovy.contracts.generation.AssertStatementCreationUtility;
+import org.apache.groovy.contracts.generation.CandidateChecks;
+import org.apache.groovy.contracts.generation.TryCatchBlockGenerator;
+import org.apache.groovy.contracts.util.AnnotationUtils;
+import org.apache.groovy.contracts.util.ExpressionUtils;
+import org.apache.groovy.contracts.util.FieldValues;
+import org.apache.groovy.contracts.util.Validate;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
+import org.codehaus.groovy.ast.ClassCodeExpressionTransformer;
+import org.codehaus.groovy.ast.ClassCodeVisitorSupport;
+import org.codehaus.groovy.ast.ClassHelper;
+import org.codehaus.groovy.ast.ClassNode;
+import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
+import org.codehaus.groovy.ast.TransformingCodeVisitor;
+import org.codehaus.groovy.ast.Variable;
+import org.codehaus.groovy.ast.VariableScope;
+import org.codehaus.groovy.ast.expr.BinaryExpression;
+import org.codehaus.groovy.ast.expr.BooleanExpression;
+import org.codehaus.groovy.ast.expr.CastExpression;
+import org.codehaus.groovy.ast.expr.ClosureExpression;
+import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
+import org.codehaus.groovy.ast.expr.Expression;
+import org.codehaus.groovy.ast.expr.ExpressionTransformer;
+import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.PostfixExpression;
+import org.codehaus.groovy.ast.expr.PrefixExpression;
+import org.codehaus.groovy.ast.expr.PropertyExpression;
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.EmptyStatement;
+import org.codehaus.groovy.ast.stmt.ReturnStatement;
+import org.codehaus.groovy.classgen.VariableScopeVisitor;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.control.io.ReaderSource;
+import org.codehaus.groovy.syntax.Token;
+import org.codehaus.groovy.syntax.Types;
+import org.codehaus.groovy.transform.stc.StaticTypesMarker;
+import org.objectweb.asm.Opcodes;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.codehaus.groovy.ast.tools.GeneralUtils.args;
+import static org.codehaus.groovy.ast.tools.GeneralUtils.callX;
+import static org.codehaus.groovy.ast.tools.GeneralUtils.classX;
+import static org.codehaus.groovy.ast.tools.GeneralUtils.constX;
+
+/**
+ * Visits interfaces &amp; classes and looks for <tt>@Requires</tt> or <tt>@Ensures</tt> and creates {@link groovy.lang.Closure}
+ * classes for the annotation closures.<p/>
+ * <p>
+ * The annotation closure classes are used later on to check interface contract pre- and post-conditions in
+ * implementation classes.
+ *
+ * @see Requires
+ * @see Ensures
+ * @see org.apache.groovy.contracts.ast.visitor.BaseVisitor
+ */
+public class AnnotationClosureVisitor extends BaseVisitor implements ASTNodeMetaData {
+
+    /**
+     * Metadata flag indicating that the rewritten closure performs method calls and therefore
+     * needs execution tracking instead of inline expansion.
+     */
+    public static final String META_DATA_USE_EXECUTION_TRACKER = "org.apache.groovy.contracts.META_DATA.USE_EXECUTION_TRACKER";
+
+    /**
+     * Metadata key used to stash the original try/catch wrapped assertion block for later phases.
+     */
+    public static final String META_DATA_ORIGINAL_TRY_CATCH_BLOCK = "org.apache.groovy.contracts.META_DATA.ORIGINAL_TRY_CATCH_BLOCK";
+
+    private static final String POSTCONDITION_TYPE_NAME = Postcondition.class.getName();
+    private static final ClassNode FIELD_VALUES = ClassHelper.makeCached(FieldValues.class);
+
+    private ClassNode classNode;
+    private final ContractClosureWriter contractClosureWriter = new ContractClosureWriter();
+
+    /**
+     * Creates a visitor that rewrites contract annotation closures into generated closure classes.
+     *
+     * @param sourceUnit the source unit currently being transformed
+     * @param source the reader source backing the source unit
+     */
+    public AnnotationClosureVisitor(final SourceUnit sourceUnit, final ReaderSource source) {
+        super(sourceUnit, source);
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Rewrites class-level contract closures and then recurses into inherited types that may also
+     * contribute contract annotations.
+     *
+     * @param classNode the class currently being visited
+     */
+    @Override
+    public void visitClass(ClassNode classNode) {
+        if (classNode == null || !(CandidateChecks.isContractsCandidate(classNode) || CandidateChecks.isInterfaceContractsCandidate(classNode))) return;
+
+        this.classNode = classNode;
+
+        if (classNode.getNodeMetaData(PROCESSED) == null) {
+            List<AnnotationNode> annotationNodes = AnnotationUtils.hasMetaAnnotations(classNode, ContractElement.class.getName());
+            for (AnnotationNode annotationNode : annotationNodes) {
+                ClosureExpression closureExpression = getOriginalCondition(annotationNode);
+                if (closureExpression == null) continue;
+
+                ClosureExpressionValidator validator = new ClosureExpressionValidator(classNode, null, annotationNode, sourceUnit);
+                validator.visitClosureExpression(closureExpression);
+                validator.secondPass(closureExpression);
+
+                List<BooleanExpression> booleanExpressions = ExpressionUtils.getBooleanExpression(closureExpression);
+                if (booleanExpressions == null || booleanExpressions.isEmpty()) continue;
+
+                BlockStatement newClosureBlockStatement = TryCatchBlockGenerator.generateTryCatchBlock(
+                        ClassHelper.makeWithoutCaching(ClassInvariantViolation.class),
+                        "<" + annotationNode.getClassNode().getName() + "> " + classNode.getName() + " \n\n",
+                        AssertStatementCreationUtility.getAssertionStatements(booleanExpressions)
+                );
+                newClosureBlockStatement.setSourcePosition(closureExpression.getCode());
+
+                ClosureExpression rewrittenClosureExpression = new ClosureExpression(closureExpression.getParameters(), newClosureBlockStatement);
+                rewrittenClosureExpression.setDeclaringClass(closureExpression.getDeclaringClass());
+                rewrittenClosureExpression.setSourcePosition(closureExpression);
+                rewrittenClosureExpression.setSynthetic(true);
+                rewrittenClosureExpression.setVariableScope(closureExpression.getVariableScope());
+
+                ClassNode closureClassNode = contractClosureWriter.createClosureClass(classNode, null, rewrittenClosureExpression, false, false, Opcodes.ACC_PUBLIC);
+                classNode.getModule().addClass(closureClassNode);
+                recomputeVariableScopes(closureClassNode);
+
+                BlockStatement block = TryCatchBlockGenerator.generateTryCatchBlockForInlineMode(
+                        ClassHelper.makeWithoutCaching(ClassInvariantViolation.class),
+                        "<" + annotationNode.getClassNode().getName() + "> " + classNode.getName() + " \n\n",
+                        AssertStatementCreationUtility.getAssertionStatements(unshareConstants(booleanExpressions))
+                );
+                block.setNodeMetaData(META_DATA_USE_EXECUTION_TRACKER, validator.isMethodCalls());
+
+                Expression value = classX(closureClassNode.getPlainNodeReference());
+                value.setNodeMetaData(META_DATA_ORIGINAL_TRY_CATCH_BLOCK, block);
+                value.setSourcePosition(annotationNode);
+                replaceCondition(annotationNode, value);
+                markClosureReplaced(classNode);
+            }
+        }
+
+        super.visitClass(classNode);
+
+        // generate closure classes for the super class and all implemented interfaces
+        visitClass(classNode.getSuperClass());
+        for (ClassNode i : classNode.getInterfaces()) {
+            visitClass(i);
+        }
+
+        markProcessed(classNode);
+    }
+
+    /**
+     * Rewrites method- and constructor-level contract closures into generated closure classes and records
+     * auxiliary metadata needed by later transformation phases.
+     *
+     * @param methodNode the method or constructor being visited
+     * @param isConstructor whether the visited executable is a constructor
+     */
+    @Override
+    public void visitConstructorOrMethod(MethodNode methodNode, boolean isConstructor) {
+        if (methodNode.getNodeMetaData(PROCESSED) != null || !(CandidateChecks.couldBeContractElementMethodNode(classNode, methodNode) || CandidateChecks.isPreconditionCandidate(classNode, methodNode))) return;
+
+        List<AnnotationNode> annotationNodes = AnnotationUtils.hasMetaAnnotations(methodNode, ContractElement.class.getName());
+        for (AnnotationNode annotationNode : annotationNodes) {
+            replaceWithClosureClassReference(annotationNode, methodNode);
+        }
+
+        recordNonNullReturnViolations(methodNode);
+
+        markProcessed(methodNode);
+
+        super.visitConstructorOrMethod(methodNode, isConstructor);
+    }
+
+    private void replaceWithClosureClassReference(AnnotationNode annotationNode, MethodNode methodNode) {
+        Validate.notNull(annotationNode);
+        Validate.notNull(methodNode);
+
+        ClosureExpression closureExpression = getOriginalCondition(annotationNode);
+        if (closureExpression == null) return;
+
+        ClassCodeExpressionTransformer transformer = new OldPropertyExpressionTransformer(methodNode);
+        TransformingCodeVisitor visitor = new TransformingCodeVisitor(transformer);
+        visitor.visitClosureExpression(closureExpression);
+
+        ClosureExpressionValidator validator = new ClosureExpressionValidator(classNode, methodNode, annotationNode, sourceUnit);
+        validator.visitClosureExpression(closureExpression);
+        validator.secondPass(closureExpression);
+
+        List<Parameter> parameters = new ArrayList<>(Arrays.asList(closureExpression.getParameters()));
+        parameters.addAll(Arrays.asList(methodNode.getParameters()));
+
+        List<BooleanExpression> booleanExpressions = ExpressionUtils.getBooleanExpression(closureExpression);
+        if (booleanExpressions == null || booleanExpressions.isEmpty()) return;
+
+        inferNonNullFromContract(methodNode, annotationNode, booleanExpressions);
+
+        boolean isConstructor = methodNode.isConstructor();
+        boolean isPostcondition = AnnotationUtils.hasAnnotationOfType(annotationNode.getClassNode(), POSTCONDITION_TYPE_NAME);
+
+        BlockStatement newClosureBlockStatement = TryCatchBlockGenerator.generateTryCatchBlock(
+                isPostcondition ? ClassHelper.makeWithoutCaching(PostconditionViolation.class) : ClassHelper.makeWithoutCaching(PreconditionViolation.class),
+                "<" + annotationNode.getClassNode().getName() + "> " + classNode.getName() + "." + methodNode.getTypeDescriptor() + " \n\n",
+                AssertStatementCreationUtility.getAssertionStatements(booleanExpressions)
+        );
+        newClosureBlockStatement.setSourcePosition(closureExpression.getCode());
+
+        ClosureExpression rewrittenClosureExpression = new ClosureExpression(parameters.toArray(Parameter.EMPTY_ARRAY), newClosureBlockStatement);
+        rewrittenClosureExpression.setDeclaringClass(closureExpression.getDeclaringClass());
+        rewrittenClosureExpression.setSourcePosition(closureExpression);
+        rewrittenClosureExpression.setSynthetic(true);
+        rewrittenClosureExpression.setVariableScope(correctVariableScope(closureExpression.getVariableScope(), methodNode));
+
+        ClassNode closureClassNode = contractClosureWriter.createClosureClass(classNode, methodNode, rewrittenClosureExpression, isPostcondition && !isConstructor, isPostcondition && !isConstructor, Opcodes.ACC_PUBLIC);
+        classNode.getModule().addClass(closureClassNode);
+        recomputeVariableScopes(closureClassNode);
+
+        BlockStatement block = TryCatchBlockGenerator.generateTryCatchBlockForInlineMode(
+                isPostcondition ? ClassHelper.makeWithoutCaching(PostconditionViolation.class) : ClassHelper.makeWithoutCaching(PreconditionViolation.class),
+                "<" + annotationNode.getClassNode().getName() + "> " + classNode.getName() + "." + methodNode.getTypeDescriptor() + " \n\n",
+                AssertStatementCreationUtility.getAssertionStatements(unshareConstants(booleanExpressions))
+        );
+        block.setNodeMetaData(META_DATA_USE_EXECUTION_TRACKER, validator.isMethodCalls());
+
+        Expression value = classX(closureClassNode.getPlainNodeReference());
+        value.setNodeMetaData(META_DATA_ORIGINAL_TRY_CATCH_BLOCK, block);
+        value.setSourcePosition(annotationNode);
+        replaceCondition(annotationNode, value);
+        markClosureReplaced(methodNode);
+    }
+
+    /**
+     * Recomputes the variable scopes of a freshly generated contract closure class so that any
+     * nested closures capture the enclosing {@code doCall} parameters (the contract subject's
+     * method parameters / {@code result} / {@code old}). {@link ContractClosureWriter} rebinds the
+     * accessed variable of a nested reference but does not establish the closure-shared capture
+     * chain, which would otherwise leave such references resolving to a property lookup at runtime
+     * (e.g. {@code @Requires(&#123; ns.indices.every &#123; ns[it] > 0 &#125; &#125;)}).
+     *
+     * @param closureClassNode the generated closure class to rescope
+     */
+    private void recomputeVariableScopes(ClassNode closureClassNode) {
+        new VariableScopeVisitor(sourceUnit, true).visitClass(closureClassNode);
+    }
+
+    private VariableScope correctVariableScope(VariableScope variableScope, MethodNode methodNode) {
+        if (variableScope == null || methodNode == null || methodNode.getParameters() == null || methodNode.getParameters().length == 0)
+            return variableScope;
+
+        VariableScope copy = copy(variableScope);
+
+        for (Iterator<Variable> iterator = variableScope.getReferencedClassVariablesIterator(); iterator.hasNext(); ) {
+            Variable variable = iterator.next();
+            String name = variable.getName();
+
+            for (Parameter parameter : methodNode.getParameters()) {
+                if (parameter.getName().equals(name)) {
+                    copy.putReferencedLocalVariable(parameter);
+                    break;
+                }
+            }
+
+            if (!copy.isReferencedLocalVariable(name)) {
+                copy.putReferencedClassVariable(variable);
+            }
+        }
+
+        return copy;
+    }
+
+    private VariableScope copy(VariableScope original) {
+        VariableScope copy = new VariableScope(original.getParent());
+        copy.setClassScope(original.getClassScope());
+        copy.setInStaticContext(original.isInStaticContext());
+        return copy;
+    }
+
+    /**
+     * Rebuilds the boolean expressions with fresh {@link ConstantExpression} leaves so the inline
+     * assertion block shares no constant nodes with the generated closure class (GROOVY-12130).
+     * The compiler's {@code OptimizerVisitor} caches eligible constants (e.g. {@code BigDecimal},
+     * {@code BigInteger}, most {@code Long}s) in per-class synthetic {@code $const$} fields by
+     * <em>mutating</em> each {@code ConstantExpression} with the assigned field name — a node
+     * reachable from two classes keeps whichever class's field name was assigned last, making the
+     * other class read the wrong constant at runtime (e.g. {@code result &lt; 0.0} evaluated as
+     * {@code result &lt; -2.5}). Nested closures may stay shared: the optimizer does not descend
+     * into closure bodies.
+     *
+     * @param booleanExpressions the assertion expressions also compiled into the closure class
+     * @return copies safe to inline into the contract subject's own methods
+     */
+    private static List<BooleanExpression> unshareConstants(final List<BooleanExpression> booleanExpressions) {
+        final ConstantUnsharer unsharer = new ConstantUnsharer();
+        final List<BooleanExpression> copies = new ArrayList<>(booleanExpressions.size());
+        for (BooleanExpression booleanExpression : booleanExpressions) {
+            // transformExpression preserves the node's own type (e.g. NotExpression), source
+            // position and metadata, so the whole node is transformed rather than unwrapped
+            copies.add((BooleanExpression) unsharer.transform(booleanExpression));
+        }
+        return copies;
+    }
+
+    private static final class ConstantUnsharer implements ExpressionTransformer {
+        @Override
+        public Expression transform(final Expression expression) {
+            if (expression == null) return null;
+            // exact type match mirrors OptimizerVisitor's own eligibility check
+            if (expression.getClass() == ConstantExpression.class) {
+                ConstantExpression constant = (ConstantExpression) expression;
+                ConstantExpression copy = new ConstantExpression(constant.getValue(), true);
+                copy.setType(constant.getType());
+                copy.setSourcePosition(constant);
+                copy.copyNodeMetaData(constant);
+                return copy;
+            }
+            return expression.transformExpression(this);
+        }
+    }
+
+    private void markClosureReplaced(ASTNode someNode) {
+        if (someNode.getNodeMetaData(CLOSURE_REPLACED) == null)
+            someNode.setNodeMetaData(CLOSURE_REPLACED, Boolean.TRUE);
+    }
+
+    private void markProcessed(ASTNode someNode) {
+        if (someNode.getNodeMetaData(PROCESSED) == null)
+            someNode.setNodeMetaData(PROCESSED, Boolean.TRUE);
+    }
+
+    /**
+     * Records non-null facts derivable from top-level {@code x != null} conjuncts in a
+     * {@code @Requires} or {@code @Ensures} closure, as {@link StaticTypesMarker#INFERRED_NON_NULL}
+     * metadata on the matching {@link Parameter} (or the {@link MethodNode} itself when the closure
+     * references {@code result} in a postcondition).
+     */
+    private static void inferNonNullFromContract(MethodNode methodNode, AnnotationNode annotationNode, List<BooleanExpression> booleanExpressions) {
+        String simpleName = annotationNode.getClassNode().getNameWithoutPackage();
+        boolean isEnsures = "Ensures".equals(simpleName);
+        if (!("Requires".equals(simpleName) || isEnsures)) return;
+        for (BooleanExpression booleanExpression : booleanExpressions) {
+            if (booleanExpression == null) continue;
+            collectNonNullFacts(booleanExpression.getExpression(), methodNode, isEnsures);
+        }
+    }
+
+    private static void collectNonNullFacts(Expression expr, MethodNode methodNode, boolean isEnsures) {
+        if (!(expr instanceof BinaryExpression bin)) return;
+        int op = bin.getOperation().getType();
+        if (op == Types.LOGICAL_AND) {
+            collectNonNullFacts(bin.getLeftExpression(), methodNode, isEnsures);
+            collectNonNullFacts(bin.getRightExpression(), methodNode, isEnsures);
+            return;
+        }
+        if (op != Types.COMPARE_NOT_EQUAL && op != Types.COMPARE_NOT_IDENTICAL) return;
+        String name = matchVarAgainstNull(bin.getLeftExpression(), bin.getRightExpression());
+        if (name == null) name = matchVarAgainstNull(bin.getRightExpression(), bin.getLeftExpression());
+        if (name == null) return;
+        if (isEnsures && "result".equals(name)) {
+            methodNode.putNodeMetaData(StaticTypesMarker.INFERRED_NON_NULL, Boolean.TRUE);
+            return;
+        }
+        for (Parameter p : methodNode.getParameters()) {
+            if (p.getName().equals(name)) {
+                p.putNodeMetaData(StaticTypesMarker.INFERRED_NON_NULL, Boolean.TRUE);
+                return;
+            }
+        }
+    }
+
+    private static String matchVarAgainstNull(Expression maybeVar, Expression maybeNull) {
+        if (!(maybeNull instanceof ConstantExpression) || !((ConstantExpression) maybeNull).isNullExpression()) return null;
+        if (maybeVar instanceof VariableExpression ve) return ve.getName();
+        return null;
+    }
+
+    private static final Set<String> NONNULL_ANNO_SIMPLE_NAMES = Set.of("NonNull", "NotNull", "Nonnull");
+
+    /**
+     * Records {@code return null} statements on a method whose return is effectively {@code @NonNull}
+     * and whose body will be rewritten by the contracts transform (postcondition or class invariant).
+     * The stashed list is read later by a downstream checker (e.g. NullChecker) which would otherwise
+     * no longer see the literal null after the rewrite.
+     */
+    private static void recordNonNullReturnViolations(MethodNode methodNode) {
+        if (methodNode.isVoidMethod() || methodNode.isAbstract() || methodNode.getCode() == null) return;
+        if (!isEffectivelyNonNullReturn(methodNode)) return;
+        if (!willHavePostconditionRewrite(methodNode)) return;
+        List<ASTNode> violations = null;
+        for (ReturnStatement rs : AssertStatementCreationUtility.getReturnStatements(methodNode)) {
+            Expression expr = rs.getExpression();
+            if (expr instanceof ConstantExpression ce && ce.isNullExpression()) {
+                if (violations == null) violations = new ArrayList<>();
+                violations.add(rs);
+            }
+        }
+        if (violations != null) {
+            methodNode.putNodeMetaData(StaticTypesMarker.INFERRED_NON_NULL_RETURN_VIOLATIONS, violations);
+        }
+    }
+
+    private static boolean isEffectivelyNonNullReturn(MethodNode method) {
+        if (Boolean.TRUE.equals(method.getNodeMetaData(StaticTypesMarker.INFERRED_NON_NULL))) return true;
+        for (AnnotationNode a : method.getAnnotations()) {
+            if (NONNULL_ANNO_SIMPLE_NAMES.contains(a.getClassNode().getNameWithoutPackage())) return true;
+        }
+        return false;
+    }
+
+    private static boolean willHavePostconditionRewrite(MethodNode method) {
+        for (AnnotationNode a : method.getAnnotations()) {
+            String name = a.getClassNode().getName();
+            if ("groovy.contracts.Ensures".equals(name) || "groovy.contracts.EnsuresConditions".equals(name)) return true;
+        }
+        ClassNode cls = method.getDeclaringClass();
+        if (cls != null) {
+            for (AnnotationNode a : cls.getAnnotations()) {
+                String name = a.getClassNode().getName();
+                if ("groovy.contracts.Invariant".equals(name) || "groovy.contracts.Invariants".equals(name)) return true;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Validates contract closure expressions and rewrites selected variable references for safe evaluation.
+     */
+    static class ClosureExpressionValidator extends ClassCodeVisitorSupport {
+
+        private final ClassNode classNode;
+        private final MethodNode methodNode;
+        private final AnnotationNode annotationNode;
+        private final SourceUnit sourceUnit;
+
+        private final Map<VariableExpression, StaticMethodCallExpression> variableExpressions;
+
+        private boolean secondPass = false;
+        private boolean methodCalls = false;
+        private int closureDepth = 0;
+
+        /**
+         * Creates a validator for one contract closure.
+         *
+         * @param classNode the declaring class
+         * @param methodNode the owning method or constructor, or {@code null} for class-level contracts
+         * @param annotationNode the contract annotation being validated
+         * @param sourceUnit the current source unit
+         */
+        ClosureExpressionValidator(ClassNode classNode, MethodNode methodNode, AnnotationNode annotationNode, SourceUnit sourceUnit) {
+            this.classNode = classNode;
+            this.methodNode = methodNode;
+            this.annotationNode = annotationNode;
+            this.sourceUnit = sourceUnit;
+            this.variableExpressions = new HashMap<>();
+        }
+
+        /**
+         * Validates the structure and declared parameters of the closure before visiting its contents.
+         *
+         * @param expression the closure being validated
+         */
+        @Override
+        public void visitClosureExpression(ClosureExpression expression) {
+            // GROOVY-12059: structural validation only applies to the outermost contract closure,
+            // not to nested closures (e.g. @Requires({ list.every { n -> n > 0 } })) whose
+            // parameters legitimately belong to library methods such as each/every/collect.
+            if (closureDepth == 0) {
+                secondPass = false;
+
+                if (expression.getCode() == null || expression.getCode() instanceof EmptyStatement) {
+                    addError("[groovy-contracts] Annotation does not contain any expressions (e.g. use '@Requires({ argument1 })').", expression);
+                }
+
+                if (expression.getCode() instanceof BlockStatement &&
+                        ((BlockStatement) expression.getCode()).getStatements().isEmpty()) {
+                    addError("[groovy-contracts] Annotation does not contain any expressions (e.g. use '@Requires({ argument1 })').", expression);
+                }
+
+                if (expression.isParameterSpecified() && !AnnotationUtils.hasAnnotationOfType(annotationNode.getClassNode(), POSTCONDITION_TYPE_NAME)) {
+                    addError("[groovy-contracts] Annotation does not support parameters (the only exception are postconditions).", expression);
+                } else if (expression.isParameterSpecified()) {
+                    for (Parameter param : expression.getParameters()) {
+                        if (!("result".equals(param.getName()) || "old".equals(param.getName()))) {
+                            addError("[groovy-contracts] Postconditions only allow 'old' and 'result' closure parameters.", expression);
+                        }
+
+                        if (!param.isDynamicTyped()) {
+                            addError("[groovy-contracts] Postconditions do not support explicit types.", expression);
+                        }
+                    }
+                }
+            }
+
+            closureDepth++;
+            try {
+                super.visitClosureExpression(expression);
+            } finally {
+                closureDepth--;
+            }
+        }
+
+        /**
+         * Resolves parameter-vs-field access and records reflective replacements for unsupported private-field access.
+         *
+         * @param expression the variable expression being visited
+         */
+        @Override
+        public void visitVariableExpression(VariableExpression expression) {
+
+            // in case of a FieldNode, checks whether the FieldNode can be replaced with a Parameter
+            Variable accessedVariable = getParameterCandidate(expression.getAccessedVariable());
+            if (accessedVariable instanceof FieldNode fieldNode) {
+
+                if (fieldNode.isPrivate() && !classNode.hasProperty(fieldNode.getName())) {
+                    // if this is a class invariant we'll change the field node access
+                    StaticMethodCallExpression field = callX(FIELD_VALUES, "fieldValue", args(VariableExpression.THIS_EXPRESSION, constX(fieldNode.getName()), classX(fieldNode.getType())));
+                    variableExpressions.put(expression, field);
+                }
+            }
+
+            if (accessedVariable instanceof Parameter parameter) {
+                // GROOVY-12059: only reject 'it' when it is the implicit parameter of the contract
+                // closure itself (depth 1). An 'it' at a deeper level belongs to a nested closure and
+                // is supported, e.g. @Requires({ ns.indices.every { ns[it] > 0 } }).
+                if ("it".equals(parameter.getName()) && closureDepth <= 1) {
+                    addError("[groovy-contracts] Access to 'it' is not supported.", expression);
+                }
+            }
+
+            expression.setAccessedVariable(accessedVariable);
+
+            super.visitVariableExpression(expression);
+        }
+
+        /**
+         * Validates {@code old.<name>} access. GROOVY-12052/GROOVY-12078: a static method has no instance
+         * state, so {@code old} there may only snapshot a method parameter's entry value; an
+         * {@code old.<field>} (or any other non-parameter) reference is rejected.
+         *
+         * @param expression the property expression being visited
+         */
+        @Override
+        public void visitPropertyExpression(PropertyExpression expression) {
+            if (!secondPass && methodNode != null && methodNode.isStatic()
+                    && expression.getObjectExpression() instanceof VariableExpression objectVar
+                    && "old".equals(objectVar.getName())
+                    && AnnotationUtils.hasAnnotationOfType(annotationNode.getClassNode(), POSTCONDITION_TYPE_NAME)
+                    && getParameterByName(expression.getPropertyAsString()) == null) {
+                addError("[groovy-contracts] 'old' in a postcondition of a static method may only reference a method parameter.", expression);
+            }
+
+            super.visitPropertyExpression(expression);
+        }
+
+        /**
+         * Validates postfix operations and performs second-pass rewrites when needed.
+         *
+         * @param expression the postfix expression being visited
+         */
+        @Override
+        public void visitPostfixExpression(PostfixExpression expression) {
+            checkOperation(expression, expression.getOperation());
+
+            if (secondPass) {
+                if (expression.getExpression() instanceof VariableExpression variableExpression) {
+                    if (variableExpressions.containsKey(variableExpression)) {
+                        expression.setExpression(variableExpressions.get(variableExpression));
+                    }
+                }
+            }
+
+            super.visitPostfixExpression(expression);
+        }
+
+        /**
+         * Validates prefix operations and performs second-pass rewrites when needed.
+         *
+         * @param expression the prefix expression being visited
+         */
+        @Override
+        public void visitPrefixExpression(PrefixExpression expression) {
+            checkOperation(expression, expression.getOperation());
+
+            if (secondPass) {
+                if (expression.getExpression() instanceof VariableExpression variableExpression) {
+                    if (variableExpressions.containsKey(variableExpression)) {
+                        expression.setExpression(variableExpressions.get(variableExpression));
+                    }
+                }
+            }
+
+            super.visitPrefixExpression(expression);
+        }
+
+        /**
+         * Validates binary operations and performs second-pass rewrites when needed.
+         *
+         * @param expression the binary expression being visited
+         */
+        @Override
+        public void visitBinaryExpression(BinaryExpression expression) {
+            checkOperation(expression, expression.getOperation());
+
+            if (secondPass) {
+                if (expression.getLeftExpression() instanceof VariableExpression variableExpression) {
+                    if (variableExpressions.containsKey(variableExpression)) {
+                        expression.setLeftExpression(variableExpressions.get(variableExpression));
+                    }
+                }
+                if (expression.getRightExpression() instanceof VariableExpression variableExpression) {
+                    if (variableExpressions.containsKey(variableExpression)) {
+                        expression.setRightExpression(variableExpressions.get(variableExpression));
+                    }
+                }
+            }
+
+            super.visitBinaryExpression(expression);
+        }
+
+        /**
+         * Marks that the closure performs a static method call.
+         *
+         * @param call the static method call being visited
+         */
+        @Override
+        public void visitStaticMethodCallExpression(StaticMethodCallExpression call) {
+            methodCalls = true;
+            super.visitStaticMethodCallExpression(call);
+        }
+
+        /**
+         * Marks that the closure performs a method call.
+         *
+         * @param call the method call being visited
+         */
+        @Override
+        public void visitMethodCallExpression(MethodCallExpression call) {
+            methodCalls = true;
+            super.visitMethodCallExpression(call);
+        }
+
+        /**
+         * Marks that the closure performs a constructor call.
+         *
+         * @param call the constructor call being visited
+         */
+        @Override
+        public void visitConstructorCallExpression(ConstructorCallExpression call) {
+            methodCalls = true;
+            super.visitConstructorCallExpression(call);
+        }
+
+        private void checkOperation(Expression expression, Token operation) {
+            if (Types.ofType(operation.getType(), Types.ASSIGNMENT_OPERATOR)) {
+                addError("[groovy-contracts] Assignment operators are not supported.", expression);
+            }
+            if (Types.ofType(operation.getType(), Types.POSTFIX_OPERATOR)) {
+                addError("[groovy-contracts] State changing postfix & prefix operators are not supported.", expression);
+            }
+        }
+
+        private Variable getParameterCandidate(Variable variable) {
+            if (variable == null || methodNode == null) return variable;
+            if (variable instanceof Parameter) return variable;
+
+            String name = variable.getName();
+            for (Parameter param : methodNode.getParameters()) {
+                if (name.equals(param.getName())) return param;
+            }
+
+            return variable;
+        }
+
+        private Parameter getParameterByName(String name) {
+            if (name == null || methodNode == null) return null;
+            for (Parameter param : methodNode.getParameters()) {
+                if (name.equals(param.getName())) return param;
+            }
+            return null;
+        }
+
+        /**
+         * Executes the second validation pass that applies the deferred expression rewrites.
+         *
+         * @param closureExpression the closure to revisit
+         */
+        public void secondPass(ClosureExpression closureExpression) {
+            secondPass = true;
+            // Enter the outermost contract closure directly (bypassing the override's structural
+            // checks) while still accounting for its depth so nested closures are recognised as
+            // non-outermost and 'it'/parameter handling stays consistent with the first pass.
+            closureDepth++;
+            try {
+                super.visitClosureExpression(closureExpression);
+            } finally {
+                closureDepth--;
+            }
+        }
+
+        /**
+         * Indicates whether the validated closure performs any method or constructor calls.
+         *
+         * @return {@code true} if execution tracking is required
+         */
+        public boolean isMethodCalls() {
+            return methodCalls;
+        }
+
+        /**
+         * Returns the source unit used for validation error reporting.
+         *
+         * @return the current source unit
+         */
+        @Override
+        protected SourceUnit getSourceUnit() {
+            return sourceUnit;
+        }
+    }
+
+    /** Node metadata key for the set of field names referenced via {@code old.xxx} in postconditions. */
+    public static final String OLD_REFERENCES_KEY = "groovy.contracts.oldReferences";
+
+    private static class OldPropertyExpressionTransformer extends ClassCodeExpressionTransformer {
+        private final MethodNode methodNode;
+        private CastExpression currentCast;
+
+        /**
+         * Creates a transformer that adapts {@code old.property} references for generated postcondition code.
+         *
+         * @param methodNode the method whose postcondition is being rewritten
+         */
+        OldPropertyExpressionTransformer(MethodNode methodNode) {
+            this.methodNode = methodNode;
+        }
+
+        /**
+         * This transformer is source-independent.
+         *
+         * @return {@code null}
+         */
+        @Override
+        protected SourceUnit getSourceUnit() {
+            return null;
+        }
+
+        /**
+         * Rewrites {@code old.property} access to preserve field type information and records referenced
+         * field names for {@code @Modifies} validation.
+         *
+         * @param expr the expression to transform
+         * @return the transformed expression
+         */
+        @SuppressWarnings("unchecked")
+        @Override
+        public Expression transform(Expression expr) {
+            if (expr instanceof CastExpression) {
+                CastExpression saved = currentCast;
+                currentCast = (CastExpression) expr;
+                Expression result = expr.transformExpression(this);
+                currentCast = saved;
+                return result;
+            }
+            if (expr instanceof PropertyExpression && expr.getNodeMetaData(PROCESSED) == null && (currentCast == null || expr != currentCast.getExpression())) {
+                // add a cast but only if an explicit cast is not already there and we haven't been here before
+                PropertyExpression propExpr = (PropertyExpression) super.transform(expr);
+                Expression objExpr = propExpr.getObjectExpression();
+                if (objExpr instanceof VariableExpression varExpr) {
+                    if ("old".equals(varExpr.getName())) {
+                        String propName = propExpr.getPropertyAsString();
+                        // Record the old reference for @Modifies validation
+                        Set<String> oldRefs = methodNode.getNodeMetaData(OLD_REFERENCES_KEY);
+                        if (oldRefs == null) {
+                            oldRefs = new LinkedHashSet<>();
+                            methodNode.putNodeMetaData(OLD_REFERENCES_KEY, oldRefs);
+                        }
+                        oldRefs.add(propName);
+                        // GROOVY-12078: a snapshotted parameter is typed by its declared type; a
+                        // parameter shadows a same-named field, matching the runtime precedence where
+                        // the parameter snapshot overrides the field snapshot
+                        Parameter parameter = getParameter(propName);
+                        if (parameter != null) {
+                            CastExpression adjusted = new CastExpression(parameter.getType(), expr);
+                            adjusted.setSourcePosition(expr);
+                            expr.setNodeMetaData(PROCESSED, Boolean.TRUE);
+                            return adjusted;
+                        }
+                        ClassNode declaringClass = methodNode.getDeclaringClass();
+                        if (declaringClass != null && declaringClass.getField(propName) != null) {
+                            CastExpression adjusted = new CastExpression(declaringClass.getField(propName).getType(), expr);
+                            adjusted.setSourcePosition(expr);
+                            expr.setNodeMetaData(PROCESSED, Boolean.TRUE);
+                            return adjusted;
+                        }
+                    }
+                }
+            }
+            return expr.transformExpression(this);
+        }
+
+        /**
+         * Returns the {@code methodNode} parameter named {@code name}, or {@code null} if there is none.
+         * Used to type an {@code old.<name>} access as the parameter's declared type.
+         *
+         * @param name the property name accessed via {@code old}
+         * @return the matching parameter, or {@code null}
+         */
+        private Parameter getParameter(String name) {
+            for (Parameter parameter : methodNode.getParameters()) {
+                if (parameter.getName().equals(name)) return parameter;
+            }
+            return null;
+        }
+    }
+}

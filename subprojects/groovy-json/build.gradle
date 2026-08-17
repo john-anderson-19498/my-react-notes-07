@@ -1,0 +1,58 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+plugins {
+    id 'org.apache.groovy-library'
+}
+
+dependencies {
+    api project(':') // JsonBuilder extends GroovyObjectSupport...
+
+    testImplementation projects.groovyTest
+    testImplementation projects.groovyTestJunit6 // for groovy.junit6.plugin.ForkedJvm
+    testImplementation projects.groovyDateutil
+    testImplementation('net.javacrumbs.json-unit:json-unit:6.2.0') {
+        // hamcrest-core 3.0 is an empty deprecation stub; exclude it to avoid pinning a
+        // verification checksum for it. JUnit already supplies hamcrest-core and the tests
+        // here only use JsonAssert.assertJsonEquals (no hamcrest matchers).
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
+
+    testRuntimeOnly project(':'), {
+        because "Tests are using Grapes"
+        capabilities {
+            requireCapability 'org.apache.groovy:groovy-grapes'
+        }
+    }
+    testRuntimeOnly projects.groovyGrapeIvy
+    testRuntimeOnly projects.groovyAnt // for JavadocAssertionTests
+    testRuntimeOnly 'com.google.code.gson:gson:2.14.0' // json-unit requires a backend: gson, jackson2 or jackson3
+}
+
+plugins.withId('eclipse') {
+    eclipse.classpath.file.whenMerged {
+        entries.removeAll { entry -> entry.path in ['/groovy-ant', '/groovy-groovydoc'] }
+    }
+}
+
+tasks.named('rat') {
+    excludes += [
+            // test file
+            'src/test/resources/groovy9802.json'
+    ]
+}

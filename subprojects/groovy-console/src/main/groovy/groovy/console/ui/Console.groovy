@@ -1,0 +1,2412 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy.console.ui
+
+import com.github.javaparser.ParseProblemException
+import com.github.javaparser.StaticJavaParser
+import com.github.javaparser.ast.CompilationUnit
+import com.github.javaparser.ast.Modifier
+import com.github.javaparser.ast.body.TypeDeclaration
+import groovy.cli.internal.CliBuilderInternal
+import groovy.cli.internal.OptionAccessor
+import groovy.console.ui.text.FindReplaceUtility
+import groovy.console.ui.text.GroovyFilter
+import groovy.console.ui.text.SmartDocumentFilter
+import groovy.swing.SwingBuilder
+import groovy.transform.CompileStatic
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ThreadInterrupt
+import groovy.transform.TupleConstructor
+import groovy.ui.GroovyMain
+import org.antlr.v4.gui.TreeViewer
+import org.antlr.v4.gui.Trees
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
+import org.apache.groovy.antlr.LexerFrame
+import org.apache.groovy.io.StringBuilderWriter
+import org.apache.groovy.parser.antlr4.GroovyLangLexer
+import org.apache.groovy.parser.antlr4.GroovyLangParser
+import org.apache.groovy.util.JavaShell
+import org.apache.groovy.util.SystemUtil
+import org.codehaus.groovy.control.CompilerConfiguration
+import org.codehaus.groovy.control.ErrorCollector
+import org.codehaus.groovy.control.MultipleCompilationErrorsException
+import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer
+import org.codehaus.groovy.control.messages.ExceptionMessage
+import org.codehaus.groovy.control.messages.SimpleMessage
+import org.codehaus.groovy.control.messages.SyntaxErrorMessage
+import org.codehaus.groovy.runtime.StackTraceUtils
+import org.codehaus.groovy.runtime.StringGroovyMethods
+import org.codehaus.groovy.syntax.SyntaxException
+import org.codehaus.groovy.tools.shell.util.MessageSource
+import org.codehaus.groovy.transform.ThreadInterruptibleASTTransformation
+import org.codehaus.groovy.vmplugin.VMPluginFactory
+
+import javax.swing.Action
+import javax.swing.Icon
+import javax.swing.JFileChooser
+import javax.swing.JFrame
+import javax.swing.JLabel
+import javax.swing.JOptionPane
+import javax.swing.JScrollPane
+import javax.swing.JSplitPane
+import javax.swing.JTextPane
+import javax.swing.RootPaneContainer
+import javax.swing.SwingUtilities
+import javax.swing.Timer
+import javax.swing.UIManager
+import javax.swing.event.CaretEvent
+import javax.swing.event.CaretListener
+import javax.swing.event.DocumentListener
+import javax.swing.event.HyperlinkEvent
+import javax.swing.event.HyperlinkListener
+import javax.swing.filechooser.FileFilter
+import javax.swing.text.AttributeSet
+import javax.swing.text.Document
+import javax.swing.text.Element
+import javax.swing.text.SimpleAttributeSet
+import javax.swing.text.Style
+import javax.swing.text.StyleConstants
+import javax.swing.text.html.HTML
+import java.awt.BorderLayout
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.EventQueue
+import java.awt.Font
+import java.awt.Toolkit
+import java.awt.Window
+import java.awt.event.ActionEvent
+import java.awt.event.ComponentEvent
+import java.awt.event.ComponentListener
+import java.awt.event.FocusEvent
+import java.awt.event.FocusListener
+import java.awt.event.WindowEvent
+import java.awt.event.WindowFocusListener
+import java.util.logging.Logger
+import java.util.prefs.Preferences
+
+/**
+ * Groovy Swing console.
+ *
+ * Allows user to interactively enter and execute Groovy.
+ */
+class Console implements CaretListener, HyperlinkListener, ComponentListener, FocusListener {
+
+    /** Prefix used for generated script names inside the console. */
+    static final String DEFAULT_SCRIPT_NAME_START = 'ConsoleScript'
+    private static final boolean DEBUG_GRAPE = Boolean.getBoolean('groovy.grape.debug')
+
+    /** User preferences backing console settings. */
+    static prefs = Preferences.userNodeForPackage(Console)
+
+    /** Whether stdout is redirected into the console output pane. */
+    static boolean captureStdOut = prefs.getBoolean('captureStdOut', true)
+    /** Whether stderr is redirected into the console output pane. */
+    static boolean captureStdErr = prefs.getBoolean('captureStdErr', true)
+    /** Active console controllers sharing the global stream interceptors. */
+    static consoleControllers = []
+
+    /** Whether the smart syntax highlighter is enabled by default. */
+    static boolean smartHighlighter = prefs.getBoolean('smartHighlighter',
+            Boolean.valueOf(SystemUtil.getSystemPropertySafe('groovy.console.enable.smart.highlighter', 'true')))
+
+    /** Whether full stack traces are shown for execution failures. */
+    boolean fullStackTraces = prefs.getBoolean('fullStackTraces',
+            Boolean.valueOf(System.getProperty('groovy.full.stacktrace', 'false')))
+    /** Action that toggles full stack trace output. */
+    Action fullStackTracesAction
+
+    /** Whether executed script text is echoed into the output pane. */
+    boolean showScriptInOutput = prefs.getBoolean('showScriptInOutput', true)
+    /** Action that toggles script echoing in the output pane. */
+    Action showScriptInOutputAction
+
+    /** Whether non-null results are transformed for visual display. */
+    boolean visualizeScriptResults = prefs.getBoolean('visualizeScriptResults', false)
+    /** Action that toggles result visualization. */
+    Action visualizeScriptResultsAction
+
+    /** Whether the toolbar is visible. */
+    boolean showToolbar = prefs.getBoolean('showToolbar', true)
+    /** Toolbar component shown above the editor. */
+    Component toolbar
+    /** Action that toggles toolbar visibility. */
+    Action showToolbarAction
+
+    /** Whether output is shown in a detached window. */
+    boolean detachedOutput = prefs.getBoolean('detachedOutput', false)
+    /** Action that toggles detached output mode. */
+    Action detachedOutputAction
+
+    /** Whether the split pane stacks input and output vertically. */
+    boolean orientationVertical = prefs.getBoolean('orientationVertical', true)
+    /** Action that toggles the split-pane orientation. */
+    Action orientationVerticalAction
+    /** Action that shows the detached output window. */
+    Action showOutputWindowAction
+    /** Menu action variant that hides the detached output window. */
+    Action hideOutputWindowAction1
+    /** Toolbar action variant that hides the detached output window. */
+    Action hideOutputWindowAction2
+    /** Popup action variant that hides the detached output window. */
+    Action hideOutputWindowAction3
+    /** Shortcut action variant that hides the detached output window. */
+    Action hideOutputWindowAction4
+    /** Divider size to restore when output is no longer detached. */
+    int origDividerSize
+    /** Detached output window component. */
+    Component outputWindow
+    /** Last focused text component used by copy/select-all actions. */
+    Component copyFromComponent
+    /** Placeholder component shown when output is detached. */
+    Component blank
+    /** Scroll container that wraps the output area. */
+    Component scrollArea
+
+    /** Whether output is cleared before each run. */
+    boolean autoClearOutput = prefs.getBoolean('autoClearOutput', false)
+    /** Action that toggles automatic output clearing. */
+    Action autoClearOutputAction
+
+    /** Whether the {@code @ThreadInterrupt} transform is applied to scripts. */
+    boolean threadInterrupt = prefs.getBoolean('threadInterrupt', false)
+    /** Action that toggles thread interruption support. */
+    Action threadInterruptAction
+
+    /** Action that toggles saving before each run. */
+    Action saveOnRunAction
+    /** Whether the current script is saved before it is run. */
+    boolean saveOnRun = prefs.getBoolean('saveOnRun', false)
+
+    /** Action that toggles loop mode. */
+    Action loopModeAction
+    /** Whether unchanged scripts are rerun after a delay. */
+    boolean loopMode = prefs.getBoolean('loopMode', false)
+    /** Hash of the last script text scheduled for execution. */
+    int inputAreaContentHash
+
+    /** Name of the currently selected theme mode. */
+    String currentTheme = ThemeManager.currentMode.name()
+
+    /** Whether script execution uses the shell class loader as context loader. */
+    boolean useScriptClassLoaderForScriptExecution = false
+
+    /** Maximum number of history entries retained by the console. */
+    int maxHistory = 10
+
+    /** Maximum number of characters retained in the output pane. */
+    int maxOutputChars = System.getProperty('groovy.console.output.limit', '20000') as int
+
+    /** Optional writer that mirrors output to a log file. */
+    PrintWriter outputPrintWriter = null
+
+    /** Swing builder used to create and wire the console UI. */
+    SwingBuilder swing
+    /** Main console frame or dialog. */
+    RootPaneContainer frame
+    /** Styled text editor used for script input. */
+    ConsoleTextEditor inputEditor
+    /** Split pane separating input and output. */
+    JSplitPane splitPane
+    /** Raw text component used for script editing. */
+    JTextPane inputArea
+    /** Output text pane used for results and errors. */
+    JTextPane outputArea
+    /** Status label shown in the footer. */
+    JLabel statusLabel
+    /** Footer label showing the caret row and column. */
+    JLabel rowNumAndColNum
+
+    /** Root document element for row calculations. */
+    Element rootElement
+    /** Current caret offset in the input document. */
+    int cursorPos
+    /** Current one-based caret row. */
+    int rowNum
+    /** Current one-based caret column. */
+    int colNum
+
+    /** Style used for prompt text in the output pane. */
+    Style promptStyle
+    /** Style used for echoed commands in the output pane. */
+    Style commandStyle
+    /** Style used for regular output text. */
+    Style outputStyle
+    /** Style used for stack traces and error text. */
+    Style stacktraceStyle
+    /** Style used for clickable error links. */
+    Style hyperlinkStyle
+    /** Style used for evaluated result text. */
+    Style resultStyle
+
+    /** Execution history records kept for navigation and result lookup. */
+    List history = []
+    /** Index of the currently selected history record. */
+    int historyIndex = 1 // valid values are 0..history.length()
+    /** Pending editor state kept while navigating command history. */
+    HistoryRecord pendingRecord = new HistoryRecord(allText: '', selectionStart: 0, selectionEnd: 0)
+    /** Action that moves to the previous history entry. */
+    Action prevHistoryAction
+    /** Action that moves to the next history entry. */
+    Action nextHistoryAction
+
+    /** Whether the current editor contents differ from the saved script. */
+    boolean dirty
+    /** Action that saves the current script. */
+    Action saveAction
+    /** Selection start cached from the caret listener. */
+    int textSelectionStart  // keep track of selections in inputArea
+    /** Selection end cached from the caret listener. */
+    int textSelectionEnd
+    /** Current script file or generated script identifier. */
+    def scriptFile
+    /** Initial directory for file open/save dialogs. */
+    File currentFileChooserDir = new File(Preferences.userNodeForPackage(Console).get('currentFileChooserDir', '.'))
+    /** Initial directory for classpath jar selection dialogs. */
+    File currentClasspathJarDir = new File(Preferences.userNodeForPackage(Console).get('currentClasspathJarDir', '.'))
+    /** Initial directory for classpath directory selection dialogs. */
+    File currentClasspathDir = new File(Preferences.userNodeForPackage(Console).get('currentClasspathDir', '.'))
+
+    /** Base compiler configuration used to seed new scripts. */
+    CompilerConfiguration baseConfig
+    /** Compiler configuration for the current script shell. */
+    CompilerConfiguration config
+    /** Shell used to compile and run scripts. */
+    GroovyShell shell
+    /** Counter used for generated script names. */
+    int scriptNameCounter = 0
+    /** Interceptor that captures stdout. */
+    SystemOutputInterceptor systemOutInterceptor
+    /** Interceptor that captures stderr. */
+    SystemOutputInterceptor systemErrorInterceptor
+    /** Background thread currently compiling or running a script. */
+    Thread runThread = null
+    /** Optional hook invoked before script execution starts. */
+    Closure beforeExecution
+    /** Optional hook invoked after script execution completes. */
+    Closure afterExecution
+
+    /** Console window icon resource. */
+    public static URL ICON_PATH = Console.class.classLoader.getResource('groovy/console/ui/ConsoleIcon.png')
+    /**
+     * Returns the icon used for AST and object browser tree nodes.
+     *
+     * @since 6.0.0
+     */
+    static Icon getNodeIcon() { Icons.green('fiber_manual_record') }
+
+    /** File filter used for Groovy script open/save dialogs. */
+    static groovyFileFilter = new GroovyFileFilter()
+    /** Whether a script is currently being compiled or executed. */
+    boolean scriptRunning = false
+    /** Whether the last failure was a stack overflow. */
+    boolean stackOverFlowError = false
+    /** Action that interrupts the active script thread. */
+    Action interruptAction
+
+    /** Space-separated arguments passed to script execution. */
+    String scriptArgs = ''
+    /** Action that edits the configured script arguments. */
+    Action setScriptArgsAction
+
+    /** Action that selects the next word in the editor. */
+    Action selectWordAction
+    /** Action that selects the previous word in the editor. */
+    Action selectPreviousWordAction
+
+    /** Lazily created preferences dialog controller. */
+    ConsolePreferences consolePreferences
+
+    /** Launches the console application from the command line. */
+    static void main(args) {
+        MessageSource messages = new MessageSource(Console)
+        def cli = new CliBuilderInternal(usage: 'groovyConsole [options] [filename]', stopAtNonOption: false,
+                header: messages['cli.option.header'])
+        cli.with {
+            _(names: ['-cp', '-classpath', '--classpath'], messages['cli.option.classpath.description'])
+            h(longOpt: 'help', messages['cli.option.help.description'])
+            V(longOpt: 'version', messages['cli.option.version.description'])
+            pa(longOpt: 'parameters', messages['cli.option.parameters.description'])
+            pr(longOpt: 'enable-preview', messages['cli.option.enable.preview.description'])
+            D(longOpt: 'define', type: Map, argName: 'name=value', messages['cli.option.define.description'])
+            _(longOpt: 'configscript', args: 1, messages['cli.option.configscript.description'])
+        }
+        OptionAccessor options = cli.parse(args)
+
+        if (options == null) {
+            // CliBuilder prints error, but does not exit
+            System.exit(22) // Invalid Args
+        }
+
+        if (options.h) {
+            cli.usage()
+            System.exit(0)
+        }
+
+        if (options.V) {
+            System.out.println(messages.format('cli.info.version', GroovySystem.version))
+            System.exit(0)
+        }
+
+        if (options.hasOption('D')) {
+            options.Ds.each { k, v -> System.setProperty(k, v) }
+        }
+
+        // full stack trace should not be logged to the output window - GROOVY-4663
+        Logger.getLogger(StackTraceUtils.STACK_LOG_NAME).useParentHandlers = false
+
+        //set the look and feel based on theme preference
+        ThemeManager.applyTheme(ThemeManager.currentMode)
+
+        def baseConfig = new CompilerConfiguration(System.getProperties())
+        String starterConfigScripts = System.getProperty("groovy.starter.configscripts", null)
+        if (options.configscript || (starterConfigScripts != null && !starterConfigScripts.isEmpty())) {
+            List<String> configScripts = new ArrayList<String>()
+            if (options.configscript) {
+                configScripts.add(options.configscript)
+            }
+            if (starterConfigScripts != null) {
+                configScripts.addAll(StringGroovyMethods.tokenize((CharSequence) starterConfigScripts, ','))
+            }
+            GroovyMain.processConfigScripts(configScripts, baseConfig)
+        }
+
+        baseConfig.setParameters(options.hasOption("pa"))
+
+        def console = new Console(Thread.currentThread().contextClassLoader, new Binding(), baseConfig)
+        console.useScriptClassLoaderForScriptExecution = true
+        console.run()
+        def remaining = options.arguments()
+        if (remaining && !remaining[-1].startsWith("-")) {
+            console.loadScriptFile(remaining[-1] as File)
+        }
+    }
+
+    /** Loads the configured output size limit, honoring the system property override. */
+    int loadMaxOutputChars() {
+        // For backwards compatibility 'maxOutputChars' remains defined in the Console class
+        // and the System Property takes precedence as the default value.
+        int max = prefs.getInt('maxOutputChars', ConsolePreferences.DEFAULT_MAX_OUTPUT_CHARS)
+        return System.getProperty('groovy.console.output.limit', "${max}") as int
+    }
+
+    /** Shows the console preferences dialog. */
+    void preferences(EventObject evt = null) {
+        if (!consolePreferences) {
+            consolePreferences = new ConsolePreferences(this)
+        }
+        consolePreferences.show()
+    }
+
+    /** Updates output mirroring preferences and recreates the log writer if needed. */
+    void setOutputPreferences(boolean useOutputFile, File outputFile) {
+        prefs.remove('outputLogFileName')
+        if (!useOutputFile) {
+            closeOutputPrintWriter(outputFile)
+        } else {
+            if (outputFile != null) {
+                closeOutputPrintWriter()
+                createOutputPrintWriter(outputFile)
+                prefs.put('outputLogFileName', outputFile.getAbsolutePath())
+            }
+        }
+    }
+
+    /** Opens the configured output log file in append mode. */
+    void createOutputPrintWriter(File outputFile) {
+        outputPrintWriter = new PrintWriter(new FileOutputStream(
+                outputFile,
+                true))
+    }
+
+    /** Closes the optional output log writer. */
+    void closeOutputPrintWriter() {
+        if (outputPrintWriter != null) {
+            outputPrintWriter.close()
+            outputPrintWriter = null
+        }
+    }
+
+    /** Creates a console backed by a fresh binding. */
+    Console(Binding binding = new Binding()) {
+        this(null, binding)
+    }
+
+    /** Creates a console with the supplied parent loader, binding, and base compiler configuration. */
+    Console(ClassLoader parent, Binding binding = new Binding(), CompilerConfiguration baseConfig = new CompilerConfiguration(System.getProperties())) {
+        this.baseConfig = baseConfig
+        this.maxOutputChars = loadMaxOutputChars()
+
+        // Set up output file for stdout/stderr, if any
+        def outputLogFileName = prefs.get('outputLogFileName', null)
+        if (outputLogFileName) {
+            createOutputPrintWriter(new File(outputLogFileName))
+        }
+
+        newScript(parent, binding)
+        try {
+            System.setProperty('groovy.full.stacktrace', System.getProperty('groovy.full.stacktrace',
+                    Boolean.toString(prefs.getBoolean('fullStackTraces', false))))
+
+        } catch (SecurityException se) {
+            fullStackTracesAction.enabled = false
+        }
+        consoleControllers += this
+
+        // listen for Ivy events if Ivy is on the Classpath
+        try {
+            if (Class.forName('org.apache.ivy.core.event.IvyListener')) {
+                def ivyPluginClass = Class.forName('groovy.console.ui.ConsoleIvyPlugin')
+                ivyPluginClass.getConstructor().newInstance().addListener(this)
+            }
+        } catch (ReflectiveOperationException ignore) {
+            if (DEBUG_GRAPE) {
+                System.err.println "Ignoring attempt to load ConsoleIvyPlugin: ${ignore.message}"
+            }
+        }
+
+        // listen for Maven resolver events if the Maven console plugin is on the classpath
+        try {
+            def mavenPluginClass = Class.forName('groovy.console.ui.ConsoleMavenPlugin')
+            mavenPluginClass.getConstructor().newInstance().addListener(this)
+        } catch (ReflectiveOperationException ignore) {
+            if (DEBUG_GRAPE) {
+                System.err.println "Ignoring attempt to load ConsoleMavenPlugin: ${ignore.message}"
+            }
+        }
+
+        binding.variables._outputTransforms = OutputTransforms.loadOutputTransforms()
+    }
+
+    /** Recreates the Groovy shell for a new script context. */
+    void newScript(ClassLoader parent, Binding binding) {
+        config = new CompilerConfiguration(baseConfig)
+        config.addCompilationCustomizers(*baseConfig.compilationCustomizers)
+        if (threadInterrupt) {
+            config.addCompilationCustomizers(new ASTTransformationCustomizer(ThreadInterrupt))
+        }
+        shell = new GroovyShell(parent, binding, config)
+    }
+
+    /** Default Swing delegates used to build the console frame and menu bar. */
+    static frameConsoleDelegates = [
+            rootContainerDelegate: {
+                frame(
+                        title: 'GroovyConsole',
+                        //location: [100,100], // in groovy 2.0 use platform default location
+                        iconImage: imageIcon('/groovy/console/ui/ConsoleIcon.png').image,
+                        defaultCloseOperation: JFrame.DO_NOTHING_ON_CLOSE,
+                ) {
+                    try {
+                        current.locationByPlatform = true
+                    } catch (Exception e) {
+                        current.location = [100, 100] // for 1.4 compatibility
+                    }
+                    containingWindows += current
+                }
+            },
+            menuBarDelegate      : { arg ->
+                current.JMenuBar = build(arg)
+            }
+    ]
+
+    /** Builds and shows the console UI using default delegates. */
+    void run() {
+        run(frameConsoleDelegates)
+    }
+
+    /** Builds and shows the console UI using the supplied Swing delegates. */
+    void run(Map defaults) {
+
+        swing = new SwingBuilder()
+        defaults.each { k, v -> swing[k] = v }
+
+        // tweak what the stack traces filter out to be fairly broad
+        System.setProperty('groovy.sanitized.stacktraces', '''org.codehaus.groovy.runtime.
+                org.codehaus.groovy.
+                org.apache.groovy.
+                groovy.lang.
+                gjdk.groovy.lang.
+                sun.
+                java.lang.reflect.
+                java.lang.Thread
+                groovy.console.ui.Console''')
+
+        // add controller to the swingBuilder bindings
+        swing.controller = this
+
+        // seed icon size from prefs before actions are built so they pick up the right size
+        Icons.setSize(initialIconSize())
+
+        // create the actions
+        swing.build(ConsoleActions)
+
+        // create the view
+        swing.build(ConsoleView)
+
+        bindResults()
+
+        // stitch some actions together
+        swing.bind(source: swing.inputEditor.undoAction, sourceProperty: 'enabled', target: swing.undoAction, targetProperty: 'enabled')
+        swing.bind(source: swing.inputEditor.redoAction, sourceProperty: 'enabled', target: swing.redoAction, targetProperty: 'enabled')
+
+        if (swing.consoleFrame instanceof Window) {
+            nativeFullScreenForMac(swing.consoleFrame)
+            installSystemThemeWatcher(swing.consoleFrame as Window)
+            swing.consoleFrame.pack()
+            swing.consoleFrame.show()
+        }
+        installInterceptor()
+        updateTitle()
+        swing.doLater inputArea.&requestFocus
+    }
+
+    /**
+     * Make the console frames capable of native fullscreen
+     * for Mac OS X Lion and beyond.
+     *
+     * @param frame the application window
+     */
+    private void nativeFullScreenForMac(Window frame) {
+        if (System.getProperty('os.name').contains('Mac OS X')) {
+            new GroovyShell(new Binding([frame: frame])).evaluate('''
+                    try {
+                        com.apple.eawt.FullScreenUtilities.setWindowCanFullScreen(frame, true)
+                    } catch (Throwable t) {
+                        // simply ignore as full screen capability is not available
+                    }
+                ''')
+        }
+    }
+
+    // Re-probes the OS appearance when the console regains focus so that
+    // SYSTEM mode tracks live OS theme changes, and so that menu-bar icons
+    // on macOS (drawn against the OS-themed screen menu bar) stay legible
+    // when the user flips the OS setting in another app.
+    private void installSystemThemeWatcher(Window frame) {
+        frame.addWindowFocusListener(new WindowFocusListener() {
+            @Override void windowGainedFocus(WindowEvent e) {
+                if (!ThemeManager.refreshSystemDarkMode()) return
+                if (ThemeManager.currentMode == ThemeManager.ThemeMode.SYSTEM) {
+                    switchTheme(ThemeManager.ThemeMode.SYSTEM)
+                } else if (ThemeManager.isMenuDrawnByOS()) {
+                    Icons.refreshAll()
+                }
+            }
+            @Override void windowLostFocus(WindowEvent e) {}
+        })
+    }
+
+    /** Starts interceptors that route standard output and error into the console. */
+    void installInterceptor() {
+        systemOutInterceptor = new SystemOutputInterceptor(this.&notifySystemOut, true)
+        systemOutInterceptor.start()
+        systemErrorInterceptor = new SystemOutputInterceptor(this.&notifySystemErr, false)
+        systemErrorInterceptor.start()
+        // TODO: would this be a good place to assign the console id?
+    }
+
+    /** Adds a history record and trims the list to the configured maximum size. */
+    void addToHistory(record) {
+        history.add(record)
+        // history.size here just retrieves method closure
+        if (history.size() > maxHistory) {
+            history.remove(0)
+        }
+        // history.size doesn't work here either
+        historyIndex = history.size()
+        updateHistoryActions()
+    }
+
+    // Ensure we don't have too much in console (takes too much memory)
+    private ensureNoDocLengthOverflow(doc) {
+        // if it is a case of stackOverFlowError, show the exception details from the front
+        // as there is no point in showing the repeating details at the back
+        int offset = stackOverFlowError ? maxOutputChars : 0
+        if (doc.length > maxOutputChars) {
+            doc.remove(offset, doc.length - maxOutputChars)
+        }
+    }
+
+    /** Appends plain text to the output pane. */
+    void appendOutput(String text, AttributeSet style) {
+        def doc = outputArea.styledDocument
+        insertString(doc, doc.length, text, style)
+        ensureNoDocLengthOverflow(doc)
+    }
+
+    /** Appends a window description to the output pane. */
+    void appendOutput(Window window, AttributeSet style) {
+        appendOutput(window.toString(), style)
+    }
+
+    /** Appends an object's string form to the output pane. */
+    void appendOutput(Object object, AttributeSet style) {
+        appendOutput(object.toString(), style)
+    }
+
+    /** Appends an embedded component to the output pane. */
+    void appendOutput(Component component, AttributeSet style) {
+        SimpleAttributeSet sas = new SimpleAttributeSet()
+        sas.addAttribute(StyleConstants.NameAttribute, 'component')
+        StyleConstants.setComponent(sas, component)
+        appendOutput(component.toString(), sas)
+    }
+
+    /** Appends an embedded icon to the output pane. */
+    void appendOutput(Icon icon, AttributeSet style) {
+        SimpleAttributeSet sas = new SimpleAttributeSet()
+        sas.addAttribute(StyleConstants.NameAttribute, 'icon')
+        StyleConstants.setIcon(sas, icon)
+        appendOutput(icon.toString(), sas)
+    }
+
+    /** Appends a stack trace, hyperlinking script line references when possible. */
+    void appendStacktrace(text) {
+        // prevent NPE when outputArea is missing, i.e. there is currently no window present
+        // TODO the text should not be swallowed (options: postpone output, open new window, log file, terminal, ...)
+        if (outputArea == null) {
+            return
+        }
+        def doc = outputArea.styledDocument
+
+        // split lines by new line separator
+        def lines = text.split(/(\n|\r|\r\n|\u0085|\u2028|\u2029)/)
+
+        // Java Identifier regex
+        def ji = /([\p{Alnum}_\$][\p{Alnum}_\$]*)/
+
+        // stacktrace line regex
+        def stacktracePattern = /\tat $ji(\.$ji)+\((($ji(\.(java|groovy))?):(\d+))\)/
+
+        lines.each { line ->
+            int initialLength = doc.length
+
+            def matcher = line =~ stacktracePattern
+            def fileName = matcher.matches() ? matcher[0][-5] : ''
+
+            if (fileName == scriptFile?.name || fileName.startsWith(DEFAULT_SCRIPT_NAME_START)) {
+                def fileNameAndLineNumber = matcher[0][-6]
+                def length = fileNameAndLineNumber.length()
+                def index = line.indexOf(fileNameAndLineNumber)
+
+                def style = hyperlinkStyle
+                def hrefAttr = new SimpleAttributeSet()
+                // don't pass a GString as it won't be coerced to String as addAttribute takes an Object
+                hrefAttr.addAttribute(HTML.Attribute.HREF, 'file://' + fileNameAndLineNumber)
+                style.addAttribute(HTML.Tag.A, hrefAttr)
+
+                insertString(doc, initialLength, line[0..<index], stacktraceStyle)
+                insertString(doc, initialLength + index, line[index..<(index + length)], style)
+                insertString(doc, initialLength + index + length, line[(index + length)..-1] + '\n', stacktraceStyle)
+            } else {
+                insertString(doc, initialLength, line + '\n', stacktraceStyle)
+            }
+        }
+
+        ensureNoDocLengthOverflow(doc)
+    }
+
+    /** Inserts text into a document and optionally mirrors it to the output log file. */
+    void insertString(Document doc, int offset, String text, AttributeSet attributeSet, boolean outputToFile = true) {
+        doc.insertString(offset, text, attributeSet)
+
+        // Output to file if activated
+        if (outputToFile && outputPrintWriter != null) {
+            outputPrintWriter.append(text)
+            outputPrintWriter.flush()
+        }
+    }
+
+    /** Appends text to the output pane, forcing a preceding line break. */
+    void appendOutputNl(text, style) {
+        def doc = outputArea.styledDocument
+        def len = doc.length
+        def alreadyNewLine = (len == 0 || doc.getText(len - 1, 1) == '\n')
+        insertString(doc, doc.length, ' \n', style)
+        if (alreadyNewLine) {
+            doc.remove(len, 2) // windows hack to fix (improve?) line spacing
+        }
+        appendOutput(text, style)
+    }
+
+    /** Appends text and preserves compact line spacing in the output pane. */
+    void appendOutputLines(text, style) {
+        appendOutput(text, style)
+        def doc = outputArea.styledDocument
+        def len = doc.length
+
+        // Disable output to log file in this case ('\n' is removed from outputArea next line)
+        insertString(doc, len, ' \n', style, false)
+        doc.remove(len, 2) // windows hack to fix (improve?) line spacing
+    }
+
+    /** Prompts to save unsaved changes before an operation proceeds. */
+    boolean askToSaveFile() {
+        if (!dirty) {
+            return true
+        }
+        switch (JOptionPane.showConfirmDialog(frame,
+                'Save changes' + (scriptFile != null ? " to ${scriptFile.name}" : '') + '?',
+                'GroovyConsole', JOptionPane.YES_NO_CANCEL_OPTION)) {
+            case JOptionPane.YES_OPTION:
+                return fileSave()
+            case JOptionPane.NO_OPTION:
+                return true
+            default:
+                return false
+        }
+    }
+
+    /** Emits the platform default warning beep. */
+    void beep() {
+        Toolkit.defaultToolkit.beep()
+    }
+
+    /** Refreshes the shell bindings that expose the last result and result history. */
+    void bindResults() {
+        shell.setVariable('_', getLastResult()) // lastResult doesn't seem to work
+        shell.setVariable('__', history.collect { it.result })
+    }
+
+    /** Toggles whether stdout is captured by all console windows. */
+    static void captureStdOut(EventObject evt) {
+        captureStdOut = evt.source.selected
+        prefs.putBoolean('captureStdOut', captureStdOut)
+    }
+
+    /** Toggles whether stderr is captured by all console windows. */
+    static void captureStdErr(EventObject evt) {
+        captureStdErr = evt.source.selected
+        prefs.putBoolean('captureStdErr', captureStdErr)
+    }
+
+    /** Toggles whether full stack traces are reported for failures. */
+    void fullStackTraces(EventObject evt) {
+        fullStackTraces = evt.source.selected
+        System.setProperty('groovy.full.stacktrace',
+                Boolean.toString(fullStackTraces))
+        prefs.putBoolean('fullStackTraces', fullStackTraces)
+    }
+
+    /** Toggles whether executed source text is echoed to the output pane. */
+    void showScriptInOutput(EventObject evt) {
+        showScriptInOutput = evt.source.selected
+        prefs.putBoolean('showScriptInOutput', showScriptInOutput)
+    }
+
+    /** Toggles whether results are transformed before display. */
+    void visualizeScriptResults(EventObject evt) {
+        visualizeScriptResults = evt.source.selected
+        prefs.putBoolean('visualizeScriptResults', visualizeScriptResults)
+    }
+
+    /** Toggles toolbar visibility and persists the selection. */
+    void showToolbar(EventObject evt) {
+        showToolbar = evt.source.selected
+        prefs.putBoolean('showToolbar', showToolbar)
+        toolbar.visible = showToolbar
+    }
+
+    /** Toggles the input/output split orientation. */
+    void orientationVertical(EventObject evt) {
+        def oldValue = orientationVertical
+        orientationVertical = evt.source.selected
+        prefs.putBoolean('orientationVertical', orientationVertical)
+        if (oldValue != orientationVertical) {
+            if (orientationVertical) {
+                splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT)
+            } else {
+                splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)
+            }
+            splitPane.resizeWeight = detachedOutput ? 1.0 : 0.5
+            splitPane.resetToPreferredSizes()
+        }
+    }
+
+    /** Toggles whether output is shown in a detached window. */
+    void detachedOutput(EventObject evt) {
+        def oldDetachedOutput = detachedOutput
+        detachedOutput = evt.source.selected
+        prefs.putBoolean('detachedOutput', detachedOutput)
+        if (oldDetachedOutput != detachedOutput) {
+            if (detachedOutput) {
+                splitPane.add(blank, JSplitPane.BOTTOM)
+                origDividerSize = splitPane.dividerSize
+                splitPane.dividerSize = 0
+                splitPane.resizeWeight = 1.0
+                outputWindow.add(scrollArea, BorderLayout.CENTER)
+                prepareOutputWindow()
+            } else {
+                splitPane.add(scrollArea, JSplitPane.BOTTOM)
+                splitPane.dividerSize = origDividerSize
+                outputWindow.add(blank, BorderLayout.CENTER)
+                outputWindow.visible = false
+                splitPane.resizeWeight = 0.5
+            }
+        }
+    }
+
+    /** Toggles whether output is cleared before each run or compile. */
+    void autoClearOutput(EventObject evt) {
+        autoClearOutput = evt.source.selected
+        prefs.putBoolean('autoClearOutput', autoClearOutput)
+    }
+
+    /**
+     * Switches the console to the bundled light theme.
+     *
+     * @since 6.0.0
+     */
+    void lightTheme(EventObject evt = null) { switchTheme(ThemeManager.ThemeMode.LIGHT) }
+    /**
+     * Switches the console to the bundled dark theme.
+     *
+     * @since 6.0.0
+     */
+    void darkTheme(EventObject evt = null) { switchTheme(ThemeManager.ThemeMode.DARK) }
+    /**
+     * Switches the console to follow the operating system theme.
+     *
+     * @since 6.0.0
+     */
+    void systemTheme(EventObject evt = null) { switchTheme(ThemeManager.ThemeMode.SYSTEM) }
+    /**
+     * Advances to the next available theme mode.
+     *
+     * @since 6.0.0
+     */
+    void cycleTheme(EventObject evt = null) { switchTheme(ThemeManager.cycleMode()) }
+
+    private void switchTheme(ThemeManager.ThemeMode mode) {
+        currentTheme = mode.name()
+        ThemeManager.applyTheme(mode)
+        // reapply custom styles for all open console windows
+        consoleControllers.each { Console console -> console.reapplyStyles() }
+        // let auxiliary windows (AstBrowser, ObjectBrowser) retint themselves
+        ThemeManager.notifyThemeChanged()
+    }
+
+    private void reapplyStyles() {
+        def fontFamily = prefs.get('fontName', 'Monospaced')
+        def newStyles = ThemeManager.getStyles(fontFamily)
+
+        // update output area styles
+        def doc = outputArea.styledDocument
+        def applyStyle = { javax.swing.text.Style style, Map values ->
+            // remove old foreground/background before applying new
+            style.removeAttribute(javax.swing.text.StyleConstants.Foreground)
+            style.removeAttribute(javax.swing.text.StyleConstants.Background)
+            values.each { k, v -> style.addAttribute(k, v) }
+        }
+        def regularStyle = doc.getStyle('regular')
+        if (regularStyle) applyStyle(regularStyle, newStyles.regular)
+        applyStyle(promptStyle, newStyles.prompt)
+        applyStyle(commandStyle, newStyles.command)
+        applyStyle(outputStyle, newStyles.output)
+        applyStyle(resultStyle, newStyles.result)
+        applyStyle(stacktraceStyle, newStyles.stacktrace)
+        applyStyle(hyperlinkStyle, newStyles.hyperlink)
+
+        // re-apply foreground color to all existing output text
+        // First set everything to the regular foreground, then let
+        // specifically-colored runs be re-colored on next output.
+        // This is the most reliable approach since Swing copies style
+        // attributes by value into character elements at insert time.
+        int docLen = doc.length
+        if (docLen > 0) {
+            doc.setCharacterAttributes(0, docLen, regularStyle, false)
+        }
+
+        // update area backgrounds
+        outputArea.background = ThemeManager.outputBackground
+        inputArea.background = ThemeManager.inputBackground
+
+        // update input area syntax highlighting styles (GroovyFilter styles)
+        def styleContext = javax.swing.text.StyleContext.defaultStyleContext
+        newStyles.each { styleName, defs ->
+            def style = styleContext.getStyle(styleName)
+            if (style) {
+                style.removeAttribute(javax.swing.text.StyleConstants.Foreground)
+                style.removeAttribute(javax.swing.text.StyleConstants.Background)
+                defs.each { k, v -> style.addAttribute(k, v) }
+            }
+        }
+
+        // update SmartDocumentFilter styles (ANTLR token-based highlighting)
+        groovy.console.ui.text.SmartDocumentFilter.updateStyles()
+
+        // force re-parse to apply new colors to existing text — suppress
+        // undo capture so the user's Undo history isn't polluted with a
+        // theme-driven attribute flip (otherwise an Undo after a theme
+        // switch would partially revert the new colors)
+        def docFilter = (inputArea.document as javax.swing.text.DefaultStyledDocument).documentFilter
+        if (docFilter instanceof groovy.console.ui.text.SmartDocumentFilter) {
+            def um = inputEditor.undoManager
+            um?.recording = false
+            try {
+                docFilter.reparseDocument()
+            } finally {
+                um?.recording = true
+            }
+        }
+
+        // let FlatLaf update all Swing component UI delegates
+        com.formdev.flatlaf.FlatLaf.updateUI()
+
+        // rebuild SVG icon rasters so accent-coloured and foreground-tracking icons pick up the new theme
+        Icons.refreshAll()
+
+        // update cycle theme button tooltip, menu radio buttons, and status
+        swing.cycleThemeAction.putValue(javax.swing.Action.SHORT_DESCRIPTION, 'Cycle theme (' + ThemeManager.themeLabel + ')')
+        swing.lightThemeMenuItem.selected = (currentTheme == 'LIGHT')
+        swing.darkThemeMenuItem.selected = (currentTheme == 'DARK')
+        swing.systemThemeMenuItem.selected = (currentTheme == 'SYSTEM')
+        statusLabel.text = 'Theme changed to: ' + ThemeManager.themeLabel + (ThemeManager.isUsingCustomTheme() ? ' (custom)' : '')
+
+        // repaint
+        inputEditor.textEditor.repaint()
+        outputArea.repaint()
+    }
+
+    /** Toggles the {@code @ThreadInterrupt} transform for future scripts. */
+    void threadInterruption(EventObject evt) {
+        threadInterrupt = evt.source.selected
+        prefs.putBoolean('threadInterrupt', threadInterrupt)
+        def customizers = config.compilationCustomizers.iterator()
+        while (customizers.hasNext()) {
+            def next = customizers.next()
+            if (next instanceof ASTTransformationCustomizer) {
+                ASTTransformationCustomizer astCustomizer = next
+                if (astCustomizer.transformation instanceof ThreadInterruptibleASTTransformation) {
+                    customizers.remove()
+                }
+            }
+        }
+        if (threadInterrupt) {
+            config.addCompilationCustomizers(new ASTTransformationCustomizer(ThreadInterrupt))
+        }
+    }
+
+    /** Updates cached selection bounds and the row/column display. */
+    void caretUpdate(CaretEvent e) {
+        textSelectionStart = Math.min(dot(e), mark(e))
+        textSelectionEnd = Math.max(dot(e), mark(e))
+        setRowNumAndColNum()
+    }
+
+    // GROOVY-8339: to avoid illegal access to a non-visible implementation class - can be removed if a more general solution is found
+    @CompileStatic
+    /** Returns the caret dot position without touching implementation details. */
+    int dot(CaretEvent e) {
+        e.dot
+    }
+
+    // GROOVY-8339: to avoid illegal access to a non-visible implementation class - can be removed if a more general solution is found
+    @CompileStatic
+    /** Returns the caret mark position without touching implementation details. */
+    int mark(CaretEvent e) {
+        e.mark
+    }
+
+    /** Clears all text from the output pane. */
+    void clearOutput(EventObject evt = null) {
+        outputArea.text = ''
+    }
+
+    /** Prompts to interrupt the running script before exiting. */
+    def askToInterruptScript() {
+        if (!scriptRunning) return true
+        def rc = JOptionPane.showConfirmDialog(frame, "Script executing. Press 'OK' to attempt to interrupt it before exiting.",
+                'GroovyConsole', JOptionPane.OK_CANCEL_OPTION)
+        if (rc == JOptionPane.OK_OPTION) {
+            doInterrupt()
+            return true
+        } else {
+            return false
+        }
+    }
+
+    /** Interrupts the currently running script thread, if any. */
+    void doInterrupt(EventObject evt = null) {
+        runThread?.interrupt()
+    }
+
+    /** Handles desktop quit requests by delegating to {@link #exit}. */
+    void exitDesktop(EventObject evt = null, quitResponse = null) {
+        if (exit(evt)) {
+            quitResponse.performQuit()
+        } else {
+            quitResponse.cancelQuit()
+        }
+    }
+
+    /** Closes this console after offering to interrupt and save. */
+    boolean exit(EventObject evt = null) {
+        if (askToInterruptScript()) {
+            def exit = askToSaveFile()
+            if (exit) {
+                if (frame instanceof Window) {
+                    frame.hide()
+                    frame.dispose()
+                    outputWindow?.dispose()
+                }
+                FindReplaceUtility.dispose()
+                consoleControllers.remove(this)
+                if (!consoleControllers) {
+                    systemOutInterceptor.stop()
+                    systemErrorInterceptor.stop()
+                }
+            }
+            return exit
+        }
+    }
+
+    /** Resets the editor to a new unsaved script. */
+    void fileNewFile(EventObject evt = null) {
+        if (askToSaveFile()) {
+            scriptFile = null
+            setDirty(false)
+            inputArea.text = ''
+        }
+    }
+
+    /** Opens another console window seeded with the current binding variables. */
+    void fileNewWindow(EventObject evt = null) {
+        Console consoleController = new Console(
+                new Binding(
+                        new HashMap(shell.getContext().variables)))
+        consoleController.systemOutInterceptor = systemOutInterceptor
+        consoleController.systemErrorInterceptor = systemErrorInterceptor
+        SwingBuilder swing = new SwingBuilder()
+        consoleController.swing = swing
+        frameConsoleDelegates.each { k, v -> swing[k] = v }
+        swing.controller = consoleController
+        swing.build(ConsoleActions)
+        swing.build(ConsoleView)
+        // TODO The call to installInterceptor() conveys that the interceptors are installed for the new window,
+        //      but this seems not to be the case. Instead the method creates new interceptors for the current window.
+        //      The new window inherited the interceptors from this window a few statements above.
+        //      Actually - since System.out and System.err exists only once - there should be only one interceptor
+        //      forwarding to potentially more than one window.
+        installInterceptor()
+        nativeFullScreenForMac(swing.consoleFrame)
+        swing.consoleFrame.pack()
+        swing.consoleFrame.show()
+        swing.doLater swing.inputArea.&requestFocus
+    }
+
+    /** Prompts for a script file and loads it into the editor. */
+    void fileOpen(EventObject evt = null) {
+        if (askToSaveFile()) {
+            def scriptName = selectFilename()
+            if (scriptName != null) {
+                loadScriptFile(scriptName)
+            }
+        }
+    }
+
+    /** Loads the supplied script file into the editor. */
+    void loadScriptFile(File file) {
+        swing.edt {
+            inputArea.editable = false
+        }
+        swing.doOutside {
+            try {
+                consoleText = file.readLines().join('\n')
+                scriptFile = file
+                swing.edt {
+                    def listeners = inputArea.document.getListeners(DocumentListener)
+                    listeners.each { inputArea.document.removeDocumentListener(it) }
+                    updateTitle()
+                    inputArea.document.remove 0, inputArea.document.length
+                    inputArea.document.insertString 0, consoleText, null
+                    listeners.each { inputArea.document.addDocumentListener(it) }
+                    setDirty(false)
+                    inputArea.caretPosition = 0
+                }
+            } finally {
+                swing.edt { inputArea.editable = true }
+                // GROOVY-3684: focus away and then back to inputArea ensures caret blinks
+                swing.doLater outputArea.&requestFocusInWindow
+                swing.doLater inputArea.&requestFocusInWindow
+                // Line numbers are typically (re)drawn using a document listener,
+                // but those were disabled above while modifying the document.
+                // So make sure line numbers are drawn now.
+                inputEditor.repaint()
+            }
+        }
+    }
+
+    /** Saves the current script, prompting for a file when needed. */
+    boolean fileSave(EventObject evt = null) {
+        if (scriptFile == null) {
+            return fileSaveAs(evt)
+        }
+
+        scriptFile.write(inputArea.text)
+        setDirty(false)
+        return true
+    }
+
+    /** Saves the current script under a newly selected file name. */
+    boolean fileSaveAs(EventObject evt = null) {
+        scriptFile = selectFilename('Save')
+        if (scriptFile != null) {
+            scriptFile.write(inputArea.text)
+            setDirty(false)
+            return true
+        } else {
+            return false
+        }
+    }
+
+    /** Reports a compilation or execution failure in the output pane. */
+    def finishException(Throwable t, boolean executing) {
+        if (executing) {
+            statusLabel.text = 'Execution terminated with exception.'
+            history[-1].exception = t
+        } else {
+            statusLabel.text = 'Compilation failed.'
+        }
+
+        if (t instanceof MultipleCompilationErrorsException) {
+            MultipleCompilationErrorsException mcee = t
+            ErrorCollector collector = mcee.errorCollector
+            int count = collector.errorCount
+            appendOutputNl("${count} compilation error${count > 1 ? 's' : ''}:\n\n", commandStyle)
+
+            collector.errors.each { error ->
+                if (error instanceof SyntaxErrorMessage) {
+                    SyntaxException se = error.cause
+                    int errorLine = se.line
+                    String message = se.originalMessage
+
+                    def doc = outputArea.styledDocument
+                    Style style = createLinkStyle(errorLine)
+
+                    insertString(doc, doc.length, message + ' at ', stacktraceStyle)
+                    insertString(doc, doc.length, "line: ${se.line}, column: ${se.startColumn}\n\n", style)
+                } else if (error instanceof Throwable) {
+                    reportException(error)
+                } else if (error instanceof ExceptionMessage) {
+                    reportException(error.cause)
+                } else if (error instanceof SimpleMessage) {
+                    def doc = outputArea.styledDocument
+                    insertString(doc, doc.length, "${error.message}\n", new SimpleAttributeSet())
+                }
+            }
+        } else if (t instanceof ParseProblemException) {
+            def problemList = ((ParseProblemException) t).getProblems()
+            int count = problemList.size()
+            appendOutputNl("${count} compilation error${count > 1 ? 's' : ''}:\n\n", commandStyle)
+
+            def doc = outputArea.styledDocument
+            problemList.each { p ->
+                insertString(doc, doc.length, "${p.message}", stacktraceStyle)
+
+                if (p.location.isPresent()) {
+                    def range = p.location.get().begin.range
+                    if (range.isPresent()) {
+                        def position = range.get().begin
+                        def errorLine = position.line
+                        def errorCol = position.column
+                        Style style = createLinkStyle(errorLine)
+
+                        insertString(doc, doc.length, " at ", stacktraceStyle)
+                        insertString(doc, doc.length, "line: ${errorLine}, column: ${errorCol}\n\n", style)
+                    }
+                }
+
+            }
+        } else {
+            reportException(t)
+        }
+
+        if (!executing) {
+            bindResults()
+        }
+
+        // GROOVY-4496: set the output window position to the top-left so the exception details are visible from the start
+        outputArea.caretPosition = 0
+
+        if (detachedOutput) {
+            prepareOutputWindow()
+            showOutputWindow()
+        }
+    }
+
+    private Style createLinkStyle(int errorLine) {
+        String scriptFileName = scriptFile?.name ?: DEFAULT_SCRIPT_NAME_START
+        def style = hyperlinkStyle
+        def hrefAttr = new SimpleAttributeSet()
+        // don't pass a GString as it won't be coerced to String as addAttribute takes an Object
+        hrefAttr.addAttribute(HTML.Attribute.HREF, 'file://' + scriptFileName + ':' + errorLine)
+        style.addAttribute(HTML.Tag.A, hrefAttr)
+        return style
+    }
+
+    private calcPreferredSize(a, b, c) {
+        [c, [a, b].min()].max()
+    }
+
+    private reportException(Throwable t) {
+        appendOutputNl('Exception thrown\n', commandStyle)
+
+        Writer sw = new StringBuilderWriter()
+        new PrintWriter(sw).withWriter { pw -> StackTraceUtils.deepSanitize(t).printStackTrace(pw) }
+        appendStacktrace("\n${sw.builder}\n")
+    }
+
+    /** Reports successful execution and publishes the resulting value. */
+    def finishNormal(Object result, Long elapsedTime=null) {
+        String elapsedTimeStr = null != elapsedTime ? " Elapsed time: ${elapsedTime}ms." : ''
+        // Take down the wait/cancel dialog
+        history[-1].result = result
+        if (result != null) {
+            statusLabel.text = "Execution complete.${elapsedTimeStr}"
+            appendOutputNl('Result: ', promptStyle)
+            def obj = (visualizeScriptResults
+                    ? OutputTransforms.transformResult(result, shell.getContext()._outputTransforms)
+                    : result.toString())
+
+            // multi-methods are magical!
+            appendOutput(obj, resultStyle)
+        } else {
+            statusLabel.text = "Execution complete. Result was null.${elapsedTimeStr}"
+        }
+        bindResults()
+        if (detachedOutput) {
+            prepareOutputWindow()
+            showOutputWindow()
+        }
+    }
+
+    /** Reports successful compilation without execution. */
+    def compileFinishNormal() {
+        statusLabel.text = 'Compilation complete.'
+    }
+
+    private def prepareOutputWindow() {
+        outputArea.setPreferredSize(null)
+        outputWindow.pack()
+        outputArea.setPreferredSize([calcPreferredSize(outputWindow.getWidth(), inputEditor.getWidth(), 120),
+                                     calcPreferredSize(outputWindow.getHeight(), inputEditor.getHeight(), 60)] as Dimension)
+        outputWindow.pack()
+    }
+
+    /** Returns the most recent non-null result from execution history. */
+    def getLastResult() {
+        // runtime bugs in here history.reverse produces odd lookup
+        // return history.reverse.find {it != null}
+        if (!history) {
+            return
+        }
+        for (i in (history.size() - 1)..0) {
+            if (history[i].result != null) {
+                return history[i].result
+            }
+        }
+        return null
+    }
+
+    /** Moves forward in command history. */
+    void historyNext(EventObject evt = null) {
+        if (historyIndex < history.size()) {
+            setInputTextFromHistory(historyIndex + 1)
+        } else {
+            statusLabel.text = "Can't go past end of history (time travel not allowed)"
+            beep()
+        }
+    }
+
+    /** Moves backward in command history. */
+    void historyPrev(EventObject evt = null) {
+        if (historyIndex > 0) {
+            setInputTextFromHistory(historyIndex - 1)
+        } else {
+            statusLabel.text = "Can't go past start of history"
+            beep()
+        }
+    }
+
+    /** Opens the object browser for the last non-null result. */
+    void inspectLast(EventObject evt = null) {
+        if (null == lastResult) {
+            JOptionPane.showMessageDialog(frame, 'The last result is null.',
+                    'Cannot Inspect', JOptionPane.INFORMATION_MESSAGE)
+            return
+        }
+        ObjectBrowser.inspect(lastResult)
+    }
+
+    /** Opens the object browser for the current shell variables. */
+    void inspectVariables(EventObject evt = null) {
+        ObjectBrowser.inspect(shell.getContext().variables)
+    }
+
+    /** Opens the AST browser for the current editor contents. */
+    void inspectAst(EventObject evt = null) {
+        new AstBrowser(inputArea, rootElement, shell.getClassLoader(), config).run({ inputArea.getText() })
+    }
+
+    /** Opens the CST viewer for the current editor contents. */
+    void inspectCst(EventObject evt = null) {
+        String text = this.inputEditor.textEditor.text
+        def charStream = CharStreams.fromReader(new StringReader(text))
+        def lexer = new GroovyLangLexer(charStream)
+        def tokens = new CommonTokenStream(lexer)
+        def parser = new GroovyLangParser(tokens)
+        def tree = parser.compilationUnit()
+        // Trees.inspect spawns its own dialog on the EDT; we wait off-EDT then
+        // hop back on to theme it — ANTLR's TreeViewer defaults to black text
+        // on white/transparent boxes, which ignores the app theme otherwise.
+        def future = Trees.inspect(tree, parser)
+        Thread.start {
+            def dialog = future.get()
+            javax.swing.SwingUtilities.invokeLater { themeCstDialog(dialog) }
+        }
+    }
+
+    private void themeCstDialog(javax.swing.JDialog dialog) {
+        TreeViewer viewer = findTreeViewer(dialog)
+        if (!viewer) return
+        applyCstColors(viewer)
+        // track theme switches so an already-open CST dialog keeps pace
+        def listener = { javax.swing.SwingUtilities.invokeLater { applyCstColors(viewer); viewer.repaint() } } as Runnable
+        ThemeManager.addThemeChangeListener(listener)
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override void windowClosed(java.awt.event.WindowEvent e) {
+                ThemeManager.removeThemeChangeListener(listener)
+            }
+        })
+    }
+
+    private static void applyCstColors(TreeViewer viewer) {
+        boolean dark = ThemeManager.isDark()
+        viewer.textColor = dark ? new java.awt.Color(210, 210, 210) : java.awt.Color.BLACK
+        viewer.boxColor = dark ? new java.awt.Color(50, 55, 65) : java.awt.Color.WHITE
+        viewer.borderColor = null  // null = no box outline around each label (TreeViewer default)
+        viewer.highlightedBoxColor = dark ? new java.awt.Color(80, 120, 80) : new java.awt.Color(200, 255, 200)
+        viewer.background = dark ? new java.awt.Color(43, 43, 43) : java.awt.Color.WHITE
+    }
+
+    private static TreeViewer findTreeViewer(java.awt.Container container) {
+        for (Component comp : container.components) {
+            if (comp instanceof TreeViewer) return (TreeViewer) comp
+            if (comp instanceof java.awt.Container) {
+                TreeViewer found = findTreeViewer((java.awt.Container) comp)
+                if (found) return found
+            }
+        }
+        null
+    }
+
+    /** Opens the lexer token inspector for the current editor contents. */
+    void inspectTokens(EventObject evt = null) {
+        def content = inputArea.getText()
+        def lf = new LexerFrame(new StringReader(content))
+        lf.visible = true
+    }
+
+    /**
+     * Returns whether toolbar icons follow the editor font size.
+     *
+     * @since 6.0.0
+     */
+    boolean isScaleIconsWithFont() { prefs.getBoolean('scaleIconsWithFont', false) }
+    /**
+     * Returns the current toolbar icon size.
+     *
+     * @since 6.0.0
+     */
+    int getCurrentIconSize() { Icons.currentSize }
+
+    /**
+     * Switches toolbar icons to the small preset.
+     *
+     * @since 6.0.0
+     */
+    void smallIcons(EventObject evt = null) { applyIconSize(Icons.SIZE_SMALL) }
+    /**
+     * Switches toolbar icons to the normal preset.
+     *
+     * @since 6.0.0
+     */
+    void normalIcons(EventObject evt = null) { applyIconSize(Icons.SIZE_NORMAL) }
+    /**
+     * Switches toolbar icons to the large preset.
+     *
+     * @since 6.0.0
+     */
+    void largeIcons(EventObject evt = null) { applyIconSize(Icons.SIZE_LARGE) }
+
+    /**
+     * Toggles whether toolbar icons track the editor font size.
+     *
+     * @since 6.0.0
+     */
+    void scaleIconsWithFont(EventObject evt = null) {
+        setScaleIconsWithFont(evt?.source?.isSelected() as boolean)
+    }
+
+    /**
+     * Persists whether toolbar icons track the editor font size.
+     *
+     * @since 6.0.0
+     */
+    void setScaleIconsWithFont(boolean enabled) {
+        prefs.putBoolean('scaleIconsWithFont', enabled)
+        if (enabled) {
+            applyIconSize(iconSizeFromFont(inputArea.font.size))
+        } else {
+            applyIconSize(prefs.getInt('iconSize', Icons.SIZE_NORMAL))
+        }
+    }
+
+    /**
+     * Applies a toolbar icon size and refreshes the toolbar.
+     *
+     * @since 6.0.0
+     */
+    void applyIconSize(int size) {
+        // only persist the preset when not tracking the font
+        if (!prefs.getBoolean('scaleIconsWithFont', false)) {
+            prefs.putInt('iconSize', size)
+        }
+        Icons.setSize(size)
+        toolbar?.revalidate()
+        toolbar?.repaint()
+    }
+
+    /**
+     * Reapplies the current theme and retints console components.
+     *
+     * @since 6.0.0
+     */
+    void reapplyTheme() {
+        switchTheme(ThemeManager.currentMode)
+    }
+
+    /**
+     * Reloads theme definitions and reapplies the active theme.
+     *
+     * @since 6.0.0
+     */
+    void reloadThemes() {
+        ThemeManager.reloadThemes()
+        reapplyTheme()
+    }
+
+    private static int iconSizeFromFont(int fontSize) {
+        Math.max(10, Math.min(48, Math.round(fontSize * 1.33f) as int))
+    }
+
+    /**
+     * HTMLEditorKit scales FontSize values up by ~4/3 (pt→px at 96/72);
+     * compensate so the output pane visually matches the input pane.
+     *
+     * @since 6.0.0
+     */
+    static int outputFontSizeFor(int inputFontSize) {
+        Math.max(1, Math.round(inputFontSize * 0.75f) as int)
+    }
+
+    private int initialIconSize() {
+        if (prefs.getBoolean('scaleIconsWithFont', false)) {
+            return iconSizeFromFont(prefs.getInt('fontSize', 12))
+        }
+        prefs.getInt('iconSize', Icons.SIZE_NORMAL)
+    }
+
+    /** Increases the editor font size. */
+    void largerFont(EventObject evt = null) {
+        updateFontSize(inputArea.font.size + 2)
+    }
+
+    /** Routes captured stdout to the owning console or every console window. */
+    static boolean notifySystemOut(int consoleId, String str) {
+        if (!captureStdOut) {
+            // Output as normal
+            return true
+        }
+
+        Closure doAppend = {
+            Console console = findConsoleById(consoleId)
+            if (console) {
+                console.appendOutputLines(str, console.outputStyle)
+            } else {
+                consoleControllers.each { it.appendOutputLines(str, it.outputStyle) }
+            }
+        }
+
+        // Put onto GUI
+        if (EventQueue.isDispatchThread()) {
+            doAppend.call()
+        } else {
+            SwingUtilities.invokeLater doAppend
+        }
+        return false
+    }
+
+    /** Routes captured stderr to the owning console or every console window. */
+    static boolean notifySystemErr(int consoleId, String str) {
+        if (!captureStdErr) {
+            // Output as normal
+            return true
+        }
+
+        Closure doAppend = {
+            Console console = findConsoleById(consoleId)
+            if (console) {
+                console.appendStacktrace(str)
+            } else {
+                consoleControllers.each { it.appendStacktrace(str) }
+            }
+        }
+
+        // Put onto GUI
+        if (EventQueue.isDispatchThread()) {
+            doAppend.call()
+        } else {
+            SwingUtilities.invokeLater doAppend
+        }
+        return false
+    }
+
+    /** Returns the identifier used by output interceptors for this console. */
+    int getConsoleId() {
+        return System.identityHashCode(this)
+    }
+
+    private static Console findConsoleById(int consoleId) {
+        return consoleControllers.find { it.consoleId == consoleId }
+    }
+
+    @CompileStatic
+    private class GroovySourceType extends SourceType {
+        GroovySourceType() {
+            super('groovy')
+        }
+
+        @Override
+        Object run(String src) {
+            String name = ((File) Console.this.scriptFile)?.name ?: (DEFAULT_SCRIPT_NAME_START + Console.this.scriptNameCounter++)
+            Console.this.shell.run(src, name, Console.this.scriptArgsArray)
+        }
+
+        @Override
+        Object compile(String src) {
+            shell.getClassLoader().parseClass(src)
+        }
+    }
+
+    @CompileStatic
+    private class JavaSourceType extends SourceType {
+        JavaSourceType() {
+            super('java')
+        }
+
+        @Override
+        Object run(String src) {
+            Optional<String> optionalPrimaryClassName = findPrimaryClassName(src)
+            if (optionalPrimaryClassName.isPresent()) {
+                def js = new JavaShell(Thread.currentThread().contextClassLoader)
+                js.run(optionalPrimaryClassName.get(), src, Console.this.scriptArgsArray)
+            } else {
+                System.err.println('Initial parsing successful but no public class found. Compile/run will not proceed.')
+            }
+            return null
+        }
+
+        @Override
+        Object compile(String src) {
+            Optional<String> optionalPrimaryClassName = findPrimaryClassName(src)
+            if (optionalPrimaryClassName.isPresent()) {
+                def js = new JavaShell(Thread.currentThread().contextClassLoader)
+                js.compileAll(optionalPrimaryClassName.get(), src)
+            } else {
+                System.err.println('Initial parsing successful but no public class found. Compile will not proceed.')
+            }
+            return null
+        }
+    }
+
+    @CompileStatic
+    @EqualsAndHashCode
+    @TupleConstructor
+    private abstract class SourceType {
+        String extension
+
+        abstract Object run(String src)
+        abstract Object compile(String src)
+    }
+
+    /** Compiles and runs the current editor contents as Java source. */
+    void runJava(EventObject evt = null) {
+        runScript(evt, new JavaSourceType())
+    }
+
+    /** Compiles and runs the current editor contents. */
+    void runScript(EventObject evt = null, SourceType st = new GroovySourceType()) {
+        saveInputAreaContentHash()
+        if (saveOnRun && scriptFile != null) {
+            if (fileSave(evt)) runScriptImpl(false, st)
+        } else {
+            runScriptImpl(false, st)
+        }
+    }
+
+    /** Toggles whether scripts are saved before they run. */
+    void saveOnRun(EventObject evt = null) {
+        saveOnRun = evt.source.selected
+        prefs.putBoolean('saveOnRun', saveOnRun)
+    }
+
+    /** Toggles whether the console reruns unchanged scripts after a delay. */
+    void loopMode(EventObject evt = null) {
+        loopMode = evt.source.selected
+        prefs.putBoolean('loopMode', loopMode)
+    }
+
+    /** Compiles and runs the current selection as Java source. */
+    void runSelectedJava(EventObject evt = null) {
+        runSelectedScript(evt, new JavaSourceType())
+    }
+
+    /** Compiles and runs only the current editor selection. */
+    void runSelectedScript(EventObject evt = null, SourceType st = new GroovySourceType()) {
+        saveInputAreaContentHash()
+        runScriptImpl(true, st)
+    }
+
+    /** Adds jar files to the shell classpath. */
+    void addClasspathJar(EventObject evt = null) {
+        def fc = new JFileChooser(currentClasspathJarDir)
+        fc.fileSelectionMode = JFileChooser.FILES_ONLY
+        fc.multiSelectionEnabled = true
+        fc.acceptAllFileFilterUsed = true
+        if (fc.showDialog(frame, 'Add') == JFileChooser.APPROVE_OPTION) {
+            currentClasspathJarDir = fc.currentDirectory
+            Preferences.userNodeForPackage(Console).put('currentClasspathJarDir', currentClasspathJarDir.path)
+            fc.selectedFiles?.each { file ->
+                shell.getClassLoader().addURL(file.toURL())
+            }
+        }
+    }
+
+    /** Adds a directory to the shell classpath. */
+    void addClasspathDir(EventObject evt = null) {
+        def fc = new JFileChooser(currentClasspathDir)
+        fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        fc.acceptAllFileFilterUsed = true
+        if (fc.showDialog(frame, 'Add') == JFileChooser.APPROVE_OPTION) {
+            currentClasspathDir = fc.currentDirectory
+            Preferences.userNodeForPackage(Console).put('currentClasspathDir', currentClasspathDir.path)
+            shell.getClassLoader().addURL(fc.selectedFile.toURL())
+        }
+    }
+
+    /** Displays the current shell classpath in a dialog. */
+    void listClasspath(EventObject evt = null) {
+        List<URL> urls = []
+
+        ClassLoader cl = shell.classLoader
+        while (cl instanceof URLClassLoader) {
+            cl.getURLs().each { url -> urls << url }
+            cl = cl.parent
+        }
+
+        boolean isWin = isWindows()
+        List data = urls.unique().collect { url -> [name: new File(url.toURI()).name, path: isWin ? url.path.substring(1).replace('/', '\\') : url.path] }
+        data.sort { it.name.toLowerCase() }
+
+        JScrollPane scrollPane = swing.scrollPane {
+            table {
+                tableModel(list: data) {
+                    propertyColumn(header: 'Name', propertyName: 'name', editable: false)
+                    propertyColumn(header: ' Path', propertyName: 'path', editable: false)
+                }
+            }
+        }
+
+        def pane = swing.optionPane()
+        pane.message = scrollPane
+        def dialog = pane.createDialog(frame, 'Classpath')
+        dialog.setSize(800, 600)
+        dialog.resizable = true
+        dialog.visible = true
+    }
+
+    /** Clears the shell binding and starts a fresh script context. */
+    void clearContext(EventObject evt = null) {
+        def binding = new Binding()
+        newScript(null, binding)
+        // reload output transforms
+        binding.variables._outputTransforms = OutputTransforms.loadOutputTransforms()
+    }
+
+    /**
+     * Prompts for space-separated script arguments used by future runs.
+     *
+     * @since 6.0.0
+     */
+    void setScriptArgs(EventObject evt = null) {
+        def result = JOptionPane.showInputDialog(frame, 'Enter script arguments (space-separated):',
+                'Set Script Arguments', JOptionPane.PLAIN_MESSAGE, null, null, scriptArgs)
+        if (result != null) {
+            scriptArgs = result.toString()
+            updateSetScriptArgsAction()
+        }
+    }
+
+    private void updateSetScriptArgsAction() {
+        if (setScriptArgsAction) {
+            if (scriptArgs) {
+                def display = scriptArgs.length() > 30 ? scriptArgs[0..29] + '...' : scriptArgs
+                setScriptArgsAction.putValue(Action.NAME, "Set Script Arguments [${display}]" as String)
+            } else {
+                setScriptArgsAction.putValue(Action.NAME, 'Set Script Arguments')
+            }
+        }
+    }
+
+    private String[] getScriptArgsArray() {
+        scriptArgs ? scriptArgs.split(/\s+/) : new String[0]
+    }
+
+    private void saveInputAreaContentHash() {
+        inputAreaContentHash = inputArea.getText().hashCode()
+    }
+
+    private void runScriptImpl(boolean selected, SourceType st = new GroovySourceType()) {
+        if (scriptRunning) {
+            statusLabel.text = 'Cannot run script now as a script is already running. Please wait or use "Interrupt Script" option.'
+            return
+        }
+        scriptRunning = true
+        interruptAction.enabled = true
+        stackOverFlowError = false // reset this flag before running a script
+        def endLine = System.lineSeparator()
+        def record = new HistoryRecord(allText: inputArea.getText().replace(endLine, '\n'),
+                selectionStart: textSelectionStart, selectionEnd: textSelectionEnd)
+        addToHistory(record)
+        pendingRecord = new HistoryRecord(allText: '', selectionStart: 0, selectionEnd: 0)
+
+        if (prefs.getBoolean('autoClearOutput', false)) clearOutput()
+
+        // Print the input text
+        if (showScriptInOutput) {
+            final promptPrefix = "${st.extension}> "
+            for (line in record.getTextToRun(selected).tokenize('\n')) {
+                appendOutputNl(promptPrefix, promptStyle)
+                appendOutput(line, commandStyle)
+            }
+            appendOutputNl(' \n', promptStyle)
+        }
+
+        // Kick off a new thread to do the evaluation
+        // Run in a thread outside of EDT, this method is usually called inside the EDT
+        runThread = Thread.start {
+            try {
+                systemOutInterceptor.setConsoleId(this.getConsoleId())
+                // TODO should systemErrorInterceptor receive the console id, too?
+                SwingUtilities.invokeLater { showExecutingMessage() }
+                if (beforeExecution) {
+                    beforeExecution()
+                }
+                Tuple2<Object, Long> resultAndElapsedTime
+                if (useScriptClassLoaderForScriptExecution) {
+                    ClassLoader savedThreadContextClassLoader = Thread.currentThread().contextClassLoader
+                    try {
+                        Thread.currentThread().contextClassLoader = shell.classLoader
+                        resultAndElapsedTime = doRun(selected, st, record)
+                    }
+                    finally {
+                        Thread.currentThread().contextClassLoader = savedThreadContextClassLoader
+                    }
+                } else {
+                    resultAndElapsedTime = doRun(selected, st, record)
+                }
+                if (afterExecution) {
+                    afterExecution()
+                }
+                SwingUtilities.invokeLater { finishNormal(resultAndElapsedTime.v1, resultAndElapsedTime.v2) }
+            } catch (Throwable t) {
+                if (t instanceof StackOverflowError) {
+                    // set the flag that will be used in printing exception details in output pane
+                    stackOverFlowError = true
+                    clearOutput()
+                }
+                SwingUtilities.invokeLater { finishException(t, true) }
+            } finally {
+                runThread = null
+                scriptRunning = false
+                interruptAction.enabled = false
+                systemOutInterceptor.removeConsoleId()
+                if( loopMode ) {
+                    int delay = prefs.getInt('loopModeDelay', ConsolePreferences.DEFAULT_LOOP_MODE_DELAY_MILLIS)
+                    Timer timer = new Timer(delay, {
+                        if( inputAreaContentHash == inputArea.getText().hashCode() ) {
+                            runScriptImpl(selected, st)
+                        }
+                    })
+                    timer.repeats = false
+                    timer.start()
+                }
+            }
+        }
+    }
+
+    @CompileStatic
+    private Tuple2<Object, Long> doRun(boolean selected, SourceType st, HistoryRecord record) {
+        def src = record.getTextToRun(selected)
+        long begin = System.currentTimeMillis()
+        Object result = st.run(src)
+        long end = System.currentTimeMillis()
+
+        return Tuple.tuple(result, (end - begin))
+    }
+
+    @CompileStatic
+    private static Optional<String> findPrimaryClassName(String javaSrc) {
+        CompilationUnit compilationUnit= StaticJavaParser.parse(javaSrc)
+        for (TypeDeclaration<?> td : compilationUnit.getTypes()) {
+            if (td.isPublic()
+                    && td.isTopLevelType()
+                    && td.isClassOrInterfaceDeclaration()
+                    && td.getFullyQualifiedName().isPresent()) {
+                return td.getFullyQualifiedName();
+            }
+        }
+        return Optional.empty()
+    }
+
+    /** Compiles the current editor contents as Java source. */
+    void compileAsJava(EventObject evt = null) {
+        compileScript(evt, new JavaSourceType())
+    }
+
+    /** Compiles the current editor contents without running them. */
+    void compileScript(EventObject evt = null, SourceType st = new GroovySourceType()) {
+        if (scriptRunning) {
+            statusLabel.text = 'Cannot compile script now as a script is already running. Please wait or use "Interrupt Script" option.'
+            return
+        }
+        stackOverFlowError = false // reset this flag before running a script
+        def endLine = System.lineSeparator()
+        def record = new HistoryRecord(allText: inputArea.getText().replace(endLine, '\n'),
+                selectionStart: textSelectionStart, selectionEnd: textSelectionEnd)
+
+        if (prefs.getBoolean('autoClearOutput', false)) clearOutput()
+
+        // Print the input text
+        if (showScriptInOutput) {
+            final promptPrefix = "${st.extension}> "
+            for (line in record.allText.tokenize('\n')) {
+                appendOutputNl(promptPrefix, promptStyle)
+                appendOutput(line, commandStyle)
+            }
+            appendOutputNl(' \n', promptStyle)
+        }
+
+        // Kick off a new thread to do the compilation
+        // Run in a thread outside of EDT, this method is usually called inside the EDT
+        runThread = Thread.start {
+            try {
+                SwingUtilities.invokeLater { showCompilingMessage() }
+                st.compile(record.allText)
+                SwingUtilities.invokeLater { compileFinishNormal() }
+            } catch (Throwable t) {
+                SwingUtilities.invokeLater { finishException(t, false) }
+            } finally {
+                runThread = null
+            }
+        }
+    }
+
+    /** Opens a file chooser and returns the selected script file. */
+    def selectFilename(name = 'Open') {
+        def fc = new JFileChooser(currentFileChooserDir)
+        fc.fileSelectionMode = JFileChooser.FILES_ONLY
+        fc.acceptAllFileFilterUsed = true
+        fc.fileFilter = groovyFileFilter
+        if (name == 'Save') {
+            fc.selectedFile = new File('*.groovy')
+        }
+        if (fc.showDialog(frame, name) == JFileChooser.APPROVE_OPTION) {
+            currentFileChooserDir = fc.currentDirectory
+            Preferences.userNodeForPackage(Console).put('currentFileChooserDir', currentFileChooserDir.path)
+            return fc.selectedFile
+        } else {
+            return null
+        }
+    }
+
+    /** Marks the editor dirty state and refreshes save affordances. */
+    void setDirty(boolean newDirty) {
+        //TODO when @BoundProperty is live, this should be handled via listeners
+        dirty = newDirty
+        saveAction.enabled = newDirty
+        updateTitle()
+    }
+
+    private void setInputTextFromHistory(newIndex) {
+        def endLine = System.lineSeparator()
+        if (historyIndex >= history.size()) {
+            pendingRecord = new HistoryRecord(allText: inputArea.getText().replace(endLine, '\n'),
+                    selectionStart: textSelectionStart, selectionEnd: textSelectionEnd)
+        }
+        historyIndex = newIndex
+        def record
+        if (historyIndex < history.size()) {
+            record = history[historyIndex]
+            statusLabel.text = "command history ${history.size() - historyIndex}"
+        } else {
+            record = pendingRecord
+            statusLabel.text = 'at end of history'
+        }
+        inputArea.text = record.allText
+        inputArea.selectionStart = record.selectionStart
+        inputArea.selectionEnd = record.selectionEnd
+        setDirty(true) // Should calculate dirty flag properly (hash last saved/read text in each file)
+        updateHistoryActions()
+    }
+
+    private void updateHistoryActions() {
+        nextHistoryAction.enabled = historyIndex < history.size()
+        prevHistoryAction.enabled = historyIndex > 0
+    }
+
+    /** Adds a variable to the shell binding. */
+    void setVariable(String name, Object value) {
+        shell.getContext().setVariable(name, value)
+    }
+
+    /** Shows the about dialog for the console. */
+    void showAbout(EventObject evt = null) {
+        def version = GroovySystem.getVersion()
+        def pane = swing.optionPane()
+        // work around GROOVY-1048
+        def message = 'Welcome to the Groovy Console for evaluating Groovy scripts\nGroovy version: ' + version
+        try {
+            def javaVersion = VMPluginFactory.getPlugin().version >= 9 ? Runtime.version().toString() : System.getProperty('java.version')
+            message += "\nJava version: ${javaVersion} (${System.getProperty('java.vendor')})"
+        } catch(ignore) { }
+        try {
+            message += "\nOS version: ${System.getProperty('os.version')} (${System.getProperty('os.name')})"
+        } catch(ignore) { }
+        pane.setMessage(message)
+        def dialog = pane.createDialog(frame, 'About GroovyConsole')
+        dialog.show()
+    }
+
+    /** Shows the find dialog. */
+    void find(EventObject evt = null) {
+        FindReplaceUtility.showDialog()
+    }
+
+    /** Repeats the previous find operation in the forward direction. */
+    void findNext(EventObject evt = null) {
+        FindReplaceUtility.FIND_ACTION.actionPerformed(evt)
+    }
+
+    /** Repeats the previous find operation in the reverse direction. */
+    void findPrevious(EventObject evt = null) {
+        def reverseEvt = new ActionEvent(
+                evt.getSource(), evt.getID(),
+                evt.getActionCommand(), evt.getWhen(),
+                ActionEvent.SHIFT_MASK) //reverse
+        FindReplaceUtility.FIND_ACTION.actionPerformed(reverseEvt)
+    }
+
+    /** Shows the replace dialog. */
+    void replace(EventObject evt = null) {
+        FindReplaceUtility.showDialog(true)
+    }
+
+    /** Comments or uncomments the current line selection. */
+    void comment(EventObject evt = null) {
+        def rootElement = inputArea.document.defaultRootElement
+        def cursorPos = inputArea.getCaretPosition()
+        int startRow = rootElement.getElementIndex(cursorPos)
+        int endRow = startRow
+
+        if (inputArea.getSelectedText()) {
+            def selectionStart = inputArea.getSelectionStart()
+            startRow = rootElement.getElementIndex(selectionStart)
+            def selectionEnd = inputArea.getSelectionEnd()
+            endRow = rootElement.getElementIndex(selectionEnd)
+        }
+
+        // If multiple commented lines intermix with uncommented lines, consider them uncommented
+        def allCommented = true
+        startRow.upto(endRow) { rowIndex ->
+            def rowElement = rootElement.getElement(rowIndex)
+            int startOffset = rowElement.getStartOffset()
+            int endOffset = rowElement.getEndOffset()
+            String rowText = inputArea.document.getText(startOffset, endOffset - startOffset)
+            if (rowText.trim().length() < 2 || !rowText.trim().substring(0, 2).equals("//")) {
+                allCommented = false
+            }
+        }
+
+        startRow.upto(endRow) { rowIndex ->
+            def rowElement = rootElement.getElement(rowIndex)
+            int startOffset = rowElement.getStartOffset()
+            int endOffset = rowElement.getEndOffset()
+            String rowText = inputArea.document.getText(startOffset, endOffset - startOffset)
+            if (allCommented) {
+                // Uncomment this line if it is already commented
+                int slashOffset = rowText.indexOf("//")
+                inputArea.document.remove(slashOffset + startOffset, 2)
+            } else {
+                // Add comment string in front of this line
+                inputArea.document.insertString(startOffset, "//", new SimpleAttributeSet())
+            }
+        }
+    }
+
+    /** Expands the selection from word to line to surrounding block. */
+    void selectBlock(EventObject evt = null) {
+        final int startPos = inputArea.getSelectionStart()
+        final int endPos = inputArea.getSelectionEnd()
+        final int startRow = rootElement.getElementIndex(startPos)
+        final int endRow = rootElement.getElementIndex(endPos)
+        final Element rowElement = rootElement.getElement(startRow)
+        final int startRowOffset = rowElement.getStartOffset()
+        final int endRowOffset = rowElement.getEndOffset()
+
+        // Empty line, nothing to do
+        if (startRowOffset == endRowOffset - 1) {
+            return
+        }
+
+        // Nothing is currently selected so select next chunk unless we are at the end of
+        // the line then we select the previous
+        if (startPos == endPos && selectWordAction != null && selectPreviousWordAction != null) {
+            if (endPos == endRowOffset - 1) {
+                selectPreviousWordAction.actionPerformed(evt)
+            } else {
+                selectWordAction.actionPerformed(evt)
+            }
+            return
+        }
+
+        // Partial selection on a single line but not the entire line or word
+        // selection actions are not available so select the entire line
+        if (startRow == endRow && (startPos != startRowOffset || (endPos != endRowOffset - 1))) {
+            inputArea.setSelectionStart(startRowOffset)
+            inputArea.setSelectionEnd(endRowOffset - 1)
+            return
+        }
+
+        // At this point an entire line or multiple lines are selected so
+        // look for a block/paragraph to select
+        String rowText = inputArea.document.getText(startRowOffset, endRowOffset - startRowOffset)
+        if (!rowText?.trim()) {
+            // Selection is empty or all spaces so not part of any block
+            return
+        }
+
+        // Look up for first empty row
+        int startBlockPos = startRowOffset
+        for (int i = startRow - 1; i >= 0; i--) {
+            Element re = rootElement.getElement(i)
+            rowText = inputArea.document.getText(re.getStartOffset(), re.getEndOffset() - re.getStartOffset())
+            if (!rowText?.trim()) {
+                break
+            }
+            startBlockPos = re.getStartOffset()
+        }
+
+        // Look down for first empty row
+        int endBlockPos = endRowOffset
+        int totalRows = rootElement.getElementCount()
+        for (int i = startRow + 1; i < totalRows; i++) {
+            Element re = rootElement.getElement(i)
+            rowText = inputArea.document.getText(re.getStartOffset(), re.getEndOffset() - re.getStartOffset())
+            if (!rowText?.trim()) {
+                break
+            }
+            endBlockPos = re.getEndOffset()
+        }
+
+        inputArea.setSelectionStart(startBlockPos)
+        inputArea.setSelectionEnd(endBlockPos)
+    }
+
+    /** Updates the status bar with the supplied message. */
+    void showMessage(String message) {
+        statusLabel.text = message
+    }
+
+    /** Shows the standard script-executing status message. */
+    void showExecutingMessage() {
+        statusLabel.text = 'Script executing now. Please wait or use "Interrupt Script" option.'
+    }
+
+    /** Shows the standard script-compiling status message. */
+    void showCompilingMessage() {
+        statusLabel.text = 'Script compiling now. Please wait.'
+    }
+
+    /** Shows the detached output window when detached mode is enabled. */
+    void showOutputWindow(EventObject evt = null) {
+        if (detachedOutput) {
+            outputWindow.setLocationRelativeTo(frame)
+            outputWindow.show()
+        }
+    }
+
+    /** Hides the detached output window when detached mode is enabled. */
+    void hideOutputWindow(EventObject evt = null) {
+        if (detachedOutput) {
+            outputWindow.visible = false
+        }
+    }
+
+    /** Clears and then hides the detached output window. */
+    void hideAndClearOutputWindow(EventObject evt = null) {
+        clearOutput()
+        hideOutputWindow()
+    }
+
+    /** Decreases the editor font size. */
+    void smallerFont(EventObject evt = null) {
+        updateFontSize(inputArea.font.size - 2)
+    }
+
+    /** Switches between smart and regex-based syntax highlighters. */
+    void smartHighlighter(EventObject evt = null) {
+        inputEditor.enableHighLighter(evt.source.selected ? SmartDocumentFilter : GroovyFilter)
+        inputEditor.textEditor.setText(inputEditor.textEditor.getText()) // enable the highlighter immediately
+        prefs.putBoolean('smartHighlighter', evt.source.selected)
+    }
+
+    /** Updates the main window title to reflect the current script and dirty state. */
+    void updateTitle() {
+        if (frame.title) {
+            String title = 'GroovyConsole'
+            if (scriptFile != null) {
+                frame.title = scriptFile.name + (dirty ? ' * ' : '') + ' - ' + title
+            } else {
+                frame.title = title
+            }
+        }
+    }
+
+    private updateFontSize(newFontSize) {
+        if (newFontSize > 40) {
+            newFontSize = 40
+        } else if (newFontSize < 4) {
+            newFontSize = 4
+        }
+
+        prefs.putInt('fontSize', newFontSize)
+
+        // don't worry, the fonts won't be changed to this family, the styles will only derive from this
+        def newFont = new Font(inputEditor.defaultFamily, Font.PLAIN, newFontSize)
+        inputArea.font = newFont
+        outputArea.font = newFont
+
+        // outputArea is an HTMLDocument-backed JTextPane — push the new size
+        // onto every named style so future inserts pick it up, and merge it
+        // onto already-rendered text so prior output resizes too. HTMLEditorKit
+        // scales FontSize values (pt→px at 96/72 ≈ 1.33×) so compensate by
+        // multiplying by 3/4 to visually match the input pane.
+        int outputFontSize = outputFontSizeFor(newFontSize)
+        def doc = outputArea.styledDocument
+        ['regular', 'prompt', 'command', 'output', 'result', 'stacktrace', 'hyperlink'].each { name ->
+            def s = doc.getStyle(name)
+            if (s) javax.swing.text.StyleConstants.setFontSize(s, outputFontSize)
+        }
+        int docLen = doc.length
+        if (docLen > 0) {
+            def sizeAttr = new javax.swing.text.SimpleAttributeSet()
+            javax.swing.text.StyleConstants.setFontSize(sizeAttr, outputFontSize)
+            doc.setCharacterAttributes(0, docLen, sizeAttr, false)
+        }
+
+        if (prefs.getBoolean('scaleIconsWithFont', false)) {
+            applyIconSize(iconSizeFromFont(newFontSize))
+        }
+    }
+
+    /** Invokes a text action against the active source component when present. */
+    void invokeTextAction(evt, closure, area = inputArea) {
+        def source = evt.getSource()
+        if (source != null) {
+            closure(area)
+        }
+    }
+
+    /** Cuts the current editor selection. */
+    void cut(EventObject evt = null) {
+        invokeTextAction(evt, { source -> source.cut() })
+    }
+
+    /** Copies the current selection from the focused text component. */
+    void copy(EventObject evt = null) {
+        invokeTextAction(evt, { source -> source.copy() }, copyFromComponent ?: inputArea)
+    }
+
+    /** Pastes clipboard text into the input editor. */
+    void paste(EventObject evt = null) {
+        invokeTextAction(evt, { source -> source.paste() })
+    }
+
+    /** Selects all text in the focused text component. */
+    void selectAll(EventObject evt = null) {
+        invokeTextAction(evt, { source -> source.selectAll() }, copyFromComponent ?: inputArea)
+    }
+
+    /** Updates the cached caret row and column display. */
+    void setRowNumAndColNum() {
+        cursorPos = inputArea.getCaretPosition()
+        rowNum = rootElement.getElementIndex(cursorPos) + 1
+
+        def rowElement = rootElement.getElement(rowNum - 1)
+        colNum = cursorPos - rowElement.getStartOffset() + 1
+
+        rowNumAndColNum.setText("$rowNum:$colNum")
+    }
+
+    /** Prints the input editor contents. */
+    void print(EventObject evt = null) {
+        inputEditor.printAction.actionPerformed(evt)
+    }
+
+    /** Undoes the most recent edit in the input editor. */
+    void undo(EventObject evt = null) {
+        inputEditor.undoAction.actionPerformed(evt)
+    }
+
+    /** Redoes the most recently undone edit in the input editor. */
+    void redo(EventObject evt = null) {
+        inputEditor.redoAction.actionPerformed(evt)
+    }
+
+    /** Highlights the source line referenced by an activated output hyperlink. */
+    void hyperlinkUpdate(HyperlinkEvent e) {
+        if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
+            // URL of the form: file://myscript.groovy:32
+            String url = e.getURL()
+            int lineNumber = url[(url.lastIndexOf(':') + 1)..-1].toInteger()
+
+            def editor = inputEditor.textEditor
+            def text = editor.text
+
+            int newlineBefore = 0
+            int newlineAfter = 0
+            int currentLineNumber = 1
+
+            // let's find the previous and next newline surrounding the offending line
+            int i = 0
+            for (ch in text) {
+                if (ch == '\n') {
+                    currentLineNumber++
+                }
+                if (currentLineNumber == lineNumber) {
+                    newlineBefore = i
+                    def nextNewline = text.indexOf('\n', i + 1)
+                    newlineAfter = nextNewline > -1 ? nextNewline : text.length()
+                    break
+                }
+                i++
+            }
+
+            // highlight / select the whole line
+            editor.setCaretPosition(newlineBefore)
+            editor.moveCaretPosition(newlineAfter)
+        }
+    }
+
+    /** No-op component listener implementation. */
+    void componentHidden(ComponentEvent e) {}
+
+    /** No-op component listener implementation. */
+    void componentMoved(ComponentEvent e) {}
+
+    /** Persists component dimensions when the editor or frame is resized. */
+    void componentResized(ComponentEvent e) {
+        def component = e.getComponent()
+        if (component == outputArea || component == inputArea) {
+            def rect = component.getVisibleRect()
+            prefs.putInt("${component.name}Width", rect.getWidth().intValue())
+            prefs.putInt("${component.name}Height", rect.getHeight().intValue())
+        } else {
+            prefs.putInt("${component.name}Width", component.width)
+            prefs.putInt("${component.name}Height", component.height)
+        }
+    }
+
+    /** No-op component listener implementation. */
+    void componentShown(ComponentEvent e) {}
+
+    /** Tracks the last focused text component for copy and select-all actions. */
+    void focusGained(FocusEvent e) {
+        // remember component with focus for text-copy functionality
+        if (e.component == outputArea || e.component == inputArea) {
+            copyFromComponent = e.component
+        }
+    }
+
+    /** No-op focus listener implementation. */
+    void focusLost(FocusEvent e) {}
+
+    private static boolean isWindows() {
+        return getOsName().startsWith("windows")
+    }
+
+    private static String getOsName() {
+        return System.getProperty("os.name").toLowerCase(Locale.ROOT)
+    }
+}
+
+/** File filter for Groovy source files recognized by the console. */
+@CompileStatic
+class GroovyFileFilter extends FileFilter {
+    private static final List GROOVY_SOURCE_EXTENSIONS = ['*.groovy', '*.gvy', '*.gy', '*.gsh', '*.story', '*.gpp', '*.grunit']
+    private static final GROOVY_SOURCE_EXT_DESC = GROOVY_SOURCE_EXTENSIONS.join(',')
+
+    /** Accepts directories and files with supported Groovy source extensions. */
+    boolean accept(File f) {
+        if (f.isDirectory()) {
+            return true
+        }
+        GROOVY_SOURCE_EXTENSIONS.find { it == getExtension(f) } ? true : false
+    }
+
+    /** Returns the chooser description for supported Groovy source files. */
+    String getDescription() {
+        "Groovy Source Files ($GROOVY_SOURCE_EXT_DESC)"
+    }
+
+    /** Returns the wildcard extension for the supplied file name. */
+    static String getExtension(File f) {
+        def ext = null
+        def s = f.getName()
+        def i = s.lastIndexOf('.')
+        if (i > 0 && i < s.length() - 1) {
+            ext = s.substring(i).toLowerCase(Locale.ROOT)
+        }
+        "*$ext"
+    }
+}

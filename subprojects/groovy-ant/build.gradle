@@ -1,0 +1,69 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+import org.apache.groovy.gradle.TargetJavaHomeSupport
+
+plugins {
+    id 'org.apache.groovy-library'
+}
+
+configurations {
+    // Resolves an external jar used only by the GROOVY-9197 joint-compilation test.
+    // Kept off the test classpath on purpose: the test verifies that a class which is
+    // NOT visible to Groovy itself can still be referenced when supplied explicitly.
+    externalJarForJointCompilationTest
+}
+
+dependencies {
+    externalJarForJointCompilationTest("org.apache.commons:commons-lang3:${versions.commonsLang3}") {
+        transitive = false
+    }
+
+    api project(':')  // FileNameFinder implements IFileNameFinder...
+    api("org.apache.ant:ant:${versions.ant}") {  // AntBuilder has Project constructor...
+        transitive = false
+    }
+    implementation("org.apache.ant:ant-junit:${versions.ant}") {
+        exclude(group: 'junit', module: 'junit')
+    }
+    implementation "org.apache.ant:ant-launcher:${versions.ant}"
+    implementation "org.apache.ant:ant-antlr:${versions.ant}"
+    // for groovydoc ant command
+    implementation projects.groovyGroovydoc, {
+        transitive = false
+    }
+    compileOnly "org.ow2.asm:asm-tree:${versions.asm}" // VerifyClass
+    compileOnly "org.ow2.asm:asm-util:${versions.asm}" // VerifyClass
+    testImplementation projects.groovyTest
+    testImplementation projects.groovyXml
+}
+
+tasks.withType(Test).configureEach {
+    // Supply the external jar (resolved, not checked in) to the GROOVY-9197 Ant test.
+    doFirst {
+        systemProperty 'groovy.ant.test.externalJar',
+            configurations.externalJarForJointCompilationTest.singleFile.absolutePath
+    }
+
+    Integer feature = TargetJavaHomeSupport.featureVersionFromReleaseFile(TargetJavaHomeSupport.targetJavaHome(project))
+    boolean testJdkPre24 = feature != null ? feature < 24 : JavaVersion.current() < JavaVersion.VERSION_24
+    if (testJdkPre24) {
+        // Setting isn't allowed for Java 24+ but hushes security manager warnings from Ant for JDK17-23
+        jvmArgs '-Djava.security.manager=allow'
+    }
+}

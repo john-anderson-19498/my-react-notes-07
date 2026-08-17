@@ -1,0 +1,178 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+
+import org.apache.groovy.gradle.DispatchMetricsSummary
+import org.apache.groovy.gradle.PerformanceTestsExtension
+import org.apache.groovy.gradle.PerformanceTestSummary
+
+plugins {
+    id 'groovy'
+    id 'org.apache.groovy-common'
+    id 'org.apache.groovy-internal'
+    id 'me.champeau.jmh'
+}
+
+project.extensions.create('performanceTests', PerformanceTestsExtension, objects, tasks, configurations, dependencies, sourceSets)
+
+configurations {
+    stats
+    testImplementation.extendsFrom(stats)
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'https://repository.ow2.org/nexus/content/repositories/public/'
+    }
+}
+
+// -Pindy=false selects classic (non-invokedynamic) call-site bytecode for
+// compileGroovy / compileJmhGroovy. After GROOVY-12185 that runtime lives in
+// the optional groovy-callsite module and must be on the compile + runtime
+// classpaths (WriterController fails fast otherwise — see GROOVY-11158).
+var indy = (project.findProperty('indy') ?: 'true').toBoolean()
+
+dependencies {
+    implementation project(':')
+    jmh project(':')
+    testImplementation project(':')
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit6}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit6}"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:${versions.junit6}"
+
+    stats "org.apache.commons:commons-math3:${versions.commonsMath3}"
+
+    if (!indy) {
+        implementation projects.groovyCallsite
+        jmh projects.groovyCallsite
+    }
+}
+
+jmh {
+    jmhVersion = versions.jmh
+    if (project.hasProperty('benchInclude')) {
+        includes = ['.*' + project.benchInclude + '.*']
+    }
+    includeTests = true
+    if (project.hasProperty('jmhResultFormat')) {
+        resultFormat = project.jmhResultFormat
+    }
+    if (project.hasProperty('jmhProfilers')) {
+        profilers = project.jmhProfilers.split(',') as List
+    }
+}
+
+jmhJar {
+    exclude 'LICENSE'
+    exclude 'THIRD-PARTY'
+}
+
+tasks.named('jmhClasses') {
+    dependsOn tasks.named('clean')
+}
+
+// The clean dependency above forces fresh JMH runs, but without an ordering
+// constraint Gradle may schedule 'clean' BETWEEN other tasks in the same
+// invocation (e.g. deleting freshly-compiled jmh classes before jmhJar
+// packages them, yielding an empty benchmark jar). Ordering-only, so tasks
+// that don't pull 'clean' into the graph are unaffected.
+tasks.configureEach {
+    if (name != 'clean') {
+        mustRunAfter tasks.named('clean')
+    }
+}
+
+tasks.named('compileJmhGroovy') {
+    classpath += compileJmhJava.classpath
+    groovyOptions.optimizationOptions.indy = indy
+    inputs.property('indy', indy)
+}
+
+tasks.named('compileGroovy') {
+    groovyOptions.optimizationOptions.indy = indy
+    inputs.property('indy', indy)
+}
+
+tasks.register('displayJmhResults') {
+    dependsOn('jmh')
+    doLast {
+        println layout.buildDirectory.file('results/jmh/results.txt').get().asFile.text
+    }
+}
+
+tasks.register('performanceTests', PerformanceTestSummary)
+
+// Deterministic dispatch metrics: run a fixed cold-dispatch workload in a
+// fresh JVM with class+load logging, then reduce the log plus the workload's
+// own bytecode-size figures to exact, runner-independent counters. See
+// DispatchMetricsSummary and DispatchMetricsWorkload for details.
+def dispatchMetricsLog = layout.buildDirectory.file('dispatch-metrics/classload.log')
+def dispatchWorkloadJson = layout.buildDirectory.file('dispatch-metrics/workload-metrics.json')
+// dependency-free subset of the compiler-perf corpus (the other pleac files
+// need third-party libraries on the compile classpath)
+def dispatchCorpus = files(
+    'src/files/script.groovy',
+    'src/files/pleac02.groovy',
+    'src/files/pleac03.groovy',
+    'src/files/pleac04.groovy',
+    'src/jmh/groovy/org/apache/groovy/bench/Ackermann.groovy',
+    'src/jmh/groovy/org/apache/groovy/bench/Ary.groovy',
+    'src/jmh/groovy/org/apache/groovy/bench/Fibo.groovy')
+
+def dispatchMetricsRun = tasks.register('dispatchMetricsRun', JavaExec) {
+    description = 'Runs the deterministic dispatch workload with class-load logging'
+    group = 'Performance'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.apache.groovy.perf.metrics.DispatchMetricsWorkload'
+    inputs.files(dispatchCorpus)
+    outputs.file(dispatchMetricsLog)
+    outputs.file(dispatchWorkloadJson)
+    def logFile = dispatchMetricsLog.get().asFile
+    jvmArgs "-Xlog:class+load=info:file=${logFile.absolutePath}:none"
+    args([dispatchWorkloadJson.get().asFile.absolutePath] + dispatchCorpus.files.sort()*.absolutePath)
+    doFirst {
+        logFile.parentFile.mkdirs()
+        logFile.delete()
+    }
+}
+
+tasks.register('dispatchMetrics', DispatchMetricsSummary) {
+    description = 'Summarises deterministic dispatch metrics (class-load and bytecode-size counters)'
+    group = 'Performance'
+    dependsOn dispatchMetricsRun
+    classLoadLog = dispatchMetricsLog
+    workloadJson = dispatchWorkloadJson
+}
+
+sonarqube {
+    skipProject = true
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('jmh') {
+    inputs.property('benchInclude', project.findProperty('benchInclude') ?: '')
+    dependsOn tasks.named('jmhClasses')
+}
+
+tasks.named('jmhJar') {
+    from(sourceSets.jmh.output)
+}

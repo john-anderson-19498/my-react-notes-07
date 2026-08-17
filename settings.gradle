@@ -1,0 +1,107 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+//        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    }
+
+    includeBuild("build-logic")
+}
+
+plugins {
+    // Before updating this, please check the compatibility from https://docs.gradle.com/develocity/current/miscellaneous/compatibility/ and https://develocity.apache.org/scans.
+    id "com.gradle.develocity" version "4.5.0"
+    id 'com.gradle.common-custom-user-data-gradle-plugin' version '2.8.0'
+}
+
+apply from: 'gradle/build-scans.gradle'
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+def subprojects = [
+        'groovy-all',
+        'groovy-ant',
+        'groovy-astbuilder',
+        'groovy-binary',
+        'groovy-bom',
+        'groovy-cli-commons',
+        'groovy-cli-picocli',
+        'groovy-concurrent-java',
+        'groovy-console',
+        'groovy-contracts',
+        'groovy-csv',
+        'groovy-datetime',
+        'groovy-dateutil',
+        'groovy-docgenerator',
+        'groovy-grape-ivy',
+        'groovy-grape-maven',
+        'groovy-grape-test',
+        'groovy-groovydoc',
+        'groovy-groovysh',
+        'groovy-jmx',
+        'groovy-json',
+        'groovy-jsr223',
+        'groovy-callsite',
+        'groovy-logging-test',
+        'groovy-ginq',
+        'groovy-http-builder',
+        'groovy-markdown',
+        'groovy-macro',
+        'groovy-macro-library',
+        'groovy-nio',
+        'groovy-osgi-test',
+        'groovy-servlet',
+        'groovy-sql',
+        'groovy-swing',
+        'groovy-templates',
+        'groovy-test',
+        'groovy-test-junit5',
+        'groovy-test-junit6',
+        'groovy-testng',
+        'groovy-reactor',
+        'groovy-rxjava',
+        'groovy-toml',
+        'groovy-typecheckers',
+        'groovy-xml',
+        'groovy-yaml',
+        'asciidoc-extensions',
+        'performance',
+        'tests-preview',
+        'binary-compatibility',
+        'stress'
+]
+
+include(subprojects as String[])
+
+rootProject.children.each { prj ->
+    prj.projectDir = new File("$rootDir/subprojects/$prj.name")
+}
+
+rootProject.name = 'groovy'
+
+enableFeaturePreview('GROOVY_COMPILATION_AVOIDANCE')
+System.setProperty("sonar.gradle.skipCompile", "true")

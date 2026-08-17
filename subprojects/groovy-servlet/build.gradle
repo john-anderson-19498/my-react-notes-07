@@ -1,0 +1,61 @@
+import org.apache.groovy.gradle.RepackageJarTask
+
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+plugins {
+    id 'org.apache.groovy-library'
+}
+
+dependencies {
+    compileOnlyApi "jakarta.servlet:jakarta.servlet-api:${versions.jakartaServletApi}"
+    compileOnlyApi("jakarta.servlet.jsp:jakarta.servlet.jsp-api:${versions.jakartaServerPagesApi}") {
+        transitive = false
+    }
+
+    api project(':')  // ServletBinding extends Binding...
+    implementation projects.groovyXml // needed for MarkupBuilder
+    implementation projects.groovyTemplates // needed by TemplateServlet
+
+    testImplementation "jakarta.servlet:jakarta.servlet-api:${versions.jakartaServletApi}"
+    testImplementation("jakarta.servlet.jsp:jakarta.servlet.jsp-api:${versions.jakartaServerPagesApi}") {
+        transitive = false
+    }
+    testImplementation projects.groovyJson
+    testImplementation projects.groovyTest
+}
+
+tasks.register("javaxJar", RepackageJarTask) {
+    def repackageJar = tasks.named("repackageJar", RepackageJarTask)
+    it.dependsOn(repackageJar)
+    it.inputJar.set(repackageJar.flatMap { it.archiveFile })
+    it.patterns = [
+        'jakarta.servlet.**': 'javax.servlet.@1'
+    ]
+    it.generateOsgiManifest = false
+    it.archiveClassifier.set('javax')
+}
+
+afterEvaluate {
+    def javaxJarTask = tasks.javaxJar
+    def mavenPublish = extensions.findByName(PublishingExtension.NAME) as PublishingExtension
+    mavenPublish?.publications.each {
+        it.artifact(javaxJarTask.outputs.files.singleFile) { classifier = "javax" }
+    }
+    tasks.matching { it.group == PublishingExtension.NAME }.configureEach { dependsOn(javaxJarTask) }
+}

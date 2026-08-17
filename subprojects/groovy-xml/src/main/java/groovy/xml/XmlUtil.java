@@ -1,0 +1,848 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy.xml;
+
+import groovy.lang.Closure;
+import groovy.lang.GroovyRuntimeException;
+import groovy.lang.Writable;
+import groovy.util.Node;
+import groovy.xml.slurpersupport.GPathResult;
+import org.apache.groovy.io.StringBuilderWriter;
+import org.codehaus.groovy.runtime.InvokerHelper;
+import org.codehaus.groovy.runtime.StringGroovyMethods;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
+
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.Writer;
+import java.net.URL;
+
+/**
+ * Used for pretty printing XML content and other XML related utilities.
+ * The serialization helpers accept DOM nodes, Groovy XML trees, {@link GPathResult},
+ * {@link Writable}, and raw XML text.
+ */
+public class XmlUtil {
+    /**
+     * Return a pretty String version of the Element.
+     *
+     * @param element the Element to serialize
+     * @return the pretty String representation of the Element
+     */
+    public static String serialize(Element element) {
+        return serialize(element, false);
+    }
+
+    /**
+     * Return a pretty String version of the Element.
+     *
+     * @param element                 the Element to serialize
+     * @param allowDocTypeDeclaration whether to allow doctype processing
+     * @return the pretty String representation of the Element
+     */
+    public static String serialize(Element element, boolean allowDocTypeDeclaration) {
+        Writer sw = new StringBuilderWriter();
+        serialize(new DOMSource(element), sw, allowDocTypeDeclaration);
+        return sw.toString();
+    }
+
+    /**
+     * Write a pretty version of the Element to the OutputStream.
+     *
+     * @param element the Element to serialize
+     * @param os      the OutputStream to write to
+     */
+    public static void serialize(Element element, OutputStream os) {
+        serialize(element, os, false);
+    }
+
+    /**
+     * Write a pretty version of the Element to the OutputStream.
+     *
+     * @param element                 the Element to serialize
+     * @param os                      the OutputStream to write to
+     * @param allowDocTypeDeclaration whether to allow doctype processing
+     */
+    public static void serialize(Element element, OutputStream os, boolean allowDocTypeDeclaration) {
+        Source source = new DOMSource(element);
+        serialize(source, os, allowDocTypeDeclaration);
+    }
+
+    /**
+     * Write a pretty version of the Element to the Writer.
+     *
+     * @param element the Element to serialize
+     * @param w       the Writer to write to
+     */
+    public static void serialize(Element element, Writer w) {
+        serialize(element, w, false);
+    }
+
+    /**
+     * Write a pretty version of the Element to the Writer.
+     *
+     * @param element                 the Element to serialize
+     * @param w                       the Writer to write to
+     * @param allowDocTypeDeclaration whether to allow doctype processing
+     */
+    public static void serialize(Element element, Writer w, boolean allowDocTypeDeclaration) {
+        Source source = new DOMSource(element);
+        serialize(source, w, allowDocTypeDeclaration);
+    }
+
+    /**
+     * Return a pretty String version of the Node.
+     *
+     * @param node the Node to serialize
+     * @return the pretty String representation of the Node
+     */
+    public static String serialize(Node node) {
+        return serialize(asString(node));
+    }
+
+    /**
+     * Write a pretty version of the Node to the OutputStream.
+     *
+     * @param node the Node to serialize
+     * @param os   the OutputStream to write to
+     */
+    public static void serialize(Node node, OutputStream os) {
+        serialize(asString(node), os);
+    }
+
+    /**
+     * Write a pretty version of the Node to the Writer.
+     *
+     * @param node the Node to serialize
+     * @param w    the Writer to write to
+     */
+    public static void serialize(Node node, Writer w) {
+        serialize(asString(node), w);
+    }
+
+    /**
+     * Return a pretty version of the GPathResult.
+     *
+     * @param node a GPathResult to serialize to a String
+     * @return the pretty String representation of the GPathResult
+     */
+    public static String serialize(GPathResult node) {
+        return serialize(asString(node));
+    }
+
+    /**
+     * Write a pretty version of the GPathResult to the OutputStream.
+     *
+     * @param node a GPathResult to serialize
+     * @param os   the OutputStream to write to
+     */
+    public static void serialize(GPathResult node, OutputStream os) {
+        serialize(asString(node), os);
+    }
+
+    /**
+     * Write a pretty version of the GPathResult to the Writer.
+     *
+     * @param node a GPathResult to serialize
+     * @param w    the Writer to write to
+     */
+    public static void serialize(GPathResult node, Writer w) {
+        serialize(asString(node), w);
+    }
+
+    /**
+     * Return a pretty String version of the XML content produced by the Writable.
+     *
+     * @param writable the Writable to serialize
+     * @return the pretty String representation of the content from the Writable
+     */
+    public static String serialize(Writable writable) {
+        return serialize(asString(writable));
+    }
+
+    /**
+     * Write a pretty version of the XML content produced by the Writable to the OutputStream.
+     *
+     * @param writable the Writable to serialize
+     * @param os       the OutputStream to write to
+     */
+    public static void serialize(Writable writable, OutputStream os) {
+        serialize(asString(writable), os);
+    }
+
+    /**
+     * Write a pretty version of the XML content produced by the Writable to the Writer.
+     *
+     * @param writable the Writable to serialize
+     * @param w        the Writer to write to
+     */
+    public static void serialize(Writable writable, Writer w) {
+        serialize(asString(writable), w);
+    }
+
+    /**
+     * Return a pretty version of the XML content contained in the given String.
+     *
+     * @param xmlString the String to serialize
+     * @return the pretty String representation of the original content
+     */
+    public static String serialize(String xmlString) {
+        return serialize(xmlString, false);
+    }
+
+    /**
+     * Return a pretty version of the XML content contained in the given String.
+     *
+     * @param xmlString               the String to serialize
+     * @param allowDocTypeDeclaration whether to allow doctype processing
+     * @return the pretty String representation of the original content
+     */
+    public static String serialize(String xmlString, boolean allowDocTypeDeclaration) {
+        Writer sw = new StringBuilderWriter();
+        serialize(asStreamSource(xmlString), sw, allowDocTypeDeclaration);
+        return sw.toString();
+    }
+
+    /**
+     * Write a pretty version of the given XML string to the OutputStream.
+     *
+     * @param xmlString the String to serialize
+     * @param os        the OutputStream to write to
+     */
+    public static void serialize(String xmlString, OutputStream os) {
+        serialize(xmlString, os, false);
+    }
+
+    /**
+     * Write a pretty version of the given XML string to the OutputStream.
+     *
+     * @param xmlString               the String to serialize
+     * @param allowDocTypeDeclaration whether to allow doctype processing
+     * @param os                      the OutputStream to write to
+     */
+    public static void serialize(String xmlString, OutputStream os, boolean allowDocTypeDeclaration) {
+        serialize(asStreamSource(xmlString), os, allowDocTypeDeclaration);
+    }
+
+    /**
+     * Write a pretty version of the given XML string to the Writer.
+     *
+     * @param xmlString the String to serialize
+     * @param w         the Writer to write to
+     */
+    public static void serialize(String xmlString, Writer w) {
+        serialize(xmlString, w, false);
+    }
+
+    /**
+     * Write a pretty version of the given XML string to the Writer.
+     *
+     * @param xmlString               the String to serialize
+     * @param allowDocTypeDeclaration whether to allow doctype processing
+     * @param w                       the Writer to write to
+     */
+    public static void serialize(String xmlString, Writer w, boolean allowDocTypeDeclaration) {
+        serialize(asStreamSource(xmlString), w, allowDocTypeDeclaration);
+    }
+
+    // --- SerializeOptions overloads ---
+
+    /**
+     * Return a pretty String version of the Element using the specified options.
+     *
+     * @param element the Element to serialize
+     * @param options the serialization options
+     * @return the pretty String representation of the Element
+     * @since 6.0.0
+     */
+    public static String serialize(Element element, SerializeOptions options) {
+        Writer sw = new StringBuilderWriter();
+        serialize(new DOMSource(element), sw, options);
+        return sw.toString();
+    }
+
+    /**
+     * Write a pretty version of the Element to the OutputStream using the specified options.
+     *
+     * @param element the Element to serialize
+     * @param os      the OutputStream to write to
+     * @param options the serialization options
+     * @since 6.0.0
+     */
+    public static void serialize(Element element, OutputStream os, SerializeOptions options) {
+        serialize(new DOMSource(element), os, options);
+    }
+
+    /**
+     * Return a pretty String version of the Node using the specified options.
+     *
+     * @param node    the Node to serialize
+     * @param options the serialization options
+     * @return the pretty String representation of the Node
+     * @since 6.0.0
+     */
+    public static String serialize(Node node, SerializeOptions options) {
+        Writer sw = new StringBuilderWriter();
+        serialize(asStreamSource(asString(node)), sw, options);
+        return sw.toString();
+    }
+
+    /**
+     * Write a pretty version of the Node to the OutputStream using the specified options.
+     *
+     * @param node    the Node to serialize
+     * @param os      the OutputStream to write to
+     * @param options the serialization options
+     * @since 6.0.0
+     */
+    public static void serialize(Node node, OutputStream os, SerializeOptions options) {
+        serialize(asStreamSource(asString(node)), os, options);
+    }
+
+    /**
+     * Return a pretty String version of the GPathResult using the specified options.
+     *
+     * @param node    a GPathResult to serialize to a String
+     * @param options the serialization options
+     * @return the pretty String representation of the GPathResult
+     * @since 6.0.0
+     */
+    public static String serialize(GPathResult node, SerializeOptions options) {
+        Writer sw = new StringBuilderWriter();
+        serialize(asStreamSource(asString(node)), sw, options);
+        return sw.toString();
+    }
+
+    /**
+     * Write a pretty version of the GPathResult to the OutputStream using the specified options.
+     *
+     * @param node    a GPathResult to serialize
+     * @param os      the OutputStream to write to
+     * @param options the serialization options
+     * @since 6.0.0
+     */
+    public static void serialize(GPathResult node, OutputStream os, SerializeOptions options) {
+        serialize(asStreamSource(asString(node)), os, options);
+    }
+
+    /**
+     * Return a pretty String version of the XML content produced by the Writable using the specified options.
+     *
+     * @param writable the Writable to serialize
+     * @param options  the serialization options
+     * @return the pretty String representation of the content from the Writable
+     * @since 6.0.0
+     */
+    public static String serialize(Writable writable, SerializeOptions options) {
+        Writer sw = new StringBuilderWriter();
+        serialize(asStreamSource(asString(writable)), sw, options);
+        return sw.toString();
+    }
+
+    /**
+     * Write a pretty version of the XML content produced by the Writable to the OutputStream using the specified options.
+     *
+     * @param writable the Writable to serialize
+     * @param os       the OutputStream to write to
+     * @param options  the serialization options
+     * @since 6.0.0
+     */
+    public static void serialize(Writable writable, OutputStream os, SerializeOptions options) {
+        serialize(asStreamSource(asString(writable)), os, options);
+    }
+
+    /**
+     * Return a pretty version of the XML content contained in the given String using the specified options.
+     *
+     * @param xmlString the String to serialize
+     * @param options   the serialization options
+     * @return the pretty String representation of the original content
+     * @since 6.0.0
+     */
+    public static String serialize(String xmlString, SerializeOptions options) {
+        Writer sw = new StringBuilderWriter();
+        serialize(asStreamSource(xmlString), sw, options);
+        return sw.toString();
+    }
+
+    /**
+     * Write a pretty version of the given XML string to the OutputStream using the specified options.
+     *
+     * @param xmlString the String to serialize
+     * @param os        the OutputStream to write to
+     * @param options   the serialization options
+     * @since 6.0.0
+     */
+    public static void serialize(String xmlString, OutputStream os, SerializeOptions options) {
+        serialize(asStreamSource(xmlString), os, options);
+    }
+
+    /**
+     * Factory method to create a SAXParser configured to validate according to a particular schema language and
+     * optionally providing the schema sources to validate with.
+     * The created SAXParser will be namespace-aware and not validate against DTDs.
+     *
+     * @param schemaLanguage the schema language used, e.g. XML Schema or RelaxNG (as per the String representation in javax.xml.XMLConstants)
+     * @param schemas        the schemas to validate against
+     * @return the created SAXParser
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @see #newSAXParser(String, boolean, boolean, Source...)
+     * @since 1.8.7
+     */
+    public static SAXParser newSAXParser(String schemaLanguage, Source... schemas) throws SAXException, ParserConfigurationException {
+        return newSAXParser(schemaLanguage, true, false, schemas);
+    }
+
+    /**
+     * Factory method to create a SAXParser configured to validate according to a particular schema language and
+     * optionally providing the schema sources to validate with.
+     *
+     * @param schemaLanguage the schema language used, e.g. XML Schema or RelaxNG (as per the String representation in javax.xml.XMLConstants)
+     * @param namespaceAware will the parser be namespace aware
+     * @param validating     will the parser also validate against DTDs
+     * @param schemas        the schemas to validate against
+     * @return the created SAXParser
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @since 1.8.7
+     */
+    public static SAXParser newSAXParser(String schemaLanguage, boolean namespaceAware, boolean validating, Source... schemas) throws SAXException, ParserConfigurationException {
+        return newSAXParser(schemaLanguage, namespaceAware, validating, false, schemas);
+    }
+
+    /**
+     * Factory method to create a SAXParser configured to validate according to a particular schema language and
+     * optionally providing the schema sources to validate with.
+     *
+     * @param schemaLanguage   the schema language used, e.g. XML Schema or RelaxNG (as per the String representation in javax.xml.XMLConstants)
+     * @param namespaceAware   will the parser be namespace aware
+     * @param validating       will the parser also validate against DTDs
+     * @param allowDoctypeDecl whether to allow doctype declarations (potentially insecure)
+     * @param schemas          the schemas to validate against
+     * @return the created SAXParser
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @since 3.0.11
+     */
+    public static SAXParser newSAXParser(String schemaLanguage, boolean namespaceAware, boolean validating, boolean allowDoctypeDecl, Source... schemas) throws SAXException, ParserConfigurationException {
+        SAXParserFactory factory = newFactoryInstance(namespaceAware, validating, allowDoctypeDecl);
+        if (schemas.length != 0) {
+            SchemaFactory schemaFactory = FactorySupport.createSchemaFactory(schemaLanguage);
+            factory.setSchema(schemaFactory.newSchema(schemas));
+        }
+        SAXParser saxParser = factory.newSAXParser();
+        if (schemas.length == 0) {
+            saxParser.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage", schemaLanguage);
+        }
+        return saxParser;
+    }
+
+    private static SAXParserFactory newFactoryInstance(boolean namespaceAware, boolean validating, boolean allowDoctypeDecl) throws ParserConfigurationException {
+        SAXParserFactory factory = FactorySupport.createSaxParserFactory(allowDoctypeDecl);
+        factory.setValidating(validating);
+        factory.setNamespaceAware(namespaceAware);
+        return factory;
+    }
+
+    /**
+     * Factory method to create a SAXParser configured to validate according to a particular schema language and
+     * a File containing the schema to validate against.
+     * The created SAXParser will be namespace-aware and not validate against DTDs.
+     *
+     * @param schemaLanguage the schema language used, e.g. XML Schema or RelaxNG (as per the String representation in javax.xml.XMLConstants)
+     * @param schema         a file containing the schema to validate against
+     * @return the created SAXParser
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @see #newSAXParser(String, boolean, boolean, File)
+     * @since 1.8.7
+     */
+    public static SAXParser newSAXParser(String schemaLanguage, File schema) throws SAXException, ParserConfigurationException {
+        return newSAXParser(schemaLanguage, true, false, schema);
+    }
+
+    /**
+     * Factory method to create a SAXParser configured to validate according to a particular schema language and
+     * a File containing the schema to validate against.
+     *
+     * @param schemaLanguage the schema language used, e.g. XML Schema or RelaxNG (as per the String representation in javax.xml.XMLConstants)
+     * @param namespaceAware will the parser be namespace aware
+     * @param validating     will the parser also validate against DTDs
+     * @param schema         a file containing the schema to validate against
+     * @return the created SAXParser
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @since 1.8.7
+     */
+    public static SAXParser newSAXParser(String schemaLanguage, boolean namespaceAware, boolean validating, File schema) throws SAXException, ParserConfigurationException {
+        SchemaFactory schemaFactory = FactorySupport.createSchemaFactory(schemaLanguage);
+        return newSAXParser(namespaceAware, validating, schemaFactory.newSchema(schema));
+    }
+
+    /**
+     * Factory method to create a SAXParser configured to validate according to a particular schema language and
+     * a URL pointing to the schema to validate against.
+     * The created SAXParser will be namespace-aware and not validate against DTDs.
+     *
+     * @param schemaLanguage the schema language used, e.g. XML Schema or RelaxNG (as per the String representation in javax.xml.XMLConstants)
+     * @param schema         a URL pointing to the schema to validate against
+     * @return the created SAXParser
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @see #newSAXParser(String, boolean, boolean, URL)
+     * @since 1.8.7
+     */
+    public static SAXParser newSAXParser(String schemaLanguage, URL schema) throws SAXException, ParserConfigurationException {
+        return newSAXParser(schemaLanguage, true, false, schema);
+    }
+
+    /**
+     * Factory method to create a SAXParser configured to validate according to a particular schema language and
+     * a URL pointing to the schema to validate against.
+     *
+     * @param schemaLanguage the schema language used, e.g. XML Schema or RelaxNG (as per the String representation in javax.xml.XMLConstants)
+     * @param namespaceAware will the parser be namespace aware
+     * @param validating     will the parser also validate against DTDs
+     * @param schema         a URL pointing to the schema to validate against
+     * @return the created SAXParser
+     * @throws SAXException
+     * @throws ParserConfigurationException
+     * @since 1.8.7
+     */
+    public static SAXParser newSAXParser(String schemaLanguage, boolean namespaceAware, boolean validating, URL schema) throws SAXException, ParserConfigurationException {
+        SchemaFactory schemaFactory = FactorySupport.createSchemaFactory(schemaLanguage);
+        return newSAXParser(namespaceAware, validating, schemaFactory.newSchema(schema));
+    }
+
+    /**
+     * Escape the following characters {@code " ' & < >} with their XML entities, e.g.
+     * {@code "bread" & "butter"} becomes {@code &quot;bread&quot; &amp; &quot;butter&quot}.
+     * Notes:<ul>
+     * <li>Supports only the five basic XML entities (gt, lt, quot, amp, apos)</li>
+     * <li>Does not escape control characters</li>
+     * <li>Does not support DTDs or external entities</li>
+     * <li>Does not treat surrogate pairs specially</li>
+     * <li>Does not perform Unicode validation on its input</li>
+     * </ul>
+     *
+     * @param orig the original String
+     * @return A new string in which all characters that require escaping
+     *         have been replaced with the corresponding XML entities.
+     * @see #escapeControlCharacters(String)
+     */
+    public static String escapeXml(String orig) {
+        return StringGroovyMethods.collectReplacements(orig, new Closure<String>(null) {
+            /**
+             * Maps a single character to its predefined XML entity.
+             *
+             * @param arg the character to examine
+             * @return the replacement entity, or {@code null} if no escaping is required
+             */
+            public String doCall(Character arg) {
+                return switch (arg) {
+                    case '&' -> "&amp;";
+                    case '<' -> "&lt;";
+                    case '>' -> "&gt;";
+                    case '"' -> "&quot;";
+                    case '\'' -> "&apos;";
+                    default -> null;
+                };
+            }
+        });
+    }
+
+    /**
+     * Escape control characters (below 0x20) with their XML entities, e.g.
+     * carriage return ({@code Ctrl-M or \r}) becomes {@code &#13;}
+     * Notes:<ul>
+     * <li>Does not escape non-ascii characters above 0x7e</li>
+     * <li>Does not treat surrogate pairs specially</li>
+     * <li>Does not perform Unicode validation on its input</li>
+     * </ul>
+     *
+     * @param orig the original String
+     * @return A new string in which all characters that require escaping
+     *         have been replaced with the corresponding XML entities.
+     * @see #escapeXml(String)
+     */
+    public static String escapeControlCharacters(String orig) {
+        return StringGroovyMethods.collectReplacements(orig, new Closure<String>(null) {
+            /**
+             * Maps a control character to its numeric XML character reference.
+             *
+             * @param arg the character to examine
+             * @return the replacement reference, or {@code null} if no escaping is required
+             */
+            public String doCall(Character arg) {
+                if (arg < 0x20) {
+                        return "&#" + (int) arg + ";";
+                }
+                return null;
+            }
+        });
+    }
+
+    private static SAXParser newSAXParser(boolean namespaceAware, boolean validating, Schema schema1) throws ParserConfigurationException, SAXException {
+        SAXParserFactory factory = newFactoryInstance(namespaceAware, validating, false);
+        factory.setSchema(schema1);
+        return factory.newSAXParser();
+    }
+
+    private static String asString(Node node) {
+        Writer sw = new StringBuilderWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        XmlNodePrinter nodePrinter = new XmlNodePrinter(pw);
+        nodePrinter.setPreserveWhitespace(true);
+        nodePrinter.print(node);
+        return sw.toString();
+    }
+
+    private static String asString(GPathResult node) {
+        // little bit of hackery to avoid Groovy dependency in this file
+        try {
+            Object builder = Class.forName("groovy.xml.StreamingMarkupBuilder").getDeclaredConstructor().newInstance();
+            InvokerHelper.setProperty(builder, "encoding", "UTF-8");
+            Writable w = (Writable) InvokerHelper.invokeMethod(builder, "bindNode", node);
+            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + w.toString();
+        } catch (Exception e) {
+            return "Couldn't convert node to string because: " + e.getMessage();
+        }
+    }
+
+    // TODO: replace with stream-based version
+
+    private static String asString(Writable writable) {
+        if (writable instanceof GPathResult) {
+            return asString((GPathResult) writable); //GROOVY-4285
+        }
+        Writer sw = new StringBuilderWriter();
+        try {
+            writable.writeTo(sw);
+        } catch (IOException e) {
+            // ignore
+        }
+        return sw.toString();
+    }
+
+    private static StreamSource asStreamSource(String xmlString) {
+        return new StreamSource(new StringReader(xmlString));
+    }
+
+    private static void serialize(Source source, OutputStream os, boolean allowDocTypeDeclaration) {
+        serialize(source, os, SerializeOptions.DEFAULT);
+    }
+
+    private static void serialize(Source source, OutputStream os, SerializeOptions options) {
+        serialize(source, new StreamResult(new OutputStreamWriter(os, options.getCharset())), options);
+    }
+
+    private static void serialize(Source source, Writer w, boolean allowDocTypeDeclaration) {
+        SerializeOptions options = new SerializeOptions();
+        options.setAllowDocTypeDeclaration(allowDocTypeDeclaration);
+        serialize(source, new StreamResult(w), options);
+    }
+
+    private static void serialize(Source source, Writer w, SerializeOptions options) {
+        serialize(source, new StreamResult(w), options);
+    }
+
+    private static void serialize(Source source, StreamResult target, boolean allowDocTypeDeclaration) {
+        SerializeOptions options = new SerializeOptions();
+        options.setAllowDocTypeDeclaration(allowDocTypeDeclaration);
+        serialize(source, target, options);
+    }
+
+    private static void serialize(Source source, StreamResult target, SerializeOptions options) {
+        TransformerFactory factory = FactorySupport.createTransformerFactory(
+                options.isAllowDocTypeDeclaration(), options.isAllowExternalResources());
+        setIndent(factory, options.getIndent());
+        try {
+            Transformer transformer = factory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/xml");
+            transformer.setOutputProperty(OutputKeys.ENCODING, options.getEncoding());
+            transformer.transform(source, target);
+        }
+        catch (TransformerException e) {
+            throw new GroovyRuntimeException(e.getMessage());
+        }
+    }
+
+    private static void setIndent(TransformerFactory factory, int indent) {
+        // TODO: support older parser attribute values as well
+        try {
+            factory.setAttribute("indent-number", indent);
+        } catch (IllegalArgumentException e) {
+            // ignore for factories that don't support this
+        }
+    }
+
+    /**
+     * Attempts to set a feature on the transformer factory and ignores unsupported features.
+     *
+     * @param factory the transformer factory to configure
+     * @param feature the fully qualified JAXP feature URI
+     * @param value the value to apply
+     */
+    public static void setFeatureQuietly(TransformerFactory factory, String feature, boolean value) {
+        try {
+            factory.setFeature(feature, value);
+        }
+        catch (TransformerConfigurationException ignored) {
+            // feature is not supported, ignore
+        }
+    }
+
+    /**
+     * Attempts to set a feature on the document builder factory and ignores unsupported features.
+     *
+     * @param factory the document builder factory to configure
+     * @param feature the fully qualified JAXP feature URI
+     * @param value the value to apply
+     */
+    public static void setFeatureQuietly(DocumentBuilderFactory factory, String feature, boolean value) {
+        try {
+            factory.setFeature(feature, value);
+        }
+        catch (ParserConfigurationException ignored) {
+            // feature is not supported, ignore
+        }
+    }
+
+    /**
+     * Attempts to set a feature on the SAX parser factory and ignores unsupported features.
+     *
+     * @param factory the SAX parser factory to configure
+     * @param feature the fully qualified JAXP feature URI
+     * @param value the value to apply
+     */
+    public static void setFeatureQuietly(SAXParserFactory factory, String feature, boolean value) {
+        try {
+            factory.setFeature(feature, value);
+        }
+        catch (ParserConfigurationException | SAXNotSupportedException | SAXNotRecognizedException ignored) {
+            // feature is not supported, ignore
+        }
+    }
+
+    /**
+     * Streams XML events from the supplied {@link java.io.Reader} using a hardened
+     * StAX {@link javax.xml.stream.XMLInputFactory}. The returned stream
+     * lazily pulls events; closing the stream closes the underlying reader.
+     * <p>
+     * Equivalent to {@link #events(Reader, boolean) events(reader, false)}.
+     *
+     * @param reader the XML source
+     * @return a stream of {@link javax.xml.stream.events.XMLEvent}s
+     * @since 6.0.0
+     */
+    public static java.util.stream.Stream<javax.xml.stream.events.XMLEvent> events(java.io.Reader reader) {
+        return events(reader, false);
+    }
+
+    /**
+     * Streams XML events from the supplied {@link java.io.Reader} using a hardened
+     * StAX {@link javax.xml.stream.XMLInputFactory}. The returned stream
+     * lazily pulls events; closing the stream closes the underlying reader.
+     *
+     * @param reader the XML source
+     * @param allowDocTypeDeclaration whether DOCTYPE declarations are permitted
+     * @return a stream of {@link javax.xml.stream.events.XMLEvent}s
+     * @since 6.0.0
+     */
+    public static java.util.stream.Stream<javax.xml.stream.events.XMLEvent> events(java.io.Reader reader, boolean allowDocTypeDeclaration) {
+        return StAXSupport.events(reader, allowDocTypeDeclaration);
+    }
+
+    /**
+     * Streams matching subtrees from a (potentially very large) XML document
+     * as DOM {@link org.w3c.dom.Node}s. Each emitted node is the root of one
+     * complete element matching {@code localName}; matching is performed on
+     * local name only (any namespace).
+     * <p>
+     * Equivalent to {@link #streamElements(Reader, String, String, boolean)
+     * streamElements(reader, null, localName, false)}.
+     * <p>
+     * Closing the returned stream closes the underlying reader. For parallel
+     * per-subtree processing, sink the stream into a virtual-thread executor
+     * (JDK 21+).
+     *
+     * @param reader the XML source
+     * @param localName the element local name to match
+     * @return a stream of DOM nodes, one per matching subtree
+     * @since 6.0.0
+     */
+    public static java.util.stream.Stream<org.w3c.dom.Node> streamElements(java.io.Reader reader, String localName) {
+        return StAXSupport.streamElements(reader, null, localName, false);
+    }
+
+    /**
+     * Streams matching subtrees from a (potentially very large) XML document
+     * as DOM {@link org.w3c.dom.Node}s. Matching is namespace-qualified.
+     *
+     * @param reader the XML source
+     * @param namespaceURI the namespace URI to match (use {@code null} to match any)
+     * @param localName the element local name to match
+     * @return a stream of DOM nodes, one per matching subtree
+     * @since 6.0.0
+     */
+    public static java.util.stream.Stream<org.w3c.dom.Node> streamElements(java.io.Reader reader, String namespaceURI, String localName) {
+        return StAXSupport.streamElements(reader, namespaceURI, localName, false);
+    }
+
+    /**
+     * Streams matching subtrees from a (potentially very large) XML document
+     * as DOM {@link org.w3c.dom.Node}s. Matching is namespace-qualified.
+     *
+     * @param reader the XML source
+     * @param namespaceURI the namespace URI to match (use {@code null} to match any)
+     * @param localName the element local name to match
+     * @param allowDocTypeDeclaration whether DOCTYPE declarations are permitted
+     * @return a stream of DOM nodes, one per matching subtree
+     * @since 6.0.0
+     */
+    public static java.util.stream.Stream<org.w3c.dom.Node> streamElements(java.io.Reader reader, String namespaceURI, String localName, boolean allowDocTypeDeclaration) {
+        return StAXSupport.streamElements(reader, namespaceURI, localName, allowDocTypeDeclaration);
+    }
+}

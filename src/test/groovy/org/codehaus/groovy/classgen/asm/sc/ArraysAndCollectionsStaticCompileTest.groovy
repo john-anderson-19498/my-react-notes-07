@@ -1,0 +1,201 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.codehaus.groovy.classgen.asm.sc
+
+import groovy.transform.stc.ArraysAndCollectionsSTCTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
+
+/**
+ * Unit tests for static compilation : arrays and collections.
+ */
+final class ArraysAndCollectionsStaticCompileTest extends ArraysAndCollectionsSTCTest implements StaticCompilationTestSupport {
+
+    @Test
+    void testShouldNotThrowVerifyError() {
+        assertScript '''
+        def list = new ArrayList<Double>()
+            list.add(2.0d)
+            assert list.get(0) + 1 == 3.0d
+        '''
+    }
+
+    // GROOVY-5654
+    @Test
+    void testShouldNotThrowForbiddenAccessWithMapProperty() {
+        assertScript '''
+            Map<String, Integer> map = ['abcd': 1234]
+            assert map['abcd'] == 1234
+            assert map.abcd == 1234
+        '''
+    }
+
+    // GROOVY-5988
+    @Test
+    void testMapArraySetPropertyAssignment() {
+        assertScript '''import static java.lang.reflect.Modifier.isPrivate
+            Map<String, Object> props(Object o) {
+                Map<String, Object> props = [:]
+                for (property in o.metaClass.properties) {
+                    if (!isPrivate(property.modifiers)) {
+                        props[property.name] = 'TEST'
+                        //props.put(property, 'TEST')
+                    }
+                }
+                props
+            }
+            def map = props('SOME RANDOM STRING')
+            assert map['class'] == 'TEST'
+            assert map['bytes'] == 'TEST'
+        '''
+    }
+
+    // GROOVY-7656
+    @Test
+    void testSpreadSafeMethodCallsOnListLiteralShouldNotCreateListTwice() {
+        assertScript '''
+            void check(List items, List sizes) {
+                assert items == [1, 2, 3]
+                assert sizes == [3]
+            }
+            void test() {
+                def items = [1, 2]
+                def sizes = [items << 3]*.size()
+                check(items, sizes)
+            }
+            test()
+        '''
+        String bytecode = astTrees.values()[0][1]
+        int offset = bytecode.indexOf('test()V')
+        bytecode = bytecode.substring(offset, bytecode.indexOf('RETURN', offset))
+
+        assert bytecode.count('ScriptBytecodeAdapter.createList') == 0 // GROOVY-8699
+        assert bytecode.count('INVOKESPECIAL java/util/ArrayList.<init>') == 3 // one for the spread result
+    }
+
+    // GROOVY-7688
+    @Test
+    void testSpreadSafeMethodCallReceiversWithSideEffectsShouldNotBeVisitedTwice() {
+        assertScript '''
+            void test() {
+                def list = ['a', 'b']
+                def lengths = list.toList()*.length()
+                assert lengths == [1, 1]
+            }
+            test()
+        '''
+        String bytecode = astTrees.values()[0][1]
+        int offset = bytecode.indexOf('test()V')
+        bytecode = bytecode.substring(offset, bytecode.indexOf('RETURN', offset))
+
+        assert bytecode.count('DefaultGroovyMethods.toList') == 1
+    }
+
+    @Override @Test
+    void testMultiDimensionalArray4() {
+        super.testMultiDimensionalArray4()
+        String script = astTrees.values()[0][1]
+        assert script.count('ANEWARRAY') == 1
+        assert script.count(' NEWARRAY') == 3
+        assert !script.contains('createList')
+    }
+
+    // GROOVY-11309
+    @ParameterizedTest
+    @ValueSource(strings=['LinkedHashSet','HashSet','Set'])
+    void testListLiteralToSetAssignmentSC(String t) {
+        assertScript """
+            $t <String> set = []
+            assert set.isEmpty()
+            assert set.size() == 0
+            assert set instanceof LinkedHashSet
+        """
+        String script = astTrees.values()[0][1]
+        assert script.contains('LinkedHashSet.<init> ()V')
+        assert !script.contains('ScriptBytecodeAdapter.createList')
+    }
+
+    // GROOVY-11309
+    @ParameterizedTest
+    @ValueSource(strings=['ArrayList','List','Collection','Iterable'])
+    void testListLiteralToListAssignmentSC(String t) {
+        assertScript """
+            $t <String> list = []
+            assert list.isEmpty()
+            assert list.size() == 0
+            assert list instanceof ArrayList
+        """
+        String script = astTrees.values()[0][1]
+        assert script.contains('ArrayList.<init> ()V')
+        assert !script.contains('ScriptBytecodeAdapter.createList')
+    }
+
+    // GROOVY-11309
+    @ParameterizedTest
+    @ValueSource(strings=['Object','Cloneable','Serializable','RandomAccess'])
+    void testListLiteralToOtherAssignmentSC(String t) {
+        assertScript """
+            $t list = []
+            assert list.isEmpty()
+            assert list.size() == 0
+            assert list instanceof ArrayList
+        """
+        String script = astTrees.values()[0][1]
+        assert script.contains('ArrayList.<init> ()V')
+        assert !script.contains('ScriptBytecodeAdapter.createList')
+    }
+
+    // GROOVY-10029
+    @Test
+    void testCollectionToArrayAssignmentSC() {
+        assertScript '''
+            class C {
+                static List<String> m() {
+                    return ['foo']
+                }
+                static main(args) {
+                    String[] strings = m()
+                    assert strings.length == 1
+                    assert strings[0] == 'foo'
+                }
+            }
+        '''
+        String out = astTrees['C'][1]
+        out = out.substring(out.indexOf('main([Ljava/lang/String;)'))
+        assert out.contains('INVOKEINTERFACE java/util/List.toArray')
+        assert !out.contains('INVOKEDYNAMIC cast(Ljava/util/List;)') : 'dynamic cast should have been replaced by direct method call'
+    }
+
+    @Test
+    void testCollectionToObjectAssignmentSC() {
+        assertScript '''
+            def collectionOfI = [1,2,3]
+
+            def obj
+            obj = new String[0]
+            obj = new Number[1]
+            obj = collectionOfI
+
+            assert obj instanceof List
+        '''
+        String out = astTrees.values()[0][1]
+        assert !out.contains('INVOKEINTERFACE java/util/List.toArray')
+    }
+}

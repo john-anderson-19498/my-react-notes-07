@@ -1,0 +1,494 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy.console.ui;
+
+import groovy.console.ui.text.MatchingHighlighter;
+import groovy.console.ui.text.SmartDocumentFilter;
+import groovy.console.ui.text.StructuredSyntaxResources;
+import groovy.console.ui.text.TextEditor;
+import groovy.console.ui.text.TextUndoManager;
+import org.codehaus.groovy.runtime.StringGroovyMethods;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.text.DefaultEditorKit;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.print.PrinterJob;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.Serial;
+import java.util.Locale;
+import java.util.prefs.Preferences;
+
+import static java.lang.System.Logger.Level.WARNING;
+
+/**
+ * Component which provides a styled editor for the console.
+ */
+public class ConsoleTextEditor extends JScrollPane {
+    private static final System.Logger LOGGER = System.getLogger(ConsoleTextEditor.class.getName());
+    @Serial private static final long serialVersionUID = -3582625263676326887L;
+    private static final Preferences PREFERENCES = Preferences.userNodeForPackage(Console.class);
+    private static final String PREFERENCE_FONT_SIZE = "fontSize";
+    private static final int DEFAULT_FONT_SIZE = 12;
+
+    /**
+     * Returns the preferred monospaced font family for the editor.
+     *
+     * @return the default font family name
+     */
+    public String getDefaultFamily() {
+        return defaultFamily;
+    }
+
+    /**
+     * Sets the preferred monospaced font family for the editor.
+     *
+     * @param defaultFamily the font family name to use
+     */
+    public void setDefaultFamily(String defaultFamily) {
+        this.defaultFamily = defaultFamily;
+    }
+
+    private class LineNumbersPanel extends JPanel {
+
+        LineNumbersPanel() {
+            int initialSize = 3 * PREFERENCES.getInt(PREFERENCE_FONT_SIZE, DEFAULT_FONT_SIZE);
+            setMinimumSize(new Dimension(initialSize, initialSize));
+            setPreferredSize(new Dimension(initialSize, initialSize));
+        }
+
+        @Override
+        @SuppressWarnings("deprecation") // TODO switch viewToModel/modelToView once minimum JDK version for Groovy >= 9
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            // starting position in document
+            int start = textEditor.viewToModel(getViewport().getViewPosition());
+            // end position in document
+            int end = textEditor.viewToModel(new Point(10,
+                    getViewport().getViewPosition().y +
+                            (int) textEditor.getVisibleRect().getHeight())
+            );
+
+            // translate offsets to lines
+            Document doc = textEditor.getDocument();
+            int startline = doc.getDefaultRootElement().getElementIndex(start) + 1;
+            int endline = doc.getDefaultRootElement().getElementIndex(end) + 1;
+            Font f = textEditor.getFont();
+            int fontHeight = g.getFontMetrics(f).getHeight();
+            int fontDesc = g.getFontMetrics(f).getDescent();
+            int startingY = -1;
+
+            try {
+                startingY = textEditor.modelToView(start).y + fontHeight - fontDesc;
+            } catch (BadLocationException e1) {
+                LOGGER.log(WARNING, e1.getMessage());
+            }
+            g.setFont(f);
+            for (int line = startline, y = startingY; line <= endline; y += fontHeight, line++) {
+                String lineNumber = StringGroovyMethods.padLeft((CharSequence)Integer.toString(line), 4, " ");
+                g.drawString(lineNumber, 0, y);
+            }
+        }
+    }
+
+    private String defaultFamily = "Monospaced";
+
+    private static final PrinterJob PRINTER_JOB = PrinterJob.getPrinterJob();
+
+    private LineNumbersPanel numbersPanel = new LineNumbersPanel();
+
+    private boolean documentChangedSinceLastRepaint = false;
+
+    private TextEditor textEditor = new TextEditor(true, true, true) {
+
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            // only repaint the line numbers in the gutter when the document has changed
+            // in case lines (hence line numbers) have been added or removed from the document
+            if (documentChangedSinceLastRepaint) {
+                numbersPanel.repaint();
+                documentChangedSinceLastRepaint = false;
+            }
+        }
+    };
+
+    private UndoAction undoAction = new UndoAction();
+    private RedoAction redoAction = new RedoAction();
+    private PrintAction printAction = new PrintAction();
+
+    private boolean editable = true;
+
+    private TextUndoManager undoManager;
+    private int fontSize;
+
+    /**
+     * Returns the undo manager backing this editor.
+     *
+     * @return the editor undo manager
+     * @since 6.0.0
+     */
+    public TextUndoManager getUndoManager() {
+        return undoManager;
+    }
+
+    /**
+     * Re-run the syntax highlighter on the full document so character
+     * attributes match the current theme. Undo recording is suppressed so
+     * this doesn't pollute the undo/redo stack. Used after undo/redo
+     * because UndoableEdits restore attributes captured at edit time,
+     * which may no longer match the active theme.
+     *
+     * @since 6.0.0
+     */
+    public void reapplyHighlighting() {
+        Document doc = textEditor.getDocument();
+        if (!(doc instanceof DefaultStyledDocument)) {
+            return;
+        }
+        DocumentFilter filter = ((DefaultStyledDocument) doc).getDocumentFilter();
+        if (filter instanceof SmartDocumentFilter) {
+            undoManager.setRecording(false);
+            try {
+                ((SmartDocumentFilter) filter).reparseDocument();
+            } finally {
+                undoManager.setRecording(true);
+            }
+        }
+    }
+
+    /**
+     * Creates a styled text editor with line numbers, undo/redo support,
+     * printing support, and syntax highlighting.
+     */
+    public ConsoleTextEditor() {
+        fontSize = PREFERENCES.getInt(PREFERENCE_FONT_SIZE, DEFAULT_FONT_SIZE);
+        PREFERENCES.addPreferenceChangeListener(evt -> {
+            if (PREFERENCE_FONT_SIZE.equals(evt.getKey())) {
+                int fs;
+                try {
+                    fs = Integer.parseInt(evt.getNewValue());
+                } catch (NumberFormatException e) {
+                    fs = DEFAULT_FONT_SIZE;
+                }
+                fontSize = fs;
+
+                int width = 3 * fontSize;
+                numbersPanel.setPreferredSize(new Dimension(width, width));
+            }
+        });
+        textEditor.setFont(new Font(defaultFamily, Font.PLAIN, fontSize));
+
+        JPanel view = new JPanel(new BorderLayout());
+        view.add(numbersPanel, BorderLayout.WEST);
+        view.add(textEditor, BorderLayout.CENTER);
+        setViewportView(view);
+
+        textEditor.setDragEnabled(editable);
+
+        getVerticalScrollBar().setUnitIncrement(10);
+
+        initActions();
+
+        DefaultStyledDocument doc = new DefaultStyledDocument();
+        doc.setDocumentFilter(new SmartDocumentFilter(doc));
+        textEditor.setDocument(doc);
+
+        // add a document listener, to hint whether the line number gutter has to be repainted
+        // when the number of lines changes
+        doc.addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent documentEvent) {
+                documentChangedSinceLastRepaint = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent documentEvent) {
+                documentChangedSinceLastRepaint = true;
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent documentEvent) {
+                documentChangedSinceLastRepaint = true;
+            }
+        });
+
+        // create and add the undo/redo manager
+        this.undoManager = new TextUndoManager();
+        doc.addUndoableEditListener(undoManager);
+
+        // add the undo actions
+        undoManager.addPropertyChangeListener(undoAction);
+        undoManager.addPropertyChangeListener(redoAction);
+
+        doc.addDocumentListener(undoAction);
+        doc.addDocumentListener(redoAction);
+
+        InputMap im = textEditor.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK, false);
+        im.put(ks, StructuredSyntaxResources.UNDO);
+        ActionMap am = textEditor.getActionMap();
+        am.put(StructuredSyntaxResources.UNDO, undoAction);
+
+        ks = KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK, false);
+        im.put(ks, StructuredSyntaxResources.REDO);
+        am.put(StructuredSyntaxResources.REDO, redoAction);
+
+        ks = KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK, false);
+        im.put(ks, StructuredSyntaxResources.PRINT);
+        am.put(StructuredSyntaxResources.PRINT, printAction);
+
+        // on macOS, remap Home/End to line start/end (Cmd+Home/End for document start/end)
+        if (System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("mac")) {
+            InputMap editorIm = textEditor.getInputMap(JComponent.WHEN_FOCUSED);
+            int meta = InputEvent.META_DOWN_MASK;
+            editorIm.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0), DefaultEditorKit.beginLineAction);
+            editorIm.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0), DefaultEditorKit.endLineAction);
+            editorIm.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, InputEvent.SHIFT_DOWN_MASK), DefaultEditorKit.selectionBeginLineAction);
+            editorIm.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, InputEvent.SHIFT_DOWN_MASK), DefaultEditorKit.selectionEndLineAction);
+            editorIm.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, meta), DefaultEditorKit.beginAction);
+            editorIm.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, meta), DefaultEditorKit.endAction);
+            editorIm.put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, meta | InputEvent.SHIFT_DOWN_MASK), DefaultEditorKit.selectionBeginAction);
+            editorIm.put(KeyStroke.getKeyStroke(KeyEvent.VK_END, meta | InputEvent.SHIFT_DOWN_MASK), DefaultEditorKit.selectionEndAction);
+        }
+    }
+
+    /**
+     * Shows or hides the line-number gutter.
+     *
+     * @param showLineNumbers {@code true} to show line numbers
+     */
+    public void setShowLineNumbers(boolean showLineNumbers) {
+        if (showLineNumbers) {
+            JPanel view = new JPanel(new BorderLayout());
+            view.add(numbersPanel, BorderLayout.WEST);
+            view.add(textEditor, BorderLayout.CENTER);
+            setViewportView(view);
+        } else {
+            setViewportView(textEditor);
+        }
+    }
+
+    /**
+     * Updates whether the text editor accepts user edits.
+     *
+     * @param editable {@code true} if the editor should be editable
+     */
+    public void setEditable(boolean editable) {
+        textEditor.setEditable(editable);
+    }
+
+    /**
+     * Reports whether plain-text clipboard content is currently available.
+     *
+     * @return {@code true} if the clipboard contains a string
+     */
+    public boolean clipBoardAvailable() {
+        Transferable t = StructuredSyntaxResources.SYSTEM_CLIPBOARD.getContents(this);
+        return t.isDataFlavorSupported(DataFlavor.stringFlavor);
+    }
+
+    /**
+     * Returns the wrapped text editor component.
+     *
+     * @return the embedded text editor
+     */
+    public TextEditor getTextEditor() {
+        return textEditor;
+    }
+
+    /**
+     * Installs actions exposed by this editor on its action map.
+     */
+    protected void initActions() {
+        ActionMap map = getActionMap();
+        map.put(StructuredSyntaxResources.PRINT, new PrintAction());
+    }
+
+    private class PrintAction extends AbstractAction {
+
+        PrintAction() {
+            setEnabled(true);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            PRINTER_JOB.setPageable(textEditor);
+
+            try {
+                if (PRINTER_JOB.printDialog()) {
+                    PRINTER_JOB.print();
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    } // end ConsoleTextEditor.PrintAction
+
+    private class RedoAction extends UpdateCaretListener implements PropertyChangeListener {
+
+        RedoAction() {
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            undoManager.redo();
+            setEnabled(undoManager.canRedo());
+            undoAction.setEnabled(undoManager.canUndo());
+            reapplyHighlighting();
+            super.actionPerformed(ae);
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent pce) {
+            setEnabled(undoManager.canRedo());
+        }
+    } // end ConsoleTextEditor.RedoAction
+
+    private abstract class UpdateCaretListener extends AbstractAction implements DocumentListener {
+
+        protected int lastUpdate;
+
+        @Override
+        public void changedUpdate(DocumentEvent de) {
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent de) {
+            lastUpdate = de.getOffset() + de.getLength();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent de) {
+            lastUpdate = de.getOffset();
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            textEditor.setCaretPosition(lastUpdate);
+        }
+    }
+
+    private class UndoAction extends UpdateCaretListener implements PropertyChangeListener {
+
+        UndoAction() {
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            undoManager.undo();
+            setEnabled(undoManager.canUndo());
+            redoAction.setEnabled(undoManager.canRedo());
+            reapplyHighlighting();
+            super.actionPerformed(ae);
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent pce) {
+            setEnabled(undoManager.canUndo());
+        }
+    }
+
+    /**
+     * Returns the action that undoes the most recent edit.
+     *
+     * @return the undo action
+     */
+    public Action getUndoAction() {
+        return undoAction;
+    }
+
+    /**
+     * Returns the action that redoes the most recently undone edit.
+     *
+     * @return the redo action
+     */
+    public Action getRedoAction() {
+        return redoAction;
+    }
+
+    /**
+     * Returns the action that prints the editor content.
+     *
+     * @return the print action
+     */
+    public Action getPrintAction() {
+        return printAction;
+    }
+
+    /**
+     * Replaces the current syntax highlighter document filter.
+     *
+     * @param clazz the filter type to instantiate for the current document
+     */
+    public void enableHighLighter(Class<? extends DocumentFilter> clazz) {
+        DefaultStyledDocument doc = (DefaultStyledDocument) textEditor.getDocument();
+
+        try {
+            DocumentFilter documentFilter = clazz.getConstructor(doc.getClass()).newInstance(doc);
+            doc.setDocumentFilter(documentFilter);
+
+            disableMatchingHighlighter();
+            if (documentFilter instanceof SmartDocumentFilter smartDocumentFilter) {
+                enableMatchingHighlighter(smartDocumentFilter);
+            }
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void enableMatchingHighlighter(SmartDocumentFilter smartDocumentFilter) {
+        textEditor.addCaretListener(new MatchingHighlighter(smartDocumentFilter, textEditor));
+    }
+
+    private void disableMatchingHighlighter() {
+        for (CaretListener cl : textEditor.getCaretListeners()) {
+            if (cl instanceof MatchingHighlighter) {
+                textEditor.removeCaretListener(cl);
+            }
+        }
+    }
+}

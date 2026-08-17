@@ -1,0 +1,109 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package groovy.jmx.builder
+
+import org.junit.jupiter.api.Assumptions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+import javax.management.MBeanServerConnection
+import javax.management.ObjectName
+
+@ExtendWith(CgroupV2NpeMitigationExtension)
+final class JmxBeanFactoryTest {
+
+    private JmxBuilder builder
+    private MBeanServerConnection server
+
+    @BeforeEach
+    void setUp() {
+        builder = new JmxBuilder()
+        builder.registerFactory('bean', new JmxBeanFactory())
+        try {
+            server = builder.getMBeanServer()
+        } catch (e) {
+            Assumptions.abort(e.getMessage())
+        }
+    }
+
+    @Test
+    void testMetaMapValidity() {
+        def object = new MockManagedObject()
+        def metaMap = builder.bean(object)
+        assert metaMap
+        assert metaMap.name == object.class.canonicalName
+        assert metaMap.target == object
+        assert metaMap.jmxName.toString() == "jmx.builder:type=ExportedObject,name=${object.class.canonicalName}@${object.hashCode()}"
+    }
+
+    @Test
+    void testImplicitMetaMap() {
+        def object = new MockManagedObject()
+        def objName = "jmx.builder:type=ExportedObject,name=${object.class.canonicalName}@${object.hashCode()}"
+
+        def map = builder.bean(object)
+
+        assert map
+        assert map.jmxName.toString() == objName
+    }
+
+    @Test
+    void testEmbeddedBeanGeneration() {
+        def object = new MockManagedGroovyObject()
+        def map = builder.bean(object)
+
+        assert map
+
+        assert map.target == object
+        assert map.name == object.class.canonicalName
+
+        assert map.jmxName == new ObjectName('jmx.builder:type=EmbeddedObject')
+        assert map.attributes.Id
+        assert map.attributes.Id.type == 'int'
+
+        assert map.attributes.Location
+        assert map.attributes.Location.type == 'java.lang.Object'
+    }
+
+    @Test
+    void testAttributeMethodListeners() {
+        def object = new MockManagedGroovyObject()
+        def map = builder.bean(target: object, name: 'jmx.builder:type=ExplicitObject',
+                attributes: ['Id': [onChange: {-> Hello}]]
+        )
+
+        assert map
+        assert map.attributes.Id
+        assert map.attributes.Id.methodListener
+    }
+
+    @Test
+    void testMBeanClass() {
+        def object = new MockSimpleObject()
+        def map = builder.bean(object)
+        assert map
+        assert map.isMBean
+        assert map.target
+        assert map.jmxName
+        assert map.attributes
+        assert map.constructors
+        assert !map.operations
+    }
+}

@@ -1,0 +1,161 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.codehaus.groovy.tools.groovydoc.antlr4;
+
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseProblemException;
+import com.github.javaparser.ParseResult;
+import org.apache.groovy.antlr.GroovydocVisitor;
+import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.control.CompilationUnit;
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.ErrorCollector;
+import org.codehaus.groovy.control.Phases;
+import org.codehaus.groovy.control.SourceUnit;
+import org.codehaus.groovy.groovydoc.GroovyClassDoc;
+import org.codehaus.groovy.groovydoc.GroovyFieldDoc;
+import org.codehaus.groovy.groovydoc.GroovyMethodDoc;
+import org.codehaus.groovy.tools.groovydoc.GroovyDocParserI;
+import org.codehaus.groovy.tools.groovydoc.LinkArgument;
+import org.codehaus.groovy.tools.groovydoc.SimpleGroovyClassDoc;
+import org.codehaus.groovy.tools.groovydoc.SimpleGroovyFieldDoc;
+import org.codehaus.groovy.tools.groovydoc.SimpleGroovyMethodDoc;
+import org.codehaus.groovy.tools.shell.util.Logger;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+
+import static java.lang.System.Logger.Level.WARNING;
+
+/**
+ * Parses Groovy and Java source files and builds {@link GroovyClassDoc} maps. Groovy sources
+ * are processed via the Groovy compiler AST ({@link GroovydocVisitor}); Java sources via
+ * JavaParser ({@link GroovydocJavaVisitor}).
+ */
+public class GroovyDocParser implements GroovyDocParserI {
+
+    private static final System.Logger LOGGER = System.getLogger(GroovyDocParser.class.getName());
+
+    private final JavaParser javaParser;
+    private final List<LinkArgument> links;
+    private final Properties properties;
+    private final Logger log = Logger.create(GroovyDocParser.class);
+
+    /**
+     * Creates a parser with a default {@link JavaParser} instance.
+     */
+    public GroovyDocParser(List<LinkArgument> links, Properties properties) {
+        this(new JavaParser(), links, properties);
+    }
+
+    /**
+     * Creates a parser with the supplied {@link JavaParser} instance.
+     *
+     * @since 6.0.0
+     */
+    public GroovyDocParser(JavaParser javaParser, List<LinkArgument> links, Properties properties) {
+        this.javaParser = javaParser;
+        this.links = links;
+        this.properties = properties;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, GroovyClassDoc> getClassDocsFromSingleSource(String packagePath, String file, String src)
+            throws RuntimeException {
+        if (file.indexOf(".java") > 0) { // simple (for now) decision on java or groovy
+            // java
+            return parseJava(packagePath, file, src);
+        }
+        if (file.indexOf(".sourcefile") > 0) {
+            // java (special name used for testing)
+            return parseJava(packagePath, file, src);
+        }
+        return parseGroovy(packagePath, file, src);
+    }
+
+    private Map<String, GroovyClassDoc> parseJava(String packagePath, String file, String src) throws RuntimeException {
+        GroovydocJavaVisitor visitor = new GroovydocJavaVisitor(packagePath, links, properties);
+        try {
+            ParseResult<com.github.javaparser.ast.CompilationUnit> parseResult = javaParser.parse(src);
+            if (!parseResult.isSuccessful() || parseResult.getResult().isEmpty()) {
+                throw new ParseProblemException(parseResult.getProblems());
+            }
+            visitor.visit(parseResult.getResult().get(), null);
+        } catch (Throwable t) {
+            LOGGER.log(WARNING, "Attempting to ignore error parsing Java source file: {0}/{1}", packagePath, file);
+            LOGGER.log(WARNING, "Consider reporting the error to the Groovy project: https://issues.apache.org/jira/browse/GROOVY");
+            LOGGER.log(WARNING, "... or directly to the JavaParser project: https://github.com/javaparser/javaparser/issues");
+            LOGGER.log(WARNING, "Error: {0}", t.getMessage());
+        }
+        return visitor.getGroovyClassDocs();
+    }
+
+    private Map<String, GroovyClassDoc> parseGroovy(String packagePath, String file, String src) throws RuntimeException {
+        CompilerConfiguration config = new CompilerConfiguration();
+        config.getOptimizationOptions().put(CompilerConfiguration.GROOVYDOC, true);
+        CompilationUnit compUnit = new CompilationUnit(config);
+        SourceUnit unit = new SourceUnit(file, src, config, null, new ErrorCollector(config));
+        compUnit.addSource(unit);
+        int phase = Phases.CONVERSION;
+        if (properties.containsKey("phaseOverride")) {
+            String raw = properties.getProperty("phaseOverride");
+            try {
+                phase = Integer.parseInt(raw);
+            } catch(NumberFormatException ignore) {
+                raw = raw.toUpperCase(Locale.ROOT);
+                switch(raw) {
+                    // some dup here but kept simple since we may swap Phases to an enum
+                    case "CONVERSION": phase = 3; break;
+                    case "SEMANTIC_ANALYSIS": phase = 4; break;
+                    case "CANONICALIZATION": phase = 5; break;
+                    case "INSTRUCTION_SELECTION": phase = 6; break;
+                    case "CLASS_GENERATION": phase = 7; break;
+                    default:
+                        LOGGER.log(WARNING, "Ignoring unrecognised or unsuitable phase and keeping default");
+                }
+            }
+        }
+        compUnit.compile(phase);
+        ModuleNode root = unit.getAST();
+        GroovydocVisitor visitor = new GroovydocVisitor(unit, packagePath, links, properties);
+        root.getClasses().forEach(clazz -> visitor.visitClass(clazz));
+        return visitor.getGroovyClassDocs();
+    }
+
+    private void replaceTags(SimpleGroovyClassDoc sgcd) {
+        sgcd.setRawCommentText(sgcd.replaceTags(sgcd.getRawCommentText()));
+        for (GroovyMethodDoc groovyMethodDoc : sgcd.methods()) {
+            SimpleGroovyMethodDoc sgmd = (SimpleGroovyMethodDoc) groovyMethodDoc;
+            sgmd.setRawCommentText(sgcd.replaceTags(sgmd.getRawCommentText()));
+        }
+        for (GroovyFieldDoc groovyFieldDoc : sgcd.isEnum() ? sgcd.enumConstants() : sgcd.fields()) {
+            SimpleGroovyFieldDoc sgfd = (SimpleGroovyFieldDoc) groovyFieldDoc;
+            sgfd.setRawCommentText(sgcd.replaceTags(sgfd.getRawCommentText()));
+        }
+        for (GroovyClassDoc innerClassDoc : sgcd.innerClasses()) {
+            replaceTags((SimpleGroovyClassDoc) innerClassDoc);
+        }
+    }
+
+}
