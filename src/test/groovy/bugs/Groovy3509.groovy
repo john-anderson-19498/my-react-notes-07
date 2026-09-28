@@ -84,3 +84,4 @@ final class Groovy3509 {
         Level2 level2
     }
 }
+

@@ -45,3 +45,5 @@ public class PowerAssertionError extends java.lang.AssertionError {
         return String.format("Assertion failed: %n%n%s%n", getMessage());
     }
 }
+
+// bc7d13

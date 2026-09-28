@@ -21,3 +21,5 @@
  * Legacy classes for building AST data structures. See also groovy-macro.
  */
 package org.apache.groovy.ast.builder;
+
+// ebf577

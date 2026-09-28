@@ -21,3 +21,5 @@
  * Standard class reflection support. Reflection utilities for built-in Java/Groovy types.
  */
 package org.codehaus.groovy.reflection.stdclasses;
+
+// a057b6

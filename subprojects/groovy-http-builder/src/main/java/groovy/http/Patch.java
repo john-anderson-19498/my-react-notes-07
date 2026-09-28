@@ -37,3 +37,5 @@ public @interface Patch {
     /** The URL template, e.g. {@code "/users/{id}"}. */
     String value();
 }
+
+// 04c502

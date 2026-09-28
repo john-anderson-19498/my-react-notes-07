@@ -103,3 +103,5 @@ public class DummyBean {
         changeSupport.firePropertyChange("point", this.point, this.point = point);
     }
 }
+
+// d4d916

@@ -1386,3 +1386,4 @@ b $$v"""/$,
         assert result.contains('/* => Demo$_declines_closure1 */')
     }
 }
+

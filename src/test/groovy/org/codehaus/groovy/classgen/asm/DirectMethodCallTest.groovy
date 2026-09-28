@@ -52,3 +52,4 @@ final class DirectMethodCallTest extends AbstractBytecodeTestCase {
         ])
     }
 }
+

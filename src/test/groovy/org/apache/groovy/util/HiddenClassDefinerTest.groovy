@@ -325,3 +325,4 @@ class HiddenClassDefinerTest {
         assertNull(HiddenClassDefiner.tryDefineNestmate(HiddenClassDefinerTest, null, true))
     }
 }
+

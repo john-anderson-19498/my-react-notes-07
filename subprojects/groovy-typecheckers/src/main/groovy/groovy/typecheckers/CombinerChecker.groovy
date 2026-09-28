@@ -363,3 +363,4 @@ class CombinerChecker extends GroovyTypeCheckingExtensionSupport.TypeCheckingDSL
         names
     }
 }
+

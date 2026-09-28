@@ -357,3 +357,5 @@ class WindowImpl<T, U extends Comparable<? super U>> extends QueryableCollection
     private static final BigDecimal MAX_VALUE = toBigDecimal(Long.MAX_VALUE);
     @Serial private static final long serialVersionUID = -3458969297047398621L;
 }
+
+// f1df6a

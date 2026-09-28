@@ -38,3 +38,4 @@ final class Groovy9153 {
         assert ConstantExpression.NULL.getNodeMetaData().isEmpty()
     }
 }
+

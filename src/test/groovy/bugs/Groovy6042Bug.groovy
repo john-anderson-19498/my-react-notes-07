@@ -30,3 +30,4 @@ class Groovy6042Bug {
         assert result.toString() == '[my.character.map.en:abc]'
     }
 }
+

@@ -469,3 +469,4 @@ class PreCompiledAlias3L {
 @AnnotationCollector(serializeClass = TheSuperGroovyHeroesL)
 @interface TheSuperGroovyHeroesL {
 }
+

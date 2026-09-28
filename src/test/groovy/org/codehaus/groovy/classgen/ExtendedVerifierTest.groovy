@@ -45,3 +45,4 @@ final class ExtendedVerifierTest {
         assert mn.returnType.annotations.isEmpty()
     }
 }
+

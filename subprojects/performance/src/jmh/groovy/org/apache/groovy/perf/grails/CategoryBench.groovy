@@ -319,3 +319,4 @@ class CategoryBench {
         bh.consume(sum)
     }
 }
+

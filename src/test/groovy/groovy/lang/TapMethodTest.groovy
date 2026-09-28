@@ -105,3 +105,4 @@ class TapMethodTest {
         fail 'this should never have been called'
     }
 }
+

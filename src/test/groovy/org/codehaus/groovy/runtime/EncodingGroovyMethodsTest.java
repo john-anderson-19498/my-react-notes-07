@@ -49,3 +49,5 @@ public class EncodingGroovyMethodsTest {
 
     }
 }
+
+// 93c96c

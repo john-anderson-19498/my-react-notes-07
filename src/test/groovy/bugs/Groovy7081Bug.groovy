@@ -70,3 +70,4 @@ class Groovy7081Bug {
         assert msg.message.contains("Abstract method 'int getMagicNumber()' is not implemented but a method of the same name but different return type is defined: static method 'java.lang.Object getMagicNumber()'")
     }
 }
+

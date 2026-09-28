@@ -39,3 +39,4 @@ final class Groovy1081 {
         assertTrue(writer.toString().startsWith('abc'))
     }
 }
+

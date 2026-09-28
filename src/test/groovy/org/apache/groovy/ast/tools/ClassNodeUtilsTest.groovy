@@ -52,3 +52,4 @@ final class ClassNodeUtilsTest {
         assertEquals('is', getPropNameForAccessor('is'))
     }
 }
+

@@ -58,3 +58,4 @@ class JUnit6Test {
         ]
     }
 }
+

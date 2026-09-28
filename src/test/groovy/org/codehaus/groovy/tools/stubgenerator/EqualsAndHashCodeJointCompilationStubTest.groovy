@@ -99,3 +99,4 @@ final class EqualsAndHashCodeJointCompilationStubTest extends StringSourcesStubT
         assert u1.hashCode() == u2.hashCode()
     }
 }
+

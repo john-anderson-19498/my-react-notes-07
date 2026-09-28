@@ -24,3 +24,4 @@ class GroovycTest3 {
         file.write(new GroovycTest3Peer().OK)
     }
 }
+

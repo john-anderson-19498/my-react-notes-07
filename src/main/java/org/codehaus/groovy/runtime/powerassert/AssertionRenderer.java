@@ -232,3 +232,5 @@ public final class AssertionRenderer {
         return value.getClass().getName() + "@" + hash;
     }
 }
+
+// 022cc2

@@ -43,3 +43,5 @@ public interface TemplateResolver {
      */
     URL resolveTemplate(String templatePath) throws IOException;
 }
+
+// ea04c6

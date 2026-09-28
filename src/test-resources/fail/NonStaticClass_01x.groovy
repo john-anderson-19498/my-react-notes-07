@@ -31,3 +31,4 @@ public class Y {
     }
 }
 assert 'Daniel' == Y.createX(new Y()).name
+

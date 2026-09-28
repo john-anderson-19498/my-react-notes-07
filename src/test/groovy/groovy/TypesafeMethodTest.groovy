@@ -34,3 +34,4 @@ class TypesafeMethodTest {
         return i + 1
     }
 }
+

@@ -179,3 +179,4 @@ class ClosureWithDefaultParamTest {
         file.eachFile { assert it.getName() }
     }
 }
+

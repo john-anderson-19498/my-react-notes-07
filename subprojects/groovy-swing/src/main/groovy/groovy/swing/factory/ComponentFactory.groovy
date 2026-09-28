@@ -74,3 +74,4 @@ class ComponentFactory extends BeanFactory {
         }
     }
 }
+

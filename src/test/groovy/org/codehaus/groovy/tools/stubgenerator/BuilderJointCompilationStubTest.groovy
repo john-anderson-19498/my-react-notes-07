@@ -121,3 +121,4 @@ final class BuilderJointCompilationStubTest extends StringSourcesStubTestCase {
         assert box.count == 7
     }
 }
+

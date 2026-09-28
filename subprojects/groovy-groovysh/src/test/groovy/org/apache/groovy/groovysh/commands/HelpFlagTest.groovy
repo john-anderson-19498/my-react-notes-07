@@ -80,3 +80,4 @@ class HelpFlagTest extends SystemTestSupport {
         }
     }
 }
+

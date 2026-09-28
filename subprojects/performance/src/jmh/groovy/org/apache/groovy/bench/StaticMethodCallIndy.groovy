@@ -234,3 +234,4 @@ class StaticMethodCallIndy {
         return staticDoubleCS(staticIncrementCS(staticSquareCS(x)))
     }
 }
+

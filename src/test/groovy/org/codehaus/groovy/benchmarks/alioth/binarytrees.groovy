@@ -83,3 +83,4 @@ while (depth<=maxDepth) {
 
 println "long lived tree of depth ${maxDepth}\t check: ${longLivedTree.itemCheck()}"
 println "${System.currentTimeMillis () - start}ms"
+

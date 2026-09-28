@@ -99,3 +99,5 @@ public class spectralnorm
         MultiplyAtv(n,u,AtAv);
     }
 }
+
+// 2e1645

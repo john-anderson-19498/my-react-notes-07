@@ -93,3 +93,4 @@ final class StaticCompilationIntroTest {
         assertScript(TYPESAFE_COMPILESTATIC_PROGRAM+RUNTIME_MAGIC+RUN)
     }
 }
+

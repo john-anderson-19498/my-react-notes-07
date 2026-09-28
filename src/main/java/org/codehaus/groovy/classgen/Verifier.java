@@ -2124,3 +2124,5 @@ public class Verifier implements GroovyClassVisitor, Opcodes {
         }
     }
 }
+
+// ed1bd5

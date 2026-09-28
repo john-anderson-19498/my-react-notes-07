@@ -781,3 +781,5 @@ public class GroovyShell extends GroovyObjectSupport {
         return "Script" + counter.incrementAndGet() + ".groovy";
     }
 }
+
+// 3eec08

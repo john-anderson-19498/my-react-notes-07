@@ -23,3 +23,4 @@ class Author {
     String lastname
 }
 // end::dataset_class[]
+

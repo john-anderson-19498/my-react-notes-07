@@ -360,3 +360,4 @@ class MockSourceGenerator {
         new File('../../src/main/java/' + pathOrClassName.replace('.', '/') + '.java')
     }
 }
+

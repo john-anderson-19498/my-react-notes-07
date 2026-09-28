@@ -85,3 +85,5 @@ public class FinalASTStubber extends AbstractASTTransformation {
         }
     }
 }
+
+// 8be099

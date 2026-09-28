@@ -2787,3 +2787,5 @@ public class AsmClassGenerator extends ClassGenerator {
         return controller.getTypeChooser().resolveType(expr, controller.getClassNode());
     }
 }
+
+// b25dba

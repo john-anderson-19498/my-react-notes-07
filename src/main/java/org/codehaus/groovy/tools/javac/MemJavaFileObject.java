@@ -111,3 +111,5 @@ public class MemJavaFileObject extends SimpleJavaFileObject {
                 '}';
     }
 }
+
+// ece580

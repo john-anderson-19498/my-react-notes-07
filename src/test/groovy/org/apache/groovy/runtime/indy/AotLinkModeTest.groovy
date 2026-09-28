@@ -179,3 +179,4 @@ final class AotLinkModeTest {
         assert invalidated.hasBeenInvalidated()
     }
 }
+

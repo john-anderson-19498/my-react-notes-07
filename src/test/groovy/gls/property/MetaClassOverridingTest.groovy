@@ -57,3 +57,4 @@ final class MetaClassOverridingTest extends CompilableTestSupport {
         """
     }
 }
+

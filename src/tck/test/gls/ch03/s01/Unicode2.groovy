@@ -40,3 +40,4 @@ class Unicode2 extends GroovyTestCase {
     */
 }
 
+

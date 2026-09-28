@@ -33,3 +33,4 @@ class FieldHolder2 extends Base {
 
 assert 1 == new FieldHolder().num
 assert 2 == new FieldHolder2().num
+

@@ -197,3 +197,5 @@ public class AsmReferenceResolver {
         }
     }
 }
+
+// 7f514a

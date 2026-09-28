@@ -59,3 +59,5 @@ public class EncodingAwareBufferedWriter extends BufferedWriter {
         return Charset.forName(getEncoding()).name();
     }
 }
+
+// 4d9e4f

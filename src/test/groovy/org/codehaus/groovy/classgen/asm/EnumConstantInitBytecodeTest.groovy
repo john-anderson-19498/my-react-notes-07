@@ -231,3 +231,4 @@ final class EnumConstantInitBytecodeTest extends AbstractBytecodeTestCase {
         assert !code.any { it.contains('ScriptBytecodeAdapter') }
     }
 }
+

@@ -40,3 +40,4 @@ n -= 1
 printf("Tak(%d,%d,%d): %d\n", n * 3, n * 2, n, tak(n * 3, n * 2, n))
 printf("Fib(3): %d\n", fib(3))
 printf("Tak(3.0,2.0,1.0): %.1f\n", tak(3.0D, 2.0D, 1.0D))
+

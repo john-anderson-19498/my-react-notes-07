@@ -45,3 +45,4 @@ class MethodsTest extends SystemTestSupport {
         assert engine.methodNames.toSet() == before
     }
 }
+

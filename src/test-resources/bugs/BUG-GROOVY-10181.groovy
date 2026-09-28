@@ -24,3 +24,4 @@ class Test {
     @Deprecated
     private int count2 = 99
 }
+

@@ -83,3 +83,5 @@ public abstract class Wrapper implements GroovyObject {
      */
     protected abstract MetaClass getDelegatedMetaClass();
 }
+
+// 4b3d1a

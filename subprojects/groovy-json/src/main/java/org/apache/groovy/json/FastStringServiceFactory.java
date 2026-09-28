@@ -31,3 +31,5 @@ public interface FastStringServiceFactory {
      */
     FastStringService getService();
 }
+
+// 98e8ed

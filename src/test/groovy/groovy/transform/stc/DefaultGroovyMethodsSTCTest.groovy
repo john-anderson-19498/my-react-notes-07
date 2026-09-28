@@ -529,3 +529,4 @@ class DefaultGroovyMethodsSTCTest extends StaticTypeCheckingTestCase {
         'Cannot call java.util.LinkedHashMap#put(java.lang.String, java.lang.String) with arguments [groovy.lang.GString, java.lang.String]'
     }
 }
+

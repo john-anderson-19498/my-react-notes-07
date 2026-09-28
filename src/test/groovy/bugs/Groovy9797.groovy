@@ -65,3 +65,4 @@ final class Groovy9797 {
         assertNotSame(negativeZeroBits, positiveZeroBits)
     }
 }
+

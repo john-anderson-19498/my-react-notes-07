@@ -511,3 +511,4 @@ final class InstanceofFlowBindingsTest {
         ifStmt.booleanExpression.expression
     }
 }
+

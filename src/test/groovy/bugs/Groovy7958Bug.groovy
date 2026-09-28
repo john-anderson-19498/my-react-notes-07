@@ -35,3 +35,4 @@ class Groovy7958Bug {
         """
     }
 }
+

@@ -113,3 +113,4 @@ final class NamedVariantJointCompilationStubTest extends StringSourcesStubTestCa
         assert direct2.seed == 7
     }
 }
+

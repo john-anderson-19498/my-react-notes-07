@@ -109,3 +109,5 @@ final class EnumConstantInit extends BytecodeExpression {
         mv.visitMethodInsn(INVOKESPECIAL, owner, "<init>", "(Ljava/lang/String;I)V", false);
     }
 }
+
+// fa5189

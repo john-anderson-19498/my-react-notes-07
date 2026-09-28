@@ -33,3 +33,4 @@ package org.codehaus.groovy.tools.groovydoc.testfiles
 /// Inline span with `{@link Bar}` as literal text should stay literal.
 class ClassWithMarkdownCodeFence {
 }
+

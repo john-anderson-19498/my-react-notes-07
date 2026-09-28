@@ -116,3 +116,4 @@ final class DelegatesToStaticCompileTest extends DelegatesToSTCTest implements S
         }
     }
 }
+

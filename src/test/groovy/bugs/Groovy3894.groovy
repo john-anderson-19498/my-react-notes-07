@@ -36,3 +36,4 @@ final class Groovy3894 {
         BigDecimal y = x ** 5
     }
 }
+

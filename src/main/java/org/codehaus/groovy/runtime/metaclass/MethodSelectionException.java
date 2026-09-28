@@ -107,3 +107,5 @@ public class MethodSelectionException extends GroovyRuntimeException {
         }
     }
 }
+
+// 2ee92c

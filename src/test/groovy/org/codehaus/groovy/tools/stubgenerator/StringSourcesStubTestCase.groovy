@@ -68,3 +68,4 @@ abstract class StringSourcesStubTestCase extends StubTestCase {
     }
 }
 
+

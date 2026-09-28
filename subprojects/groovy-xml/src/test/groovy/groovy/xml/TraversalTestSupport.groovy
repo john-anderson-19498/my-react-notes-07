@@ -51,3 +51,4 @@ class TraversalTestSupport {
         assert trace == '_1 _1_1 _1_2 _1_1_1 _1_1_2 _1_2_1 _1_1_2_1 '
     }
 }
+

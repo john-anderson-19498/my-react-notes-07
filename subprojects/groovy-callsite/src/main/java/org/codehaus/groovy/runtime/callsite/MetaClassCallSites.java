@@ -180,3 +180,5 @@ public final class MetaClassCallSites {
         return GeneratedClosure.class.isAssignableFrom(metaClass.getTheClass());
     }
 }
+
+// c2d3d0

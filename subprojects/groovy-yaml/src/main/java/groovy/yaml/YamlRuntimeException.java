@@ -59,3 +59,5 @@ public class YamlRuntimeException extends GroovyRuntimeException {
         super(msg, cause);
     }
 }
+
+// 8cf34c

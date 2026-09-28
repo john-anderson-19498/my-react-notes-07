@@ -36,3 +36,4 @@ class Groovy7912Bug {
         assert closure() == 0
     }
 }
+

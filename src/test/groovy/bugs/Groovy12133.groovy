@@ -570,3 +570,4 @@ final class Groovy12133 {
         assertTrue(BalancedGroup.find('', '\\(', '\\)').isEmpty())
     }
 }
+

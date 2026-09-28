@@ -67,3 +67,4 @@ class AnnotationCollectorStubTest extends StringSourcesStubTestCase {
 @AnnotationCollector
 @interface TheSuperGroovyHeroes {}
 
+

@@ -100,3 +100,4 @@ final class SingletonJointCompilationStubTest extends StringSourcesStubTestCase 
         assert customInstance.greet() == 'self hi'
     }
 }
+

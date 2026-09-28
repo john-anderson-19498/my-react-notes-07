@@ -36,3 +36,4 @@ final class Groovy4043Bug extends CompilableTestSupport {
         """
     }
 }
+

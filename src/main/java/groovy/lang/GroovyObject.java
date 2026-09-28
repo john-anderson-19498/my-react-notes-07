@@ -75,3 +75,5 @@ public interface GroovyObject {
      */
     void setMetaClass(MetaClass metaClass);
 }
+
+// e171b7

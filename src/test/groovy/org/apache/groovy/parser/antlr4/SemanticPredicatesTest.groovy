@@ -84,3 +84,4 @@ final class SemanticPredicatesTest {
         return new GroovyLangParser(tokens(source))
     }
 }
+

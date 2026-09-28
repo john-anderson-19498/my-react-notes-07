@@ -88,3 +88,5 @@ public @interface GrabResolver {
      */
     boolean initClass() default true;
 }
+
+// b3b1c8

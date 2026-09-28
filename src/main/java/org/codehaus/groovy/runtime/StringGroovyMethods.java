@@ -4535,3 +4535,5 @@ public class StringGroovyMethods extends DefaultGroovyMethodsSupport {
         return BalancedGroup.find(self, openRegex, closeRegex, options);
     }
 }
+
+// d8e4bd

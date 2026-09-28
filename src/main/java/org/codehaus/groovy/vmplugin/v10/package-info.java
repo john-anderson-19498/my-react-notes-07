@@ -21,3 +21,5 @@
  * Java 10 VM plugin. Compatibility layer for Java 10 local variable type inference.
  */
 package org.codehaus.groovy.vmplugin.v10;
+
+// 3515ee

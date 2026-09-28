@@ -135,3 +135,4 @@ class ImplicitReturnPostconditionTests extends BaseTestClass {
         assert clazz.leftpad('x', 5, 'ab') == 'xxxab'
     }
 }
+

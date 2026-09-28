@@ -23,3 +23,4 @@ class Service {
     def method(object) {
     }
 }
+

@@ -38,3 +38,4 @@ final class Groovy3205 {
         String toString() { 'original toString' }
     }
 }
+

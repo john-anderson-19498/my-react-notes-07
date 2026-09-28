@@ -195,3 +195,5 @@ public class PropertyTest extends GroovyTestCase {
         assertEquals("property: " + property + " of: " + object, expected, value);
     }
 }
+
+// eb5eef

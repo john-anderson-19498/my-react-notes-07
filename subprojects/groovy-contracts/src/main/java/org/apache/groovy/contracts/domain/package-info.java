@@ -21,3 +21,5 @@
  * Domain model classes representing contract elements such as preconditions, postconditions, and class invariants.
  */
 package org.apache.groovy.contracts.domain;
+
+// df01bb

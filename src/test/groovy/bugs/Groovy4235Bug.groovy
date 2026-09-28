@@ -37,3 +37,4 @@ class Groovy4235Bug {
         """
     }
 }
+

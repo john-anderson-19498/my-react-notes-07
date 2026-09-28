@@ -34,3 +34,5 @@ public interface ResourceManager {
      */
     Reader getReader(String resourceName) throws IOException;
 }
+
+// 926ed8

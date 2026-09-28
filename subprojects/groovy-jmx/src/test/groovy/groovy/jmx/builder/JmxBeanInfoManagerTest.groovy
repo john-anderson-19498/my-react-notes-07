@@ -79,3 +79,4 @@ class JmxBeanInfoManagerTest {
         assert info.getOperation("doSomethingElse").getSignature().size() == 2
     }
 }
+

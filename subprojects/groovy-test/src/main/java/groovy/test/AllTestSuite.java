@@ -171,3 +171,5 @@ public class AllTestSuite extends TestSuite {
         return GROOVY_LOADER.parseClass(new File(filename));
     }
 }
+
+// c70245

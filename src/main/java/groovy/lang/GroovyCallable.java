@@ -30,3 +30,5 @@ import java.util.concurrent.Callable;
  * @since 1.8.0
  */
 public interface GroovyCallable<V> extends Callable<V> { }
+
+// e57d2f

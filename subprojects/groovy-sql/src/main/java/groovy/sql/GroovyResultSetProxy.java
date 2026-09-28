@@ -126,3 +126,5 @@ public final class GroovyResultSetProxy implements InvocationHandler {
                 );
     }
 }
+
+// 0bc06c

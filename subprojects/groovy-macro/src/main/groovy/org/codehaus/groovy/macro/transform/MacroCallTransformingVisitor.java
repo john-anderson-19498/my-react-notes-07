@@ -180,3 +180,5 @@ class MacroCallTransformingVisitor extends ClassCodeVisitorSupport {
         return true;
     }
 }
+
+// 7d4655

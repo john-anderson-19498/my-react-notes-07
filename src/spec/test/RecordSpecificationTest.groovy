@@ -328,3 +328,4 @@ assert msg.toString() == 'Message[from=me@myhost.com, to=you@yourhost.net, body=
 '''
     }
 }
+

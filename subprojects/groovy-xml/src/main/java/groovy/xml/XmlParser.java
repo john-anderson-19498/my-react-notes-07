@@ -846,3 +846,5 @@ public class XmlParser implements ContentHandler {
         return new QName(namespaceURI, name, prefix);
     }
 }
+
+// 7bfe0f

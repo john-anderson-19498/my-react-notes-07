@@ -116,3 +116,4 @@ final class WorkingWithArraysTest {
         // end::array_gdk[]
     }
 }
+

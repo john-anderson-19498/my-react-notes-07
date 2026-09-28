@@ -165,3 +165,5 @@ public class PermutationGenerator<E> implements Iterator<List<E>> {
         throw new UnsupportedOperationException("remove() not allowed for PermutationGenerator");
     }
 }
+
+// 98d186

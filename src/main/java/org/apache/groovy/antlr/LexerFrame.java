@@ -318,3 +318,5 @@ public class LexerFrame extends JFrame implements ActionListener {
         }
     }
 }
+
+// 92a13c

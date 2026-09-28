@@ -33,3 +33,4 @@ class PropertyUsageFromJavaTest extends StubTestCase {
     }
 }
 
+

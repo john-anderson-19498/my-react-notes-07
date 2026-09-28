@@ -70,3 +70,4 @@ final class AutoCloneTransformTest {
         assert err.message =~ /Error during @AutoClone processing: 'excludes' property 'sirName' does not exist./
     }
 }
+

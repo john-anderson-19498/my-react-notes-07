@@ -21,3 +21,5 @@
  * Service provider interfaces for extending contract functionality with custom validators and handlers.
  */
 package org.apache.groovy.contracts.common.spi;
+
+// 94de21

@@ -48,3 +48,5 @@ public class GeneratedHashCodeBench {
     }
 
 }
+
+// 08ebc7

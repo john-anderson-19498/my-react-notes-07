@@ -180,3 +180,4 @@ final class CombinedIndyAndStaticCompilationTest extends AbstractBytecodeTestCas
 
     }
 }
+

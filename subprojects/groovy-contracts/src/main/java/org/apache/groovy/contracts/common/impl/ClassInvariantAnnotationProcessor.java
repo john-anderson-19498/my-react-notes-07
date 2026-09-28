@@ -58,3 +58,5 @@ public class ClassInvariantAnnotationProcessor extends AnnotationProcessor {
         contract.setClassInvariant(new ClassInvariant(blockStatement, booleanExpression));
     }
 }
+
+// a4cd78

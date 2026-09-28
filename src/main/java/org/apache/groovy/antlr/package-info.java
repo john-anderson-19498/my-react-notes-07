@@ -21,3 +21,5 @@
  * Support utilities for legacy ANTLR parser. Provides compatibility layer and utility functions.
  */
 package org.apache.groovy.antlr;
+
+// 881837

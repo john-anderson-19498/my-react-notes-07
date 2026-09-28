@@ -23,3 +23,4 @@ def yield () { return 'b' }
 def result = yield 'a'
 assert 'a' == result
 assert 'b'== yield()
+

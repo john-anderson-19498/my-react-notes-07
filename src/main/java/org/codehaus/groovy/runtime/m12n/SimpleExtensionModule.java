@@ -147,3 +147,5 @@ public abstract class SimpleExtensionModule extends ExtensionModule {
      */
     public abstract List<Class> getStaticMethodsExtensionClasses();
 }
+
+// 4f02db

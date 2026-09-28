@@ -59,3 +59,4 @@ final class Groovy2951 {
         }
     }
 }
+

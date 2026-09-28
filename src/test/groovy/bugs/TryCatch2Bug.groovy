@@ -31,3 +31,4 @@ class TryCatch2Bug {
         }
     }
 }
+

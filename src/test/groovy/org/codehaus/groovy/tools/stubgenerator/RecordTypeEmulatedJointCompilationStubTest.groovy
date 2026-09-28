@@ -191,3 +191,4 @@ final class RecordTypeEmulatedJointCompilationStubTest extends StringSourcesStub
         assert comps.v2 == 10
     }
 }
+

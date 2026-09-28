@@ -31,3 +31,4 @@ def method() {
     assert ++x == 1
     AssertionTestUtil.fails { assert ++x == 1 }
 }
+

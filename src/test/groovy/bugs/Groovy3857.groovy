@@ -32,3 +32,4 @@ final class Groovy3857 extends CompilableTestSupport {
         '''
     }
 }
+

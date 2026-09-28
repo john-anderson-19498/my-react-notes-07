@@ -40,3 +40,5 @@ public class IntegerObjectRangeTest extends NumberRangeTestCase {
     }
 
 }
+
+// 419804

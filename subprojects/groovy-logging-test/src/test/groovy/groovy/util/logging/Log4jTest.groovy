@@ -362,3 +362,4 @@ class Log4jInterceptingAppender extends AppenderSkeleton {
     }
 }
 
+

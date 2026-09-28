@@ -60,3 +60,4 @@ class Groovy4120Bug {
         """
     }
 }
+

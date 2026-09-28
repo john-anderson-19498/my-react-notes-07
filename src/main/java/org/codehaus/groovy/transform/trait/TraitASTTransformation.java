@@ -826,3 +826,5 @@ public class TraitASTTransformation extends AbstractASTTransformation implements
         }
     }
 }
+
+// 316a93

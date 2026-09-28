@@ -47,3 +47,4 @@ class RedundantCastInStubTest extends StringSourcesStubTestCase {
         assert !stubJavaSourceFor('some.ClassWithPrimitiveBoolean').contains('(boolean)false')
     }
 }
+

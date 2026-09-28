@@ -24,3 +24,5 @@ package gls.annotations;
 public enum CascadeType {
     ALL, PERSIST, MERGE, REMOVE, REFRESH
 }
+
+// 17a1d8

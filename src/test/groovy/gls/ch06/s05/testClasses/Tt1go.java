@@ -37,3 +37,5 @@ public class Tt1go extends GroovyObjectSupport {
 
     public String p1 = "property";
 }
+
+// 73ec3d

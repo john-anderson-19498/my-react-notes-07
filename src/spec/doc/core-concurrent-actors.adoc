@@ -631,3 +631,4 @@ This also makes the code highly readable for AI tools — the
 `@ActiveObject` annotation explicitly declares the concurrency model,
 and each `@ActiveMethod` contains pure business logic without
 messaging boilerplate.
+

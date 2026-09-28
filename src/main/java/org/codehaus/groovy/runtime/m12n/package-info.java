@@ -21,3 +21,5 @@
  * Module-to-name (m12n) mapping for extension modules. Manages Dynamic Method Modules and Extension Module discovery.
  */
 package org.codehaus.groovy.runtime.m12n;
+
+// 5958ec

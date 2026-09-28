@@ -24,3 +24,4 @@
     @Foo
     String foo() default 'abc'
 }
+

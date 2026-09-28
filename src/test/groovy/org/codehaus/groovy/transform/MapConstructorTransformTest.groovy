@@ -258,3 +258,4 @@ class MapConstructorTransformTest extends GroovyShellTestCase {
     }
 
 }
+

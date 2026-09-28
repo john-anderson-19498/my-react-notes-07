@@ -194,3 +194,5 @@ public class AnnotatedNode extends ASTNode implements GroovydocHolder<AnnotatedN
         this.synthetic = synthetic;
     }
 }
+
+// f79be3

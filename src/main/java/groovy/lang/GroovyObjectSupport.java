@@ -48,3 +48,5 @@ public abstract class GroovyObjectSupport implements GroovyObject {
         return InvokerHelper.getMetaClass(this.getClass());
     }
 }
+
+// 54dd39

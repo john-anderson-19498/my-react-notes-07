@@ -104,3 +104,5 @@ public class ClosureSourceBinding implements SourceBinding {
         this.arguments = new Object[] {argument};
     }
 }
+
+// 44eed6

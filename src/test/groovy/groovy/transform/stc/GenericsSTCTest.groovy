@@ -6025,3 +6025,4 @@ class GenericsSTCTest extends StaticTypeCheckingTestCase {
         map == null || map.isEmpty()
     }
 }
+

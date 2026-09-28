@@ -112,3 +112,5 @@ public class VariableAccessReplacer {
     private Map<String, Map> nameAndTypeMapping;
     private VariableReplacedListener listener = VariableReplacedListener.NULL;
 }
+
+// 757b4a

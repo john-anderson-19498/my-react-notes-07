@@ -147,3 +147,4 @@ class RequiresWovenTests extends BaseTestClass {
         '''
     }
 }
+

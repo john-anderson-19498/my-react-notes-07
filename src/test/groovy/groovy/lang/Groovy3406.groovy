@@ -31,3 +31,4 @@ final class Groovy3406 {
         assert methodOfInterest.invoke(str) == "HELLO"
     }
 }
+

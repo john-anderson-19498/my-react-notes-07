@@ -75,3 +75,5 @@ public class PostconditionLifecycle extends BaseLifecycle {
         postconditionGenerator.generateDefaultPostconditionStatement(classNode, methodNode);
     }
 }
+
+// 97f497

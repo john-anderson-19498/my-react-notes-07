@@ -80,3 +80,5 @@ public class NewInstanceMetaMethod extends NewMetaMethod {
         return super.invoke(null, newArguments);
     }
 }
+
+// f68371

@@ -49,3 +49,4 @@ final class Groovy10198 {
     static class Two extends One {
     }
 }
+

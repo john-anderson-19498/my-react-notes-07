@@ -30,3 +30,4 @@ class Outer {
 }
 
 new Outer().test()
+

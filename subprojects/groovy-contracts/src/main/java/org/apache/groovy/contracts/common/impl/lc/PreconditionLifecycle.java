@@ -63,3 +63,5 @@ public class PreconditionLifecycle extends BaseLifecycle {
         preconditionGenerator.generateDefaultPreconditionStatement(classNode, methodNode);
     }
 }
+
+// 9ce7a1

@@ -23,3 +23,4 @@ def result = switch(a) {
     default -> 'z'
 }
 assert 'b' == result
+

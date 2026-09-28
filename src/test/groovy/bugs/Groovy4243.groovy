@@ -53,3 +53,4 @@ final class Groovy4243 {
     abstract static class TestScript4243 extends Script {
     }
 }
+

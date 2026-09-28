@@ -84,3 +84,4 @@ contribute(bind(closure: inClosure()) & isThisType() & bind(methods: enclosingMe
     }
   }
 }
+

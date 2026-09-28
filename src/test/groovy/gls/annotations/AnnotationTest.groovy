@@ -1412,3 +1412,4 @@ final class AnnotationTest {
         assert err.message.contains('Annotation @ImportOnly is not allowed on element STATEMENT')
     }
 }
+

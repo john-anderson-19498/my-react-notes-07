@@ -598,3 +598,5 @@ public class GenericsType extends ASTNode {
         }
     }
 }
+
+// ef79b8

@@ -42,3 +42,5 @@ public class Precondition extends Assertion<Precondition> {
         super(blockStatement, booleanExpression);
     }
 }
+
+// c70ec7

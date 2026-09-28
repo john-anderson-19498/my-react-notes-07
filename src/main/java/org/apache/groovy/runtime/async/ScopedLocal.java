@@ -767,3 +767,5 @@ public abstract class ScopedLocal<T> {
         }
     }
 }
+
+// f2c6e3

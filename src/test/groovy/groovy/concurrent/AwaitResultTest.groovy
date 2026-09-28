@@ -116,3 +116,4 @@ final class AwaitResultTest {
         assert a != 'x'
     }
 }
+

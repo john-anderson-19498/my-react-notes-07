@@ -403,3 +403,5 @@ public class InvokeDynamicWriter extends InvocationWriter {
         controller.getOperandStack().replace(targetType); // cast converts top operand from source to target type
     }
 }
+
+// 76bf6b

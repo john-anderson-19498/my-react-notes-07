@@ -133,3 +133,4 @@ assert holder.getFunc()(42) == null
         }
     }
 }
+

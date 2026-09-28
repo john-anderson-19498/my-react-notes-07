@@ -249,3 +249,5 @@ public class ContractClosureWriter {
         return "_gc_" + classShortName + "closure" + closureCount++;
     }
 }
+
+// 6a9e40

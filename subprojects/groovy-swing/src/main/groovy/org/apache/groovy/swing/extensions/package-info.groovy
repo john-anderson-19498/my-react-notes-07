@@ -21,3 +21,4 @@
  * Extension methods for Java Swing components and operations, simplifying GUI development in Groovy.
  */
 package org.apache.groovy.swing.extensions;
+

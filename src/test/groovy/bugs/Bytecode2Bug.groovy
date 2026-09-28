@@ -68,3 +68,4 @@ final class Bytecode2Bug {
         [1, 2, 3, 4]
     }
 }
+

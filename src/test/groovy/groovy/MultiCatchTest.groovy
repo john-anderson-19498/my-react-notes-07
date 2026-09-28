@@ -129,3 +129,4 @@ class MultiCatchTest {
         assert catched
     }
 }
+

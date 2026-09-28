@@ -44,3 +44,5 @@ public class partialsums {
       System.out.println(formatter.format(a9) + "\tGregory");
    }
 }
+
+// 0372dc

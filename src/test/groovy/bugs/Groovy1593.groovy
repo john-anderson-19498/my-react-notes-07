@@ -36,3 +36,4 @@ final class Groovy1593 {
     static class SubClassOfHashMap extends HashMap {
     }
 }
+

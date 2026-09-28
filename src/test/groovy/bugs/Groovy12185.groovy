@@ -175,3 +175,4 @@ final class Groovy12185 {
         return (t.message ?: '') + ' / ' + (cur.message ?: '') + ' / ' + t.toString()
     }
 }
+

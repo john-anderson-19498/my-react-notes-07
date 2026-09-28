@@ -59,3 +59,5 @@ public class CircularAssertionCallException extends RuntimeException {
         super(throwable);
     }
 }
+
+// 6b6d52

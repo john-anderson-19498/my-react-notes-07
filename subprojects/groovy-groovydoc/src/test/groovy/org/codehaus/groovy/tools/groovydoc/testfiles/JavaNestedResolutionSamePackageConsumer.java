@@ -28,3 +28,5 @@ public class JavaNestedResolutionSamePackageConsumer {
         return null;
     }
 }
+
+// 98e60a

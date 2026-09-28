@@ -37,3 +37,4 @@ class ForLoopWithLocalVariablesTest {
         assert x == 9
     }
 }
+

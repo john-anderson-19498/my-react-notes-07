@@ -197,3 +197,5 @@ public @interface AnnotationCollector {
      */
     Class serializeClass() default Undefined.CLASS.class;
 }
+
+// c35186

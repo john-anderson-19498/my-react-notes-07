@@ -297,3 +297,5 @@ public abstract class GString extends GroovyObjectSupport implements Comparable,
         return toString().getBytes(charset);
     }
 }
+
+// eb9460

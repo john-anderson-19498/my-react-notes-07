@@ -222,3 +222,4 @@ class RealJsonPayloadsTest {
         assert result.Placemark[0].AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.PostalCode.PostalCodeNumber == "94043"
     }
 }
+

@@ -28,3 +28,5 @@ import org.codehaus.groovy.ast.ASTNode;
 public interface ErrorCollecting {
     void addError(String msg, ASTNode expr);
 }
+
+// 13abf6

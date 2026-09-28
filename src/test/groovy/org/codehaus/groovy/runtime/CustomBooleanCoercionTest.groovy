@@ -136,3 +136,4 @@ class BoolCategory {
         !self.value
     }
 }
+

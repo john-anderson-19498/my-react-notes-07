@@ -97,3 +97,4 @@ public class XmlExtensions {
         return (T) InvokerHelper.invokeConstructorOf(type, new Object[]{map});
     }
 }
+// 936ea0

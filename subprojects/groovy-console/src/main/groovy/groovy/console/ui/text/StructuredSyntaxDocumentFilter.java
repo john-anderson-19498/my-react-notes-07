@@ -633,3 +633,5 @@ public class StructuredSyntaxDocumentFilter extends DocumentFilter {
         }
     }
 }
+
+// 30eb53

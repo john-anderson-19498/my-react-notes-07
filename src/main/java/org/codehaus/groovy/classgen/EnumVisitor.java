@@ -398,3 +398,5 @@ public class EnumVisitor extends ClassCodeVisitorSupport {
         return stream(enumClass.getInnerClasses()).noneMatch(it -> it instanceof EnumConstantClassNode);
     }
 }
+
+// c4201d

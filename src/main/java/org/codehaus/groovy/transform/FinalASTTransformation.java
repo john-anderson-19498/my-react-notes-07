@@ -74,3 +74,5 @@ public class FinalASTTransformation extends AbstractASTTransformation {
         addError("Error during " + MY_TYPE.getNameWithoutPackage() + " processing: " + error, where);
     }
 }
+
+// 512619

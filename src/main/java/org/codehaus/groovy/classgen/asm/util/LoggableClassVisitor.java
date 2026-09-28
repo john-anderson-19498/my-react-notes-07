@@ -42,3 +42,5 @@ public class LoggableClassVisitor extends ClassVisitor {
         super(CompilerConfiguration.ASM_API_VERSION, new TraceClassVisitor(cv, new LoggableTextifier(compilerConfiguration), null));
     }
 }
+
+// ff73e1

@@ -34,3 +34,4 @@ class ReflectorLoaderTest {
         binding.closureB.call()
     }
 }
+

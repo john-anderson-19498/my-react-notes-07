@@ -455,3 +455,4 @@ foo
         assert colors.readLines()*.size() == [6, 6, 6]
     }
 }
+

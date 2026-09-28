@@ -93,3 +93,4 @@ class WithGStringField implements Serializable{
 
     GString f;
 }
+

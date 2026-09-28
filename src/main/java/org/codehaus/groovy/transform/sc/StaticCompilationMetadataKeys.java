@@ -43,3 +43,5 @@ public enum StaticCompilationMetadataKeys {
     /** If a receiver is the receiver of a dynamic property (for mixed-mode compilation). */
     RECEIVER_OF_DYNAMIC_PROPERTY
 }
+
+// efd53e

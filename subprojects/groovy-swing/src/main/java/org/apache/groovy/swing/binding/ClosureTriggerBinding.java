@@ -243,3 +243,5 @@ class BindPathSnooper extends GroovyObjectSupport {
         return DEAD_END;
     }
 }
+
+// 24799e

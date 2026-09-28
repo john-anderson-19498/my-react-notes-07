@@ -50,3 +50,4 @@ final class BenchmarkBug {
         return 10
     }
 }
+

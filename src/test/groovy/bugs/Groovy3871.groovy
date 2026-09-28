@@ -59,3 +59,4 @@ final class Groovy3871 {
     /** a dummy child class */
     static class G3871Child extends G3871Base { }
 }
+

@@ -24,3 +24,4 @@ class X implements T {
         return 'X' + T.super.m()
     }
 }
+

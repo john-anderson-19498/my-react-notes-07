@@ -52,3 +52,4 @@ final class Groovy11046 {
         assert err.asString() =~ /at org.apache.logging.log4j.LogManager.getLogger\(/ : 'script should have failed at runtime'
     }
 }
+

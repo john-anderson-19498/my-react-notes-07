@@ -30,3 +30,5 @@ public class JavaNestedResolutionImportedConsumer {
         return null;
     }
 }
+
+// 51c61e

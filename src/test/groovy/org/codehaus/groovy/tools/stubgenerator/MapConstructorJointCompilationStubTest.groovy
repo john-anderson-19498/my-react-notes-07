@@ -115,3 +115,4 @@ final class MapConstructorJointCompilationStubTest extends StringSourcesStubTest
         assert empty.right == null
     }
 }
+

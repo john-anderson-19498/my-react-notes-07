@@ -503,3 +503,4 @@ class LineCheckVisitor extends ClassCodeVisitorSupport {
         super.visitClosureListExpression(cle)
     }
 }
+

@@ -29,3 +29,5 @@ public enum FileType {
     /** Represents both normal files and directories */
     ANY
 }
+
+// 9d3dd0

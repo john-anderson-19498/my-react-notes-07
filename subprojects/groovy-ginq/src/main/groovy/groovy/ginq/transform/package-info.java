@@ -27,3 +27,5 @@
  * </p>
  */
 package groovy.ginq.transform;
+
+// 52f844

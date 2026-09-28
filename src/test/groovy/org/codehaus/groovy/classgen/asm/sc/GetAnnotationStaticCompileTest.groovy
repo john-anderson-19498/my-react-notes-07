@@ -49,3 +49,4 @@ final class GetAnnotationStaticCompileTest extends AbstractBytecodeTestCase {
         clazz.newInstance().main()
     }
 }
+

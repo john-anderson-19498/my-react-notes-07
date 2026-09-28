@@ -38,3 +38,5 @@ public class Groovy6924Support {
         this.bar = bar;
     }
 }
+
+// d7db3d

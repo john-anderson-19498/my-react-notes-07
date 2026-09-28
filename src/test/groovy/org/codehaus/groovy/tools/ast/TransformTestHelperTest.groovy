@@ -67,3 +67,4 @@ class ObservingTransformation implements ASTTransformation {
         }
     }
 }
+

@@ -1090,3 +1090,4 @@ class ASTMatcher extends ContextualClassCodeVisitor {
         pattern
     }
 }
+

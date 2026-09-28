@@ -70,3 +70,4 @@ class MapConstructionTest {
         assert m[2] == 'def'
     }
 }
+

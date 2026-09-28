@@ -64,3 +64,4 @@ class Groovy7920Bug {
         '''
     }
 }
+

@@ -21,3 +21,5 @@ package bugs;
 public class Groovy11624Support {
     public static final String CONST = "value";
 }
+
+// 4a74f2

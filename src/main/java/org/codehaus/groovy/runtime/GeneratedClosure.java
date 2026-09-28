@@ -29,3 +29,5 @@ import groovy.transform.Internal;
  */
 @Internal
 public interface GeneratedClosure {}
+
+// 2dc4e0

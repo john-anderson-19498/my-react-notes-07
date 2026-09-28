@@ -21,3 +21,5 @@
  * Static compilation transformation. Optimizes Groovy code for performance through static compilation.
  */
 package org.codehaus.groovy.transform.sc;
+
+// 71f71e

@@ -61,3 +61,5 @@ public class MetaExpandoProperty extends MetaProperty {
         value = newValue;
     }
 }
+
+// acad27

@@ -248,3 +248,5 @@ public class MapConstructorASTTransformation extends AbstractASTTransformation i
         };
     }
 }
+
+// 00ff0b

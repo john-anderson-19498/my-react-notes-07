@@ -327,3 +327,4 @@ class JsonCyclicReference {
     static final DEFAULT = new JsonCyclicReference()
     JsonCyclicReference() { }
 }
+

@@ -29,3 +29,4 @@ class XmlSlurperFactoryTest {
         assert root.children()[0].name() == 'old'
     }
 }
+

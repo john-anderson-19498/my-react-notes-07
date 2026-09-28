@@ -24,3 +24,4 @@ class Groovy4098Parent {
     protected String propertyThree
     protected String propertyFour
 }
+

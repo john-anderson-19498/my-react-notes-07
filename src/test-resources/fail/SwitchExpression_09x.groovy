@@ -22,3 +22,4 @@ def r = switch(a) {
     case 6 -> def x = 'a'; yield x
     default -> throw new RuntimeException('z')
 }
+

@@ -28,3 +28,4 @@ class DocAggregationExtension {
         Collections.addAll(excludedFromJavadocs, items)
     }
 }
+

@@ -62,3 +62,4 @@ def genMethod (int paramNum) {
     res += '}'
     res
 }
+

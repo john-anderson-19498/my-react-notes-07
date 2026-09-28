@@ -55,3 +55,4 @@ toolbar = toolBar(rollover: true, visible: controller.showToolbar, constraints: 
     separator(orientation: SwingConstants.VERTICAL)
     button(cycleThemeAction,   text: null, icon: Icons.toolbarViolet('refresh'))
 }
+

@@ -755,3 +755,5 @@ public class StaticTypesMethodReferenceExpressionWriter extends MethodReferenceE
     private record MethodReferenceInvocation(int implMethodKind, String invokedTypeDescriptor, boolean capturing) {
     }
 }
+
+// 409cf5

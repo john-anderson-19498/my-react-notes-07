@@ -107,3 +107,4 @@ final class StaticCompileComparisonTest extends AbstractBytecodeTestCase {
         clazz.newInstance().main()
     }
 }
+

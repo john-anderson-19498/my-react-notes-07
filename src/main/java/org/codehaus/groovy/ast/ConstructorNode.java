@@ -47,3 +47,5 @@ public class ConstructorNode extends MethodNode {
     }
 
 }
+
+// 090d55

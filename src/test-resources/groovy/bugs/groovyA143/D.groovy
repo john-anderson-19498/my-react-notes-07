@@ -38,3 +38,4 @@ trait D extends B {
 		managerObject
 	}
 }
+

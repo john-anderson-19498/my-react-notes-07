@@ -32,3 +32,4 @@ final class Groovy3498 {
         '''
     }
 }
+

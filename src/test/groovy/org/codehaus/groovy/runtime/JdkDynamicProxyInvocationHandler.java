@@ -42,3 +42,5 @@ public class JdkDynamicProxyInvocationHandler implements InvocationHandler {
         return m.invoke(proxiedObject, args);
     }
 }
+
+// fe745c

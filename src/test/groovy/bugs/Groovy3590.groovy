@@ -28,3 +28,4 @@ final class Groovy3590 {
         assert map.get('key', this) == null
     }
 }
+

@@ -51,3 +51,5 @@ public class BooleanClosurePredicate<T> implements Predicate<T> {
         return bcw.call(arg);
     }
 }
+
+// 803925

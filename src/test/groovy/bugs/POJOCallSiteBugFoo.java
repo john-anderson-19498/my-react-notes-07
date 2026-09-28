@@ -27,3 +27,5 @@ public class POJOCallSiteBugFoo {
     }
 
 }
+
+// c3f86f

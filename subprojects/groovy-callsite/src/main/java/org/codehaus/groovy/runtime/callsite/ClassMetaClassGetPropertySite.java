@@ -55,3 +55,5 @@ class ClassMetaClassGetPropertySite extends AbstractCallSite {
         }
     }
 }
+
+// 98f0e7

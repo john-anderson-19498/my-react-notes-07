@@ -256,3 +256,4 @@ class ASTTestTransformation implements ASTTransformation, CompilationUnitAware {
         }
     }
 }
+

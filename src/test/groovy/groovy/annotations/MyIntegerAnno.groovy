@@ -35,3 +35,4 @@ import org.codehaus.groovy.transform.GroovyASTTransformationClass
 @interface MyIntegerAnno {
     int value()
 }
+

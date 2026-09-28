@@ -44,3 +44,4 @@ public class RecursionVariantViolation extends AssertionViolation {
         super(o);
     }
 }
+// c19ee7

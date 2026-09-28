@@ -47,3 +47,4 @@ final class Groovy9405 extends StringSourcesStubTestCase {
         assert inners*.name.contains('test.package-info$_closure1')
     }
 }
+

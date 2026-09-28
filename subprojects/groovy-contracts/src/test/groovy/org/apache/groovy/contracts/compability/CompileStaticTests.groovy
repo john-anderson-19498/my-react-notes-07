@@ -94,3 +94,4 @@ class CompileStaticTests extends GroovyShellTestCase {
     }
 
 }
+

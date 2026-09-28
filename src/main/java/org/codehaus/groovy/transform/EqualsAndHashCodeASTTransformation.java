@@ -615,3 +615,5 @@ public class EqualsAndHashCodeASTTransformation extends AbstractASTTransformatio
         );
     }
 }
+
+// bb723a

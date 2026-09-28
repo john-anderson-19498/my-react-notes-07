@@ -71,3 +71,4 @@ class Groovy5056Bug {
 class ToCompare {
     String x
 }
+

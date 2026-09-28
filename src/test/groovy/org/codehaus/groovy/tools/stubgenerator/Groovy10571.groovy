@@ -65,3 +65,4 @@ final class Groovy10571 extends StringSourcesStubTestCase {
         assert stub.contains('B.class')//bug
     }
 }
+

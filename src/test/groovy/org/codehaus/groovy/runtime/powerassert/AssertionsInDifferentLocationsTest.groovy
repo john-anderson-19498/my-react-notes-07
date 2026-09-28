@@ -113,3 +113,4 @@ final class AssertionsInDifferentLocationsTest {
         assert false
     }
 }
+

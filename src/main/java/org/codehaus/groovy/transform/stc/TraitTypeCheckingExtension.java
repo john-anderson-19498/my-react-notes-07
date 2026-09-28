@@ -197,3 +197,5 @@ public class TraitTypeCheckingExtension extends AbstractTypeCheckingExtension {
         return false;
     }
 }
+
+// 099139

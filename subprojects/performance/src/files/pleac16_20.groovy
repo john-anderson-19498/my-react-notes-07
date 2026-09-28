@@ -2278,3 +2278,4 @@ parser = new DOMParser()
 parser.setProperty("http://cyberneko.org/html/properties/filters", myfilters)
 parser.parse(new InputSource(new StringReader(input)))
 //----------------------------------------------------------------------------------
+

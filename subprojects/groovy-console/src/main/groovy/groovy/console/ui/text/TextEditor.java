@@ -610,3 +610,5 @@ public class TextEditor extends JTextPane implements Pageable, Printable {
         }
     }
 }
+
+// 14ede5

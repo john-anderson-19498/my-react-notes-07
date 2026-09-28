@@ -51,3 +51,5 @@ public class StrangeBean {
     }
 
 }
+
+// 7adb5e

@@ -383,3 +383,4 @@ class ThemeManager {
         return false
     }
 }
+

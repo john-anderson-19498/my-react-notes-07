@@ -32,3 +32,5 @@ public interface ASTNodeMetaData {
      */
     String CLOSURE_REPLACED = "org.apache.groovy.contracts.CLOSURE_REPLACED";
 }
+
+// c7fef8

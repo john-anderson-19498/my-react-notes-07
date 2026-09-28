@@ -57,3 +57,4 @@ final class ConstructorParameterBug {
         assert err.message =~ / Cannot reference 'baz' before supertype constructor has been called. /
     }
 }
+

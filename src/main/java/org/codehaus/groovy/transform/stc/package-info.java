@@ -21,3 +21,5 @@
  * Static type checking transformation. Detects type errors at compile time.
  */
 package org.codehaus.groovy.transform.stc;
+
+// c06810

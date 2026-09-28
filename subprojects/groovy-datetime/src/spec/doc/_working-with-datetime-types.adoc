@@ -372,3 +372,4 @@ for converting into the various JSR 310 types:
 -------------------------------------
 include::../test/gdk/WorkingWithDateTimeTypesTest.groovy[tags=to_jsr310_types,indent=0]
 -------------------------------------
+

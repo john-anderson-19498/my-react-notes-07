@@ -101,3 +101,5 @@ public abstract class GenericsTestBase extends GroovyTestCase {
         throw new AssertionError("compilation of script '" + script + "' should have failed, but did not.");
     }
 }
+
+// 47b2b9

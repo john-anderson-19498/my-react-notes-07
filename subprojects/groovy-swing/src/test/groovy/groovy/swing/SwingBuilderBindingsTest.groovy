@@ -1258,3 +1258,4 @@ class SwingBuilderBindingsTest extends GroovySwingTestCase {
     Date date
     @Vetoable String vetoField
 }
+

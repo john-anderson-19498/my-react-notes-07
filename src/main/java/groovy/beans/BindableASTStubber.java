@@ -125,3 +125,5 @@ public class BindableASTStubber extends AbstractASTTransformation {
         }
     }
 }
+
+// edcc90

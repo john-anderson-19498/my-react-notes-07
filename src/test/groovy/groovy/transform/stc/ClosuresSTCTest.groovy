@@ -1457,3 +1457,4 @@ class ClosuresSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

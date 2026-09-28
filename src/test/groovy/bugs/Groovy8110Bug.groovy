@@ -48,3 +48,4 @@ class Groovy8110Bug {
         '''
     }
 }
+

@@ -68,3 +68,4 @@ class Groovy4457GenericTypeDeclarationLeakTest {
         '''
     }
 }
+

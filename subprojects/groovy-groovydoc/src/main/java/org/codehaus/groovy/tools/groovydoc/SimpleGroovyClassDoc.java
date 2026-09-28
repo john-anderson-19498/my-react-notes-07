@@ -1263,3 +1263,5 @@ public class SimpleGroovyClassDoc extends SimpleGroovyAbstractableElementDoc imp
         return nameWithTypeArgs;
     }
 }
+
+// dab21e

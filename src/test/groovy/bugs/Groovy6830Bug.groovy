@@ -50,3 +50,4 @@ class Groovy6830Bug {
         '''
     }
 }
+

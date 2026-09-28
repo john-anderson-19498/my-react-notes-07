@@ -191,3 +191,4 @@ final class Groovy4418 {
         '''
     }
 }
+

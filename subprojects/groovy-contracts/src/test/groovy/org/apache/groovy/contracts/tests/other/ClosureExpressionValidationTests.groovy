@@ -286,3 +286,4 @@ class ClosureExpressionValidationTests extends GroovyShellTestCase {
         assertTrue msg.contains("'old' in a postcondition of a static method may only reference a method parameter")
     }
 }
+

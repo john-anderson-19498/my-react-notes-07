@@ -72,3 +72,5 @@ public class VariableSlotLoader extends BytecodeExpression {
         return idx;
     }
 }
+
+// 5e40eb

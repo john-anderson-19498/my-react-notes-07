@@ -689,3 +689,4 @@ final class TypeRecord {
     TypeDeclaration<?> declaration
     String fqcn
 }
+

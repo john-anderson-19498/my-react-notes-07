@@ -153,3 +153,4 @@ class MavenCoordinateCompleter implements Completer {
     }
 
 }
+

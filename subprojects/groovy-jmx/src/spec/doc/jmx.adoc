@@ -985,3 +985,4 @@ If you use an **event listener closure (see above) that accepts a parameter**, y
 - https://web.archive.org/web/20170818125929/https://blogs.oracle.com/sundararajan/groovier-jconsole[Groovier jconsole!]
 - http://jmesnil.net/weblog/2007/05/23/jmx-scripts-with-eclipse-monkey[JMX Scripts with Eclipse Monkey]
 - http://activemq.apache.org/jmx.html[Using JMX to monitor Apache ActiveMQ]
+

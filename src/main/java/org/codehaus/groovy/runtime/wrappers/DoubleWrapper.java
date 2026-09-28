@@ -32,3 +32,5 @@ public class DoubleWrapper extends PojoWrapper {
         super(wrapped, double.class);
     }
 }
+
+// 9392fc

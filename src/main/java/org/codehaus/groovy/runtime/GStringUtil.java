@@ -124,3 +124,5 @@ public final class GStringUtil {
         return Math.max((int) (initialCapacity * 1.2), 16);
     }
 }
+
+// c89930

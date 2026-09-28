@@ -105,3 +105,5 @@ public interface JsonParser {
      */
     Object parse(File file, String charset);
 }
+
+// 4793a7

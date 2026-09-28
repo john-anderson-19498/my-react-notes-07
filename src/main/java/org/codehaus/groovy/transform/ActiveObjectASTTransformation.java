@@ -244,3 +244,5 @@ public class ActiveObjectASTTransformation extends AbstractASTTransformation {
         return candidate;
     }
 }
+
+// 7fcb69

@@ -47,3 +47,4 @@ assert t.someProp == 2
 assert t.foo() == 1'''
     }
 }
+

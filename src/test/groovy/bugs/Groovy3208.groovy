@@ -45,3 +45,4 @@ final class Groovy3208 {
         static String doItStaticallyAgain() { PROP }
     }
 }
+

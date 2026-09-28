@@ -411,3 +411,4 @@ final class TraitWithClosureOrLambda {
         '''
     }
 }
+

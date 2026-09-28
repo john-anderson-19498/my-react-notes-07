@@ -936,3 +936,5 @@ public class StreamGroovyMethods {
         return answer.isEmpty() ? Collections.emptySet() : Collections.unmodifiableSet(answer);
     }
 }
+
+// dd0dae

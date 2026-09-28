@@ -76,3 +76,4 @@ final class Groovy7951Bug {
         assert checker.assertWasChecked
     }
 }
+

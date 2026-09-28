@@ -91,3 +91,4 @@ final class ReproducibleBytecodeBugs extends StaticTypeCheckingTestCase implemen
         }
     }
 }
+

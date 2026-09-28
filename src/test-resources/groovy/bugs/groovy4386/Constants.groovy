@@ -22,3 +22,4 @@ class Constants {
     public static final PI = 3.14
     static final TWOPI = 6.28
 }
+

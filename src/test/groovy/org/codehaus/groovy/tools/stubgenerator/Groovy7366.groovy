@@ -62,3 +62,4 @@ final class Groovy7366 extends StringSourcesStubTestCase {
         assert stub.contains('java.lang.Object getTest() {')
     }
 }
+

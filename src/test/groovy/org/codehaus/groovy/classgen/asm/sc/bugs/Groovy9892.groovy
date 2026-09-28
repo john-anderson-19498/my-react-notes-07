@@ -67,3 +67,4 @@ final class Groovy9892 extends StaticTypeCheckingTestCase implements StaticCompi
         '''
     }
 }
+

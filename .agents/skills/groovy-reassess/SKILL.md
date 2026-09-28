@@ -580,3 +580,4 @@ Before declaring a campaign session complete:
   destination for the `still-fails-same` tail.
 - `.agents/skills/groovy-tests/SKILL.md` — when an adapted `@Test`
   is kept as the starting point for a real regression test.
+

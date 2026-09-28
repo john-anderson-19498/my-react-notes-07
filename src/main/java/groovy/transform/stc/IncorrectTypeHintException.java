@@ -55,3 +55,5 @@ public class IncorrectTypeHintException extends SyntaxException {
         super("Incorrect type hint in @ClosureParams in class "+mn.getDeclaringClass().getName()+" method "+mn.getTypeDescriptor()+" : "+msg, line, column);
     }
 }
+
+// 55e058

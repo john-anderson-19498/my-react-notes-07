@@ -21,3 +21,5 @@
  * Trait transformation. Implements trait behavior through bytecode generation.
  */
 package org.codehaus.groovy.transform.trait;
+
+// 9c784a

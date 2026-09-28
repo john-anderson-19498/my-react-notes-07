@@ -149,3 +149,4 @@ final class SuperMethod2Bug {
         long longMethod(){super.longMethod()}
     }
 }
+

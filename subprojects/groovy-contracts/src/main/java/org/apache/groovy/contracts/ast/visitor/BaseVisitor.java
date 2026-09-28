@@ -129,3 +129,5 @@ public abstract class BaseVisitor extends ClassCodeVisitorSupport {
         node.setMember("value", Objects.requireNonNull(expr));
     }
 }
+
+// 6727b6

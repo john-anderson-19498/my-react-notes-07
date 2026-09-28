@@ -150,3 +150,5 @@ public interface GinqAstVisitor<R> {
      */
     default Map<String, String> getConfiguration() { return Collections.emptyMap(); }
 }
+
+// 2c7b2f

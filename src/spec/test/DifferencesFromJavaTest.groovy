@@ -205,3 +205,4 @@ assert 'cx'.asType(char) == 'c'
 
     }
 }
+

@@ -254,3 +254,4 @@ class JListSelectedElementBinding extends AbstractSyntheticBinding implements Pr
         update()
     }
 }
+

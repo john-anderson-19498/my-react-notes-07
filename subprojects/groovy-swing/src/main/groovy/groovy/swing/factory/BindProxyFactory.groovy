@@ -68,3 +68,4 @@ class BindProxyFactory extends AbstractFactory {
     }
 
 }
+

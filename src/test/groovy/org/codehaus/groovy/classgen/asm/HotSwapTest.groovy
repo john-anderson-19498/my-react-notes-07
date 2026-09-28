@@ -45,3 +45,4 @@ final class HotSwapTest extends AbstractBytecodeTestCase {
         ])
     }
 }
+

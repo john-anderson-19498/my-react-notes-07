@@ -64,3 +64,5 @@ public class CharacterCachedClass extends CachedClass {
                 || classToTransformFrom == Character.TYPE;
     }
 }
+
+// c6ba90

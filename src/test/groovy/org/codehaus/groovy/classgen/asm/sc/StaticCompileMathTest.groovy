@@ -363,3 +363,4 @@ final class StaticCompileMathTest extends AbstractBytecodeTestCase {
         ])
     }
 }
+

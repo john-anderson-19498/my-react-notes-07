@@ -48,3 +48,4 @@ class Groovy4449Bug {
         """
     }
 }
+

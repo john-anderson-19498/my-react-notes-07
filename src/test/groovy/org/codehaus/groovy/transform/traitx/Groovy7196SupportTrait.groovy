@@ -24,3 +24,4 @@ trait Groovy7196SupportTrait {
 
 class Groovy7196SupportTraitImpl implements Groovy7196SupportTrait {
 }
+

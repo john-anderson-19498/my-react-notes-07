@@ -47,3 +47,4 @@ final class OldClosureSyntaxRemovalTest extends CompilableTestSupport {
         """
     }
 }
+

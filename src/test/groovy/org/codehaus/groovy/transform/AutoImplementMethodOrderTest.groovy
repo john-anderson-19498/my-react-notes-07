@@ -68,3 +68,4 @@ final class AutoImplementMethodOrderTest {
         assert generated == declared
     }
 }
+

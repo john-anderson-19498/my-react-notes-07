@@ -93,3 +93,5 @@ public class ConcurrentSoftCache<K, V> extends ConcurrentCommonCache<K, SoftRefe
         return value.get();
     }
 }
+
+// 80d94d

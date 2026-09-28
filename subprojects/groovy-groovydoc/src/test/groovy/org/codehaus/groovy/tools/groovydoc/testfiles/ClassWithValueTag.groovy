@@ -43,3 +43,4 @@ class ClassWithValueTag {
     /** Four is: {@value}. */
     public static final int FOUR = 'four'.size()
 }
+

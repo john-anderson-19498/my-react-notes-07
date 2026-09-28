@@ -42,3 +42,4 @@ class Groovy4241Bug {
 class Foo4241 {}
 
 class Bar4241 {}
+

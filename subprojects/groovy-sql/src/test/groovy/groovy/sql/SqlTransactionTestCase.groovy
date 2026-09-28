@@ -177,3 +177,4 @@ class SqlTransactionTestCase extends GroovyTestCase {
         assert sql.rows("SELECT * FROM PERSON_FOOD").size() == 3
     }
 }
+

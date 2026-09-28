@@ -57,3 +57,5 @@ public class FromAbstractTypeMethods extends ClosureSignatureHint {
         return signatures;
     }
 }
+
+// 26961e

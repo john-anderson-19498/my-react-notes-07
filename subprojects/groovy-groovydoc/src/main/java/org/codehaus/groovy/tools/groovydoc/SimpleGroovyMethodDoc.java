@@ -95,3 +95,5 @@ public class SimpleGroovyMethodDoc extends SimpleGroovyExecutableMemberDoc imple
         this.typeParameters = typeParameters;
     }
 }
+
+// 0d4a52

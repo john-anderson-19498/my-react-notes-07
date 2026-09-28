@@ -70,3 +70,5 @@ public class BigIntegerCachedClass extends NumberCachedClass {
             || BigInteger.class.isAssignableFrom(classToTransformFrom);
     }
 }
+
+// 4cc406

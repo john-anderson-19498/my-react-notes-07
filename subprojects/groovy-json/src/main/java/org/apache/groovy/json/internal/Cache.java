@@ -64,3 +64,5 @@ public interface Cache<KEY, VALUE> {
      */
     int size();
 }
+
+// 8d5037

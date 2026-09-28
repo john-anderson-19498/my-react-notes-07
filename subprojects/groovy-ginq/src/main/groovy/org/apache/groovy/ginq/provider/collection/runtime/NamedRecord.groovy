@@ -104,3 +104,4 @@ class NamedRecord<E, T> extends NamedTuple<E> {
         return this
     }
 }
+

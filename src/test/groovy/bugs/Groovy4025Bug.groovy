@@ -45,3 +45,4 @@ final class Groovy4025Bug extends CompilableTestSupport {
         """
     }
 }
+

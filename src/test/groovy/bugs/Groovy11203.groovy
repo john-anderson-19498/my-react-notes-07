@@ -33,3 +33,4 @@ final class Groovy11203 {
         assert err.message.startsWith("Cannot cast 'null' to class 'int'")
     }
 }
+

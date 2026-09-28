@@ -25,3 +25,4 @@ abstract class AbstractGroovySuperclass {
 
    abstract String myAbstractMethod();
 }
+

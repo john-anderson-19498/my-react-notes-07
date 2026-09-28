@@ -98,3 +98,5 @@ public class StaticMethodCallExpression extends Expression implements MethodCall
     }
 
 }
+
+// c49119

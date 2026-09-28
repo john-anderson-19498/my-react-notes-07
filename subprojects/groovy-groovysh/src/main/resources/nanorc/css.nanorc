@@ -44,3 +44,4 @@ COMMENT:  "(^|[[:space:]])//.*"
 COMMENT:  start="/\*" end="\*/"
 WHITESPACE: "[[:space:]]+$"
 WARNING:    "	+ +| +	+"
+

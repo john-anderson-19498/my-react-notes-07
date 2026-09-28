@@ -220,3 +220,5 @@ public class PackageScopeASTTransformation extends AbstractASTTransformation {
     }
 
 }
+
+// 7e44f1

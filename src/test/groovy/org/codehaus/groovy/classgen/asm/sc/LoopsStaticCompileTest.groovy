@@ -34,3 +34,4 @@ final class LoopsStaticCompileTest extends LoopsSTCTest implements StaticCompila
         assert !bytecode.contains('INVOKESTATIC org/codehaus/groovy/runtime/DefaultGroovyMethods.iterator')
     }
 }
+

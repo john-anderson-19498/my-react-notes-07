@@ -82,3 +82,4 @@ class TextNode {
         userObject ? userObject.toString() : 'null'
     }
 }
+

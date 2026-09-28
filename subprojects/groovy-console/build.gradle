@@ -49,3 +49,4 @@ tasks.register("console", JavaExec) {
     mainClass = 'groovy.console.ui.Console'
     classpath = sourceSets.main.runtimeClasspath
 }
+

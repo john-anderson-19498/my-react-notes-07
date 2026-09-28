@@ -23,3 +23,4 @@ record Point(int x, int y, String color) {
         this.x = -x;
     }
 }
+

@@ -155,3 +155,4 @@ final class StaticThisTest extends CompilableTestSupport {
         """
     }
 }
+

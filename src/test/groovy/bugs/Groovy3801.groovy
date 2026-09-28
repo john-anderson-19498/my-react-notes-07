@@ -55,3 +55,4 @@ final class Groovy3801 {
         assert nonStdMainMethod.returnType.toString().contains('java.lang.Object')
     }
 }
+

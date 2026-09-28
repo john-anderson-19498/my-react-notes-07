@@ -27,3 +27,4 @@ assert "2" == new Outer.Inner2().innerName
 assert "3" == new Outer.Inner3().innerName
 assert "1.Innest" == new Outer.Inner.Innest().name
 assert "3.Innest" == new Outer.Inner3.Innest().name
+

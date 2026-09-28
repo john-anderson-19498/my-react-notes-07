@@ -28,3 +28,5 @@ public interface OutParameter {
      */
     int getType();
 }
+
+// fc68bc

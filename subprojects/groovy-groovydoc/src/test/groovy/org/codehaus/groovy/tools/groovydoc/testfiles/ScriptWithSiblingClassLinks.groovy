@@ -29,3 +29,4 @@ def method() {}
 class SiblingHelper {
     static otherMethod() {}
 }
+

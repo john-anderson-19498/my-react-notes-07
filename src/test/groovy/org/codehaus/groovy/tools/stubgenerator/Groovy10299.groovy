@@ -46,3 +46,4 @@ final class Groovy10299 extends StringSourcesStubTestCase {
         assert !stub.contains('new java.lang.Boolean')
     }
 }
+

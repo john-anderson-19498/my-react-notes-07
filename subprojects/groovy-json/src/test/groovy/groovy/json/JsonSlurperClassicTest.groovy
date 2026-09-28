@@ -346,3 +346,4 @@ class JsonSlurperClassicTest {
         assertEquals("http://example.com", result.get("url"))
     }
 }
+

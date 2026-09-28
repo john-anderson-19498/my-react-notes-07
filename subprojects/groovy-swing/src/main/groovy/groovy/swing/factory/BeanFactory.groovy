@@ -85,3 +85,4 @@ class BeanFactory extends AbstractFactory {
         return bean
     }
 }
+

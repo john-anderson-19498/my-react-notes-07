@@ -333,3 +333,5 @@ public class NumberValue extends java.lang.Number implements Value {
         return buffer[startIndex];
     }
 }
+
+// d9fd93

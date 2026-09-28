@@ -324,3 +324,5 @@ public class SequenceTest extends GroovyTestCase {
         assertEquals(0xbabe, hash);
     }
 }
+
+// 53366a

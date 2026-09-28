@@ -47,3 +47,4 @@ class TextTreeNodeMaker implements AstBrowserNodeMaker<TextNode> {
         new TextNode(userObject, properties)
     }
 }
+

@@ -21,3 +21,5 @@
  * Utilities for bytecode generation. Helper classes for ASM bytecode manipulation.
  */
 package org.codehaus.groovy.classgen.asm.util;
+
+// 555044

@@ -21,3 +21,5 @@
  * AST transformation framework for GINQ that converts GINQ query syntax into executable Groovy code.
  */
 package org.apache.groovy.ginq.transform;
+
+// be2d7c

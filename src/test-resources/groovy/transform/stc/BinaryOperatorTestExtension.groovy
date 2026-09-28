@@ -31,3 +31,4 @@ methodNotFound { receiver, name, argumentList, argTypes, call ->
         return new MethodNode("leftShift", Opcodes.ACC_PUBLIC, STRING_TYPE, [new Parameter(argTypes[0], "op")] as Parameter[], ClassNode.EMPTY_ARRAY, null)
     }
 }
+

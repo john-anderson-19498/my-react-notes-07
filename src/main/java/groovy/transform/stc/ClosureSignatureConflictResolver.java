@@ -52,3 +52,5 @@ public class ClosureSignatureConflictResolver {
         return candidates;
     }
 }
+
+// fd431b

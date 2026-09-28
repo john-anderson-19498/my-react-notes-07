@@ -787,3 +787,5 @@ public class Groovydoc extends Task {
         return GroovyDocTemplateInfo.DEFAULT_CLASS_TEMPLATES;
     }
 }
+
+// 069039

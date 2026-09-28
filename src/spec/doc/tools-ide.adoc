@@ -37,3 +37,4 @@ Many IDEs and text editors support the Groovy programming language.
 |https://editrocket.com/features/groovy_editor.html[EditRocket]|Yes|No|No
 |https://code.visualstudio.com/[VSCode]|Yes|No|https://marketplace.visualstudio.com/items?itemName=NicolasVuillamy.vscode-groovy-lint[Yes]
 |===============================================================
+

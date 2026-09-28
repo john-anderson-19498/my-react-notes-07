@@ -325,3 +325,4 @@ final class SemanticsTest {
     }
     // end::coordinates-class[]
 }
+

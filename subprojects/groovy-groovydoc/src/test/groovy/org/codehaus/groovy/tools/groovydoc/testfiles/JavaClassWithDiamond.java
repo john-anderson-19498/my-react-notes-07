@@ -33,3 +33,5 @@ public abstract class JavaClassWithDiamond {
      */
     public abstract void link();
 }
+
+// b2a9a3

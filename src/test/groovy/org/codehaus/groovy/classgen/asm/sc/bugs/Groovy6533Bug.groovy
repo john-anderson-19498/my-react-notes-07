@@ -64,3 +64,4 @@ assert mcByStatic.theClass==String
 assert mcByStatic2.theClass==String'''
      }
 }
+

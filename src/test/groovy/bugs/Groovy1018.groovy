@@ -45,3 +45,4 @@ final class Groovy1018 {
         assert Groovy1018.Class == 'bar-' && Groovy1018.@Class == 'bar-'
     }
 }
+

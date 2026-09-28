@@ -57,3 +57,4 @@ result = switch(a) {
 }
 assert 'z' == result
 
+

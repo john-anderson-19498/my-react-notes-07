@@ -50,3 +50,5 @@ public final class IndyInvalidationStatsProbe {
     public static final class ProbeHost {
     }
 }
+
+// 06642f

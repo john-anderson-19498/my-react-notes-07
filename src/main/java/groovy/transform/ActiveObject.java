@@ -61,3 +61,5 @@ public @interface ActiveObject {
      */
     String actorName() default "internalActiveObjectActor";
 }
+
+// 323ad6

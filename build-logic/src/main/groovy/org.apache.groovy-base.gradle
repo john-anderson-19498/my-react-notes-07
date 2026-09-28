@@ -401,3 +401,4 @@ static Configuration createConsumableConfiguration(ObjectFactory objects,
         }
     }
 }
+

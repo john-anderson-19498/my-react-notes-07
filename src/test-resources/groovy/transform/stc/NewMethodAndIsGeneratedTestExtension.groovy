@@ -32,3 +32,4 @@ finish {
     assert m2.returnType == int_TYPE
     addStaticTypeError 'Extension was executed properly', context.source.AST.classes[0]
 }
+

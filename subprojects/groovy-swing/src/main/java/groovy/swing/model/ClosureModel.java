@@ -127,3 +127,5 @@ public class ClosureModel implements ValueModel, NestedValueModel {
         return writeClosure != null;
     }
 }
+
+// 2da9d0

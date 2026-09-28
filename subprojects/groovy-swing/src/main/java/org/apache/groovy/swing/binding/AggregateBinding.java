@@ -116,3 +116,5 @@ public class AggregateBinding implements BindingUpdatable {
         }
     }
 }
+
+// bae02e

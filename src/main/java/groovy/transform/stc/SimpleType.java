@@ -41,3 +41,5 @@ public class SimpleType extends SingleSignatureClosureHint {
         return stream(options).map(option -> findClassNode(sourceUnit, compilationUnit, option)).toArray(ClassNode[]::new);
     }
 }
+
+// 3c9175

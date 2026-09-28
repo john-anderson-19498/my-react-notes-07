@@ -52,3 +52,5 @@ public class ReflectionCache {
         return ClassInfo.getClassInfo(klazz).getCachedClass();
     }
 }
+
+// ed5abe

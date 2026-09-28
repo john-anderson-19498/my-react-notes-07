@@ -37,3 +37,5 @@ public @interface Query {
     /** The query parameter name. Defaults to the method parameter name if empty. */
     String value() default "";
 }
+
+// 1b102a

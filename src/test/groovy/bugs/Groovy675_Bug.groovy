@@ -44,3 +44,4 @@ class Groovy675_Bug {
     assert "Hello\\, \\World\\".charAt(6) == ",".charAt(0)
     }
 }
+

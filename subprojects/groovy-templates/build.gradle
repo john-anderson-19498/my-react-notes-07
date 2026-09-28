@@ -43,3 +43,4 @@ tasks.named('rat') {
             'src/test/resources/includes/hello.html'
     ]
 }
+

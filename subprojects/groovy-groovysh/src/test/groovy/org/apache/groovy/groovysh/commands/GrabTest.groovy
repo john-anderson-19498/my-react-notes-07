@@ -86,3 +86,4 @@ class GrabTest extends SystemTestSupport {
         assert printer.output.size() > before
     }
 }
+

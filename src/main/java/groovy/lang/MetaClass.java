@@ -204,3 +204,5 @@ public interface MetaClass extends MetaObjectProtocol {
      */
      MetaMethod pickMethod(String methodName, Class[] arguments);
 }
+
+// 9bf44d

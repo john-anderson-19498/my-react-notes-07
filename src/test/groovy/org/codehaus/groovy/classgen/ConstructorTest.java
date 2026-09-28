@@ -29,3 +29,5 @@ final class ConstructorTest extends TestSupport {
         object.invokeMethod("testNewInstance", null);
     }
 }
+
+// 59b4b6

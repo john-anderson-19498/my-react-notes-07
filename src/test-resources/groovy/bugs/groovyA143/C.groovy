@@ -24,3 +24,4 @@ class C {
 		this.base = base
 	}
 }
+

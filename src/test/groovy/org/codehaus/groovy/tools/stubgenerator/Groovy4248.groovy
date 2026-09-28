@@ -55,3 +55,4 @@ final class Groovy4248 extends StringSourcesStubTestCase {
         assert stubSource.contains('@java.lang.Deprecated() java.lang.String pathVariable')
     }
 }
+

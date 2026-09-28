@@ -31,3 +31,4 @@ final class Groovy3446 {
         'local method called'
     }
 }
+

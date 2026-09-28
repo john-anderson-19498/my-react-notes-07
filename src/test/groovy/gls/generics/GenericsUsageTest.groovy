@@ -487,3 +487,4 @@ final class GenericsUsageTest {
         assert false, "$text can not match any expected error message: $errorMessages"
     }
 }
+

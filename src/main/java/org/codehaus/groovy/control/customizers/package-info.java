@@ -21,3 +21,5 @@
  * Compiler customization framework. Allows modifying compilation behavior through customizers.
  */
 package org.codehaus.groovy.control.customizers;
+
+// 771e94

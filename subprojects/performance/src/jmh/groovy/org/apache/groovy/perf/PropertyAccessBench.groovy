@@ -146,3 +146,4 @@ class PropertyAccessBench {
         bh.consume(sum)
     }
 }
+

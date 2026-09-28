@@ -146,3 +146,4 @@ final class Groovy7870Bug extends StaticTypeCheckingTestCase implements StaticCo
 
     static class DummyException extends Exception {}
 }
+

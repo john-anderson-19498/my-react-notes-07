@@ -43,3 +43,5 @@ class BarTwo implements FooTwo {
         return String.format("BarTwo.foo(%1$d)", a);
     }
 }
+
+// a8528c

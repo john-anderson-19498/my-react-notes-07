@@ -33,3 +33,4 @@ class Groovy4191Bug {
         val[1] = 1;
     }
 }
+

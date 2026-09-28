@@ -32,3 +32,4 @@ final class Groovy2558 {
         assertEquals "peter", person.name
     }
 }
+

@@ -36,3 +36,4 @@ class AliasTest extends ConsoleTestSupport {
         assert !console.hasAlias('foo')
     }
 }
+

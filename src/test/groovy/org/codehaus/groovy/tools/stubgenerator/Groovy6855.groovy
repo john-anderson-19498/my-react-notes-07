@@ -63,3 +63,4 @@ final class Groovy6855 extends StringSourcesStubTestCase {
         assert stub.contains('java.lang.Class value() default groovy.lang.Closure.class')
     }
 }
+

@@ -39,3 +39,4 @@ assert foo.test('abc')
 '''
     }
 }
+

@@ -65,3 +65,4 @@ class TextArgWidgetFactory extends AbstractFactory {
     }
 
 }
+

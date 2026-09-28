@@ -24,3 +24,4 @@ import java.sql.Date
 class AmbiguousDateSql {
     Date when() { new Date(0L) }
 }
+

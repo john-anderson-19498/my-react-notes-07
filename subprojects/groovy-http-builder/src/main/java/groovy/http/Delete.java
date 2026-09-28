@@ -37,3 +37,5 @@ public @interface Delete {
     /** The URL template, e.g. {@code "/users/{id}"}. */
     String value();
 }
+
+// 7234a3

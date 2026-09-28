@@ -249,3 +249,4 @@ class SqlBatchTest extends GroovyTestCase {
         assert sql.@statementCache[sqlText].is(wrapper.@delegate)
     }
 }
+

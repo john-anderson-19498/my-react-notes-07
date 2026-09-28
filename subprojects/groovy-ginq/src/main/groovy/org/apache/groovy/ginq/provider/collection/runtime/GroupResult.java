@@ -77,3 +77,5 @@ public interface GroupResult<K, T> extends Queryable<T> {
         return new GroupResultImpl<>(key, group);
     }
 }
+
+// f8803c

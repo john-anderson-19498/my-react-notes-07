@@ -38,3 +38,5 @@ public class Java implements Serializable {
     @Deprecated
     public void annotatedMethod(@CommandLine.Parameters(hidden = true) String annotatedParam) {}
 }
+
+// 3e0fce

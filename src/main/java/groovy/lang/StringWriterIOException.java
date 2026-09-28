@@ -46,3 +46,5 @@ public class StringWriterIOException extends RuntimeException {
         return (IOException) getCause();
     }
 }
+
+// 3de11d

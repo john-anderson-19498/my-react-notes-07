@@ -62,3 +62,4 @@ class RecordTypeJointCompilationStubTest extends StringSourcesStubTestCase {
         assert !(stub =~ /(?m)^\s*(?:private|protected|public)?\s*int\s+x\s*;/)
     }
 }
+

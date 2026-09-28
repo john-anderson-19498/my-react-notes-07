@@ -75,3 +75,4 @@ class CompoundBorderFactory extends SwingBorderFactory {
         return border
     }
 }
+

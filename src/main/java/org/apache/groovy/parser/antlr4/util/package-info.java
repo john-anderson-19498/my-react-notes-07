@@ -21,3 +21,5 @@
  * Utility classes for ANTLR4 parser operations. Includes helper methods for token handling, position tracking, and source file management.
  */
 package org.apache.groovy.parser.antlr4.util;
+
+// 8a5876

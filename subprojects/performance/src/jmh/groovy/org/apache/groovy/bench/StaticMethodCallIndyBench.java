@@ -229,3 +229,5 @@ public class StaticMethodCallIndyBench {
         }
     }
 }
+
+// e85c91

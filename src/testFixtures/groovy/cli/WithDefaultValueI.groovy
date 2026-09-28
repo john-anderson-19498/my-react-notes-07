@@ -26,3 +26,4 @@ interface WithDefaultValueI {
     @Option(shortName='t', defaultValue='35') int to()
 }
 // end::withDefaultValueInterfaceSpec[]
+

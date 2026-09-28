@@ -29,3 +29,5 @@ class BarOne implements FooOne {
         return "BarOne.foo()";
     }
 }
+
+// 1ca44c

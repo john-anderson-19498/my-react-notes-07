@@ -89,3 +89,4 @@ abstract class TestResultAggregatorService implements BuildService<Params>, Oper
         return provider
     }
 }
+

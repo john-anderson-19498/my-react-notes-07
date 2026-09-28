@@ -64,3 +64,5 @@ public final class ModuleNodeTest {
         assertEquals("X", DefaultGroovyMethods.last(mn.getImports()).getAlias());
     }
 }
+
+// 46f5b7

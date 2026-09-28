@@ -25,3 +25,4 @@ assert (dict.values().sort({ l, r -> r <=> l })) != null
 dict.values().sort({ l, r -> r <=> l }).each() { value ->
     println "${value.toString().padLeft(8)}"
 }
+

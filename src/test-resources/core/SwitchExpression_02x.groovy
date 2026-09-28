@@ -28,3 +28,4 @@ result = switch(a) {
     case 6 -> 'a'
 }
 assert null == result
+

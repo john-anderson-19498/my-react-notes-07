@@ -35,3 +35,4 @@ groovyLibrary {
         extensionClasses = 'org.apache.groovy.ginq.GinqGroovyMethods'
     }
 }
+

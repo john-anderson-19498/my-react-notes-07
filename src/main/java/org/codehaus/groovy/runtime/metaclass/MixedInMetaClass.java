@@ -68,3 +68,4 @@ public class MixedInMetaClass extends OwnedMetaClass {
         return super.invokeMethod(sender, receiver, methodName, arguments, false, fromInsideClass);
     }
 }
+// 5247ba

@@ -90,3 +90,5 @@ public interface CharacterSource {
      */
     String errorDetails(String message);
 }
+
+// e5b7c9

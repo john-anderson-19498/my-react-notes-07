@@ -21,3 +21,4 @@
  * Extension methods for XML manipulation, parsing, and generation using DOM, SAX, and builder patterns.
  */
 package org.apache.groovy.xml.extensions;
+

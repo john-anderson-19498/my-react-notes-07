@@ -266,3 +266,5 @@ public class GenericsVisitor extends ClassCodeVisitorSupport {
         return count + " " + (count == 1 ? string : string + "s");
     }
 }
+
+// d814b3

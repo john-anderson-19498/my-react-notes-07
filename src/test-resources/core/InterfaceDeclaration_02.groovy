@@ -58,3 +58,4 @@ public interface AA1 {
         @Test3
         public abstract <T extends A & B> T sayHello9() throws IOException, SQLException;
 }
+

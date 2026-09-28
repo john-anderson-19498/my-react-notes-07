@@ -61,3 +61,4 @@ final class Groovy8046 {
         assert err.message =~ /The variable 'bar' has invalid type void|void is not allowed here/
     }
 }
+

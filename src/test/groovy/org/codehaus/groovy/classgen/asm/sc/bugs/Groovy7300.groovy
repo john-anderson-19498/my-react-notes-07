@@ -85,3 +85,4 @@ final class Groovy7300 extends StaticTypeCheckingTestCase implements StaticCompi
         'Cannot access field: x of class: A'
     }
 }
+

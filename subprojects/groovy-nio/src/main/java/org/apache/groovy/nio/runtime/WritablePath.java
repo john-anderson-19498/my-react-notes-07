@@ -267,3 +267,5 @@ public class WritablePath implements Path, Writable {
         return delegate.toString();
     }
 }
+
+// 8d3599

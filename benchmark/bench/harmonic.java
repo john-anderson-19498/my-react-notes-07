@@ -21,3 +21,5 @@ public class harmonic {
         System.out.println(formatter.format(partialSum));
     }
 }
+
+// b639a6

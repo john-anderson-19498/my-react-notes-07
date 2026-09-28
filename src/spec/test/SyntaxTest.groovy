@@ -1007,3 +1007,4 @@ final class SyntaxTest extends CompilableTestSupport {
         }
     }
 }
+

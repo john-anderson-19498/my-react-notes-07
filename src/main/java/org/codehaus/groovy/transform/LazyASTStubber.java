@@ -69,3 +69,5 @@ public class LazyASTStubber extends AbstractASTTransformation {
         }
     }
 }
+
+// 545ed4

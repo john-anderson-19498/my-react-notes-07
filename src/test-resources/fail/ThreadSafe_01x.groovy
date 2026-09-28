@@ -18,3 +18,4 @@
  */
 
 threadsafe foo() {}
+

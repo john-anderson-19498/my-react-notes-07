@@ -39,3 +39,5 @@ public interface Group<T> extends Queryable<T> {
         return new GroupImpl<>(sourceStream);
     }
 }
+
+// 8ce091

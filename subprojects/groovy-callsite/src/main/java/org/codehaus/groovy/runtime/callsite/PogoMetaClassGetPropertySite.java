@@ -56,3 +56,5 @@ public class PogoMetaClassGetPropertySite extends AbstractCallSite {
         }
     }
 }
+
+// 8d17a9

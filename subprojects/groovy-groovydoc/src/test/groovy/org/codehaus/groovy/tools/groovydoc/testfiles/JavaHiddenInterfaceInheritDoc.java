@@ -54,3 +54,5 @@ public interface JavaHiddenInterfaceInheritDoc {
     default void setProperty(String propertyName, Object newValue) {
     }
 }
+
+// ccd401

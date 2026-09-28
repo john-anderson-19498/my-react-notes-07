@@ -322,3 +322,5 @@ public class ClosureMetaMethod extends MetaMethod implements ClosureInvokingMeth
         }
     }
 }
+
+// eaec42

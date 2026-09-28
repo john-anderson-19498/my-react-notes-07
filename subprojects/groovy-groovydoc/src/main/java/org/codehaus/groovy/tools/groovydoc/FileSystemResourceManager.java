@@ -53,3 +53,5 @@ public class FileSystemResourceManager implements ResourceManager {
         return ResourceGroovyMethods.newReader(new File(basedir + resourceName));
     }
 }
+
+// 9b1efc

@@ -49,3 +49,4 @@ final class ContractsSpec extends Specification {
         20    | 10 // should be aborted/ignored and not throw a groovy-contracts related exception
     }
 }
+

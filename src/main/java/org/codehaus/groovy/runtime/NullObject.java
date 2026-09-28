@@ -193,3 +193,5 @@ public class NullObject extends GroovyObjectSupport {
         return DefaultGroovyMethods.with(null, closure);
     }
 }
+
+// 65deca

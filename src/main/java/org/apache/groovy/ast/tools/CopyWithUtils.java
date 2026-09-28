@@ -87,3 +87,5 @@ public final class CopyWithUtils {
                                 args(varX("this"), varX(block))))));
     }
 }
+
+// 879b90

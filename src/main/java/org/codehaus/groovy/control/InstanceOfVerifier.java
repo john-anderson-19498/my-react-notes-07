@@ -64,3 +64,5 @@ public abstract class InstanceOfVerifier extends ClassCodeVisitorSupport {
         addError("Cannot perform instanceof check against " + referenceType, referenceExpr);
     }
 }
+
+// 870442

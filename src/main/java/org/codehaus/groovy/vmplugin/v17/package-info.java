@@ -21,3 +21,5 @@
  * Java 17 VM plugin. Compatibility layer for Java 17 LTS features.
  */
 package org.codehaus.groovy.vmplugin.v17;
+
+// 5b6af2

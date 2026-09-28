@@ -21,3 +21,5 @@
  * Runtime support for macro execution including evaluation context and result handling.
  */
 package org.codehaus.groovy.macro.runtime;
+
+// d9a83b

@@ -47,3 +47,4 @@ class StubGenerationForAnAnnotationStubsTest extends StringSourcesStubTestCase {
         assert !annotationClassSource.contains('java.lang.annotation.Annotation')
     }
 }
+

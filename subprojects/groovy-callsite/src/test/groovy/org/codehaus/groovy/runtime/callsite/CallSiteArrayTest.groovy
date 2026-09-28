@@ -112,3 +112,4 @@ final class CallSiteArrayTest {
         assert csa.array[1].callStatic(String, 100) == '100'
     }
 }
+

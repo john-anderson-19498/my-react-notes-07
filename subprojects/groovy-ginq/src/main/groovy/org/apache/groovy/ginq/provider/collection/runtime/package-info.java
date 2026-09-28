@@ -21,3 +21,5 @@
  * Runtime support classes for collection-based GINQ operations including aggregation and windowing functions.
  */
 package org.apache.groovy.ginq.provider.collection.runtime;
+
+// 1a4c22

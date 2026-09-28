@@ -23,3 +23,5 @@
  * @since 6.0.0
  */
 package groovy.junit6.plugin;
+
+// da42bc

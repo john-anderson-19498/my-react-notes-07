@@ -39,3 +39,4 @@ def value = closure.call()
 
 assert value instanceof Integer
 assert value == 3
+

@@ -38,3 +38,4 @@ class CustomXmlParser extends XmlParser {
         return new CustomNode(parent, name, attributes, new NodeList());
     }
 }
+// f5fc2d

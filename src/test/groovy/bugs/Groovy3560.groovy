@@ -28,3 +28,4 @@ final class Groovy3560 {
         assert Groovy3560Helper.m2("a", "b", new Groovy3560A(), new Groovy3560B()) == 2
     }
 }
+

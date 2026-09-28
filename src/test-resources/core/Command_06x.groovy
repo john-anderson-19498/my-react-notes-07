@@ -24,3 +24,4 @@ def m(a, b) {
     return a + b
 }
 assert m((1.plus 2 plus 3), (1.multiply 1)) == 7
+

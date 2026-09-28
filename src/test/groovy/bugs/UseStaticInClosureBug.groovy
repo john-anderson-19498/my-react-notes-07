@@ -44,3 +44,4 @@ final class UseStaticInClosureBug {
         assert stuff[2] == 'dog'
     }
 }
+

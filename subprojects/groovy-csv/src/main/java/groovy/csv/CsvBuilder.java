@@ -174,3 +174,5 @@ public class CsvBuilder implements Writable {
         return out.append(toString());
     }
 }
+
+// 7938c2

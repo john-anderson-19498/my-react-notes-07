@@ -118,3 +118,4 @@ final class ModifiersTest extends CompilableTestSupport {
         shouldNotCompile("class Foo { native Foo() {}}")
     }
 }
+

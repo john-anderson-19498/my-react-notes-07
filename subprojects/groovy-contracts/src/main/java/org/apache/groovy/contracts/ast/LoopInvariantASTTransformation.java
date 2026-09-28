@@ -154,3 +154,5 @@ public class LoopInvariantASTTransformation implements ASTTransformation, Compil
         }
     }
 }
+
+// 482d2a

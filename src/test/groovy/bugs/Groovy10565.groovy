@@ -38,3 +38,4 @@ final class Groovy10565 extends AbstractBytecodeTestCase {
         assert bytecode.hasSequence(['PERMITTEDSUBCLASS example/Bar'])
     }
 }
+

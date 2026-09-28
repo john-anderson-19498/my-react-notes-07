@@ -301,3 +301,5 @@ class MemberSignatureParser {
         return nodes;
     }
 }
+
+// 54dce8

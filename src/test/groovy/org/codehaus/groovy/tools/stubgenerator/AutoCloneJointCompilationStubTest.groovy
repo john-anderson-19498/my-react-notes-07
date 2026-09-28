@@ -81,3 +81,4 @@ final class AutoCloneJointCompilationStubTest extends StringSourcesStubTestCase 
         assert copy.count == 7
     }
 }
+

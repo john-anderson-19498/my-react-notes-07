@@ -89,3 +89,4 @@ class StreamingMarkupWriterTest {
         assertThrows(IOException) { w.write('\uD835' + 'A') }
     }
 }
+

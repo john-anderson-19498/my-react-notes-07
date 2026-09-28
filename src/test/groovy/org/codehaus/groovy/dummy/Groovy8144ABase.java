@@ -23,3 +23,5 @@ abstract class Groovy8144ABase {
         return 42;
     }
 }
+
+// 87f5a1

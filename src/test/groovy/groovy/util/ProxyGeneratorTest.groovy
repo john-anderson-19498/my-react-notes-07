@@ -209,3 +209,4 @@ abstract class AbstractClass {
     def myMethodA() { return "the original A" }
     abstract myMethodG()
 }
+

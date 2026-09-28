@@ -48,3 +48,4 @@ final class Groovy6404 extends StringSourcesStubTestCase {
     void verifyStubs() {
     }
 }
+

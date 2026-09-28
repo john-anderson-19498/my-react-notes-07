@@ -66,3 +66,4 @@ final class AmbiguousListOrMethodTest {
         def getAt(String a) {return 1}
     }
 }
+

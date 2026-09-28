@@ -102,3 +102,4 @@ class ColdReflectionParityTest {
         return stdout
     }
 }
+

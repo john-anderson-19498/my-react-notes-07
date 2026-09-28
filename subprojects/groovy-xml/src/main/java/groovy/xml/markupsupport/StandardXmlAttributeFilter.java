@@ -37,3 +37,5 @@ public class StandardXmlAttributeFilter implements Function<Character, Optional<
         return Optional.ofNullable(result);
     }
 }
+
+// 5be796

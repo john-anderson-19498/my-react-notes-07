@@ -249,3 +249,5 @@ public class JavaAwareCompilationUnit extends CompilationUnit {
         this.compilerFactory = compilerFactory;
     }
 }
+
+// 1105cc

@@ -35,3 +35,4 @@ public interface DummyMBean {
 
     void setSize(int size);
 }
+// 8560dc

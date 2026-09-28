@@ -60,3 +60,4 @@ final class CanonicalGeneratedTest extends AbstractGeneratedAstTestCase {
         assertMethodIsNotAnnotated(explicitCanonical, 'toString')
     }
 }
+

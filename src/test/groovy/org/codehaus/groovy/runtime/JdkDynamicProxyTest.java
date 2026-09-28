@@ -47,3 +47,5 @@ public class JdkDynamicProxyTest extends GroovyTestCase {
     }
 
 }
+
+// f1ef5d

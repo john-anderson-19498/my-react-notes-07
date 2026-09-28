@@ -102,3 +102,5 @@ public class FloatCachedClass extends NumberCachedClass {
                 || classToTransformFrom == BigInteger.class;
     }
 }
+
+// 2c3cf3

@@ -241,3 +241,4 @@ parser/lexer, or annotation processors.
 To pass _every_ parent project property at once, set `inheritAll="true"`.
 Explicit `<sysproperty>` and `<syspropertyset>` entries take precedence
 on name collision.
+

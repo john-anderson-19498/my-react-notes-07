@@ -265,3 +265,4 @@ and leave the root level at `INFO` or `WARNING`.
 NOTE: If a different `System.LoggerFinder` is on the classpath (e.g., via SLF4J/Logback or Log4j2),
 platform logging calls are routed to that backend instead, and `logging.properties` has no effect.
 Configure the alternative backend using its own mechanism (e.g., `logback.xml` or `log4j2.xml`).
+

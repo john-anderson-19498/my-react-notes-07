@@ -127,3 +127,4 @@ assert Closure.isAssignableFrom(foo { 'Hello' })
 '''
     }
 }
+

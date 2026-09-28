@@ -61,3 +61,5 @@ public class XmlRuntimeException extends GroovyRuntimeException {
         super(msg, cause);
     }
 }
+
+// 296f57

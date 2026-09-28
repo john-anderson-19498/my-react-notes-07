@@ -16,3 +16,5 @@ public class takfp {
         return Tak(Tak(x-1.0f,y,z), Tak(y-1.0f,z,x), Tak(z-1.0f,x,y));
     }
 }
+
+// ef23ad

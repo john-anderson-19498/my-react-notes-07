@@ -192,3 +192,5 @@ public final class fannkuch implements Runnable
         permutation[position] = perm0;
     }
 }
+
+// 0855af

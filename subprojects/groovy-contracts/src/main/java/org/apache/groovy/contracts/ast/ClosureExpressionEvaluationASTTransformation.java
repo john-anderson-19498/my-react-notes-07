@@ -116,3 +116,5 @@ public class ClosureExpressionEvaluationASTTransformation extends BaseASTTransfo
             classNode.addAnnotation(new AnnotationNode(contractedAnnotationClassNode));
     }
 }
+
+// 8d7aa0

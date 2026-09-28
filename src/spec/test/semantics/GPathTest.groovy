@@ -87,3 +87,4 @@ final class GPathTest {
         //end::gpath_on_xml_1[]
     }
 }
+

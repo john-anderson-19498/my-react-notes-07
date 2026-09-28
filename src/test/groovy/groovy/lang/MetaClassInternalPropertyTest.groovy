@@ -101,3 +101,4 @@ class MetaClassInternalPropertyTest {
         assert 'class' in propNames
     }
 }
+

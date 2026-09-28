@@ -36,3 +36,5 @@
  * </p>
  */
 package groovy.transform;
+
+// f77b6c

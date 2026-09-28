@@ -46,3 +46,5 @@ public interface PropertyAccessInterceptor extends Interceptor {
     void beforeSet(Object object, String property, Object newValue);
 
 }
+
+// a41e7b

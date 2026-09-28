@@ -343,3 +343,4 @@ final class NullCheckTransformTest {
         '''
     }
 }
+

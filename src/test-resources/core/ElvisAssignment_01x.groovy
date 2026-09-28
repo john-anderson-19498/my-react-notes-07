@@ -54,3 +54,4 @@ def csElvisAssignment() {
     assert (a ?= '2') == '2'
 }
 csElvisAssignment();
+

@@ -526,3 +526,4 @@ class GrailsWorkloadBench {
                    taskSummary.size() + empNames.size())
     }
 }
+

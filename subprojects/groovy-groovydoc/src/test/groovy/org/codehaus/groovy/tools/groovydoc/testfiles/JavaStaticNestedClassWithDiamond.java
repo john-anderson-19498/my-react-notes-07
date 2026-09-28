@@ -36,3 +36,5 @@ public class JavaStaticNestedClassWithDiamond<E> {
     public JavaStaticNestedClassWithDiamond<Object> expectedObject = new JavaStaticNestedClassWithDiamond.Nested<>();
 
 }
+
+// 336403

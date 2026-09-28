@@ -254,3 +254,5 @@ public class TemplateConfiguration {
         this.cacheTemplates = cacheTemplates;
     }
 }
+
+// e2d766

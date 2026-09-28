@@ -25,3 +25,4 @@ import groovy.transform.stc.SocketGMClosureParamTypeInferenceSTCTest
  */
 final class SocketGMClosureParamTypeInferenceStaticCompileTest extends SocketGMClosureParamTypeInferenceSTCTest implements StaticCompilationTestSupport {
 }
+

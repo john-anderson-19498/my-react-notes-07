@@ -161,3 +161,4 @@ class GinqGroovyMethods {
     private static final String DEFAULT_AST_WALKER_CLASS_NAME = GinqAstWalker.class.name
     private static final String TRUE_STR = 'true'
 }
+

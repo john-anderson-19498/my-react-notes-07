@@ -218,3 +218,4 @@ final class ClassTagExtensionModuleTest {
         assert !withoutModule.contains('tag')
     }
 }
+

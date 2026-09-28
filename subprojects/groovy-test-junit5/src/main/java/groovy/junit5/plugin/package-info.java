@@ -21,3 +21,5 @@
  * Classes to support running JUnit5 tests as scripts.
  */
 package groovy.junit5.plugin;
+
+// 24e45d

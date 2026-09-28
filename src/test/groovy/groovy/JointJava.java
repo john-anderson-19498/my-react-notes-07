@@ -25,3 +25,5 @@ public class JointJava {
         Closure closure = new JointGroovy().getProperty().getProperty2().getProperty3();
     }
 }
+
+// 07b119

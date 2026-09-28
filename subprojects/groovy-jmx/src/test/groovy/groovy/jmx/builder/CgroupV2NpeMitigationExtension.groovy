@@ -77,3 +77,4 @@ class CgroupV2NpeMitigationExtension implements BeforeAllCallback, TestExecution
         throw t
     }
 }
+

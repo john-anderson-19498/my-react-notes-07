@@ -2717,3 +2717,5 @@ public abstract class StaticTypeCheckingSupport {
         }
     }
 }
+
+// 675d2d

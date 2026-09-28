@@ -98,3 +98,4 @@ class SlowStringReader extends StringReader {
 
     boolean markSupported() { return false }
 }
+

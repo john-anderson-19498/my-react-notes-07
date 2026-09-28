@@ -362,3 +362,5 @@ public class TupleTest extends GroovyTestCase {
                 "assert [new Tuple2(1, 2), new Tuple2(3, 4)].unique().size() == 2\n");
     }
 }
+
+// 9f6c4a

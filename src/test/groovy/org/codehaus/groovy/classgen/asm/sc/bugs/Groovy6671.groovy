@@ -104,3 +104,4 @@ final class Groovy6671 extends StaticTypeCheckingTestCase implements StaticCompi
         '''
     }
 }
+

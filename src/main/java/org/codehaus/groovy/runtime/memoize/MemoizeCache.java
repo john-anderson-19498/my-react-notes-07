@@ -82,3 +82,5 @@ public interface MemoizeCache<K, V> {
         V provide(K key);
     }
 }
+
+// ff0f44

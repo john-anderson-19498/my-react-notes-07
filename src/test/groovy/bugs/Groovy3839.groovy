@@ -74,3 +74,4 @@ final class Groovy3839 {
         assert err.message =~ '@GroovyASTTransformationClass in bugs.G3839A4 should specify transforms by name or by type, not by both'
     }
 }
+

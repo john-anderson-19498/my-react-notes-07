@@ -1487,3 +1487,4 @@ as the start of a comment. Instead, quote the argument like this `/ls '/tmp/*.tx
 The Groovy Shell relies heavily on the JLine3 library for its platform
 support. If you have specific platform problems, please refer to the
 JLine documentation.
+

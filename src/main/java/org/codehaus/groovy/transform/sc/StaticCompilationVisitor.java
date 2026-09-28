@@ -596,3 +596,5 @@ public class StaticCompilationVisitor extends StaticTypeCheckingVisitor {
         }
     }
 }
+
+// e55be3

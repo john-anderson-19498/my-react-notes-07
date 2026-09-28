@@ -148,3 +148,4 @@ class GDKDocTool {
         System.exit(tool.run())
     }
 }
+

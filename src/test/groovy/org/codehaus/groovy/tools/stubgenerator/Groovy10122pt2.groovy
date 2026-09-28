@@ -52,3 +52,4 @@ final class Groovy10122pt2 extends StringSourcesStubTestCase {
         assert specialCtorCall.find() && specialCtorCall.group(1) == '(T)null'
     }
 }
+

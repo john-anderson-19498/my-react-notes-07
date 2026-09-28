@@ -46,3 +46,4 @@ assert -100 == p3.x()
 assert 200 == p3.y()
 assert 'RED' == p3.color()
 
+

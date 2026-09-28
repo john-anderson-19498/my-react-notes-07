@@ -82,3 +82,4 @@ final class StaticCompileDGMMethodTest extends AbstractBytecodeTestCase {
         clazz.newInstance().run()
     }
 }
+

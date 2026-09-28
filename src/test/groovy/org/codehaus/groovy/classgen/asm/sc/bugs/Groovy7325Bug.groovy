@@ -56,3 +56,4 @@ final class Groovy7325Bug extends StaticTypeCheckingTestCase implements StaticCo
         'Cannot access method: clone() of class: java.lang.Object'
     }
 }
+

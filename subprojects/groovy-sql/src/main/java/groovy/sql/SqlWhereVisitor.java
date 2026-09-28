@@ -183,3 +183,5 @@ public class SqlWhereVisitor extends CodeVisitorSupport {
         };
     }
 }
+
+// 928b32

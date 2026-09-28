@@ -42,3 +42,4 @@ static isRendered(String expectedRendering, Closure failingAssertion) {
         assert expectedRendering.trim() == e.message.trim()
     }
 }
+

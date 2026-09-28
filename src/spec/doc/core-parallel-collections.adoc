@@ -366,3 +366,4 @@ items.eachParallel { results << transform(it) }  // race condition!
 // Good — use CopyOnWriteArrayList or collectParallel
 def results = items.collectParallel { transform(it) }
 ----
+

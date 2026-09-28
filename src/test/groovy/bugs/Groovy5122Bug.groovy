@@ -51,3 +51,4 @@ class Groovy5122Bug {
         '''
     }
 }
+

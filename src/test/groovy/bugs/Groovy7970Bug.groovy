@@ -132,3 +132,4 @@ class Groovy7970Bug {
         assertScript getScriptNestedAIC('private', true)
     }
 }
+

@@ -151,3 +151,5 @@ public class ExternalizeMethodsASTTransformation extends AbstractASTTransformati
         return "Object";
     }
 }
+
+// a39ec0

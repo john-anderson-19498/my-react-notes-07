@@ -44,3 +44,4 @@ final class InterfaceWithPrimitiveFieldsStubTest extends StringSourcesStubTestCa
         assert classes['Interface'].getFieldByName('baz').initializationExpression
     }
 }
+

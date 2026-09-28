@@ -1628,3 +1628,5 @@ public abstract class Closure<V> extends GroovyObjectSupport implements Cloneabl
         }
     }
 }
+
+// c5fbe9

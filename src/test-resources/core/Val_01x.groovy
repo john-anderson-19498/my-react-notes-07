@@ -55,3 +55,4 @@ for (val i in [1, 2, 3]) { assert i > 0 }
 // GString interpolation
 val g = 99
 assert "$g" == "99"
+

@@ -283,3 +283,4 @@ class StreamingMarkupBuilder extends AbstractStreamingBuilder {
         bind { out << node }
     }
 }
+

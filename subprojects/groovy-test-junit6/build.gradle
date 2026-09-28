@@ -51,3 +51,4 @@ tasks.named('test') {
         excludeTags 'manual'
     }
 }
+

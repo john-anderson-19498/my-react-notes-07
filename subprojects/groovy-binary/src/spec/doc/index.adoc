@@ -201,3 +201,4 @@ include::../../../../../src/spec/doc/design-patterns-in-groovy.adoc[leveloffset=
 include::../../../../../src/spec/doc/contributors.adoc[leveloffset=+2]
 
 include::../../../../../src/spec/doc/license.adoc[leveloffset=+2]
+

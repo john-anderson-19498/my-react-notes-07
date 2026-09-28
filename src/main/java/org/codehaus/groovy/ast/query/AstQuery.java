@@ -508,3 +508,5 @@ public final class AstQuery<T extends ASTNode> {
         @Override public void visitEmptyExpression(org.codehaus.groovy.ast.expr.EmptyExpression e) { test(e); /* leaf: no children */ }
     }
 }
+
+// e2754d

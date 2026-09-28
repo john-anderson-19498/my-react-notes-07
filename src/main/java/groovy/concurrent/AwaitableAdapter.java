@@ -65,3 +65,5 @@ public interface AwaitableAdapter {
         throw new UnsupportedOperationException("Iterable conversion not supported by " + getClass().getName());
     }
 }
+
+// 9b72c2

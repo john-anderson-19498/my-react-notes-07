@@ -395,3 +395,5 @@ abstract class TypeSignatureParser extends SignatureVisitor {
         return (cn.getGenericsTypes() == null);
     }
 }
+
+// 07d8f0

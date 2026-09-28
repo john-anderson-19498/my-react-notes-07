@@ -49,3 +49,4 @@ class Xyz {
         str.equalsIgnoreCase this.class.getName()
     }
 }
+

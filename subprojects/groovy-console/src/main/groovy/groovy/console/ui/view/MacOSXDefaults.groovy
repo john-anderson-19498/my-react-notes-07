@@ -37,3 +37,4 @@ styles[StyleContext.DEFAULT_STYLE][StyleConstants.FontFamily] = fontFamily
 
 /** Menu bar implementation used for macOS screen-menu integration. */
 menuBarClass = MacOSXMenuBar
+

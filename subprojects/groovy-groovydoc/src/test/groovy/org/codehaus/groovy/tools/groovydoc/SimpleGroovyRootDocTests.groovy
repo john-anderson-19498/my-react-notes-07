@@ -35,3 +35,4 @@ class SimpleGroovyRootDocTests {
         assert expectedResult == root.classNamed(null, 'Foo')
     }
 }
+

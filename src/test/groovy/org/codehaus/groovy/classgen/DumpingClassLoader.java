@@ -80,3 +80,5 @@ public class DumpingClassLoader extends GroovyClassLoader implements Opcodes {
     protected ClassGenerator dumper = new AsmClassGenerator(null,new GeneratorContext(unit), dumpVisitor, null);
 
 }
+
+// 9ed566

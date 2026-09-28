@@ -75,3 +75,5 @@ public @interface PackageScope {
      */
     PackageScopeTarget[] value() default {PackageScopeTarget.CLASS};
 }
+
+// c70aa9

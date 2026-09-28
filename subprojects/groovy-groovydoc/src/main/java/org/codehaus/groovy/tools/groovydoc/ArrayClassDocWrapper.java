@@ -580,3 +580,5 @@ public class ArrayClassDocWrapper implements GroovyClassDoc {
         return 42; // any arbitrary constant will do
     }
 }
+
+// d14ab1

@@ -647,3 +647,5 @@ public class RecordTypeASTTransformation extends AbstractASTTransformation imple
         }
     }
 }
+
+// 87a80f

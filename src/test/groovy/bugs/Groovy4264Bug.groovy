@@ -75,3 +75,4 @@ class Groovy4264Bug {
         }
     }
 }
+

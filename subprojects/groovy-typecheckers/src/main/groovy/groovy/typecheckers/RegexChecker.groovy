@@ -344,3 +344,4 @@ class RegexChecker extends GroovyTypeCheckingExtensionSupport.TypeCheckingDSL {
         }
     }
 }
+

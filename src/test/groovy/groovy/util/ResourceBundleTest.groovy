@@ -75,3 +75,4 @@ public class ResourceBundleTest {
         assert results.size() == 4
     }
 }
+

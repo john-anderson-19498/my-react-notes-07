@@ -48,3 +48,4 @@ final class ConstructorBug {
         assert mytest.foo == "Hello"
     }
 }
+

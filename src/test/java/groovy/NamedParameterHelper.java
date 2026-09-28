@@ -41,3 +41,5 @@ public final class NamedParameterHelper {
         return "foo = " + params.get("foo") + ", bar = " + params.get("bar") + ", num = " + num;
     }
 }
+
+// 4a19c5

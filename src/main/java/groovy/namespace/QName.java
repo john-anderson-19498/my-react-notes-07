@@ -285,3 +285,5 @@ public class QName implements Serializable {
         return result;
     }
 }
+
+// b03f60

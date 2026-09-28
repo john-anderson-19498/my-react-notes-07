@@ -65,3 +65,5 @@ public class Dummy implements groovy.jmx.DummyMBean {
     }
 
 }
+
+// 5919e4

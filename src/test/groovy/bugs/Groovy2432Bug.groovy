@@ -43,3 +43,4 @@ class WillCauseInfiniteLoop {
         return buffer.toString()
     }
 }
+

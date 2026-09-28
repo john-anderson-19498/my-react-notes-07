@@ -31,3 +31,4 @@ trait B {
 	}
 	C managerObject
 }
+

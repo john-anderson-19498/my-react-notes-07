@@ -617,3 +617,4 @@ class NumberValueTest {
         ONE, TWO, THREE
     }
 }
+

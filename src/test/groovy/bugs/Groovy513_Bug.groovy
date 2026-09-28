@@ -40,3 +40,4 @@ class Groovy513_Bug {
     }
 
 }
+

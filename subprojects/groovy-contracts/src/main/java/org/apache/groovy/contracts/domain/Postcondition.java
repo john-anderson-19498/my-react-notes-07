@@ -55,3 +55,5 @@ public class Postcondition extends Assertion<Postcondition> {
         return isPartOfConstructor;
     }
 }
+
+// d620fb

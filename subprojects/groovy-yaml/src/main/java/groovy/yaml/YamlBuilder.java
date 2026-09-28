@@ -329,3 +329,5 @@ public class YamlBuilder extends GroovyObjectSupport implements Writable {
         return out.append(toString());
     }
 }
+
+// 3f5af9

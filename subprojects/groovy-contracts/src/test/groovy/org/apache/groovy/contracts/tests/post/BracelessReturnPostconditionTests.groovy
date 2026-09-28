@@ -123,3 +123,4 @@ class BracelessReturnPostconditionTests extends BaseTestClass {
         }
     }
 }
+

@@ -394,3 +394,4 @@ final class HashCodeHelperTest {
         assertNotEquals(hashPosInf, hashNegInf)
     }
 }
+

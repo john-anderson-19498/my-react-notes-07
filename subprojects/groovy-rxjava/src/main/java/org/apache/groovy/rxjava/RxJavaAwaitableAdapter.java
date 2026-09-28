@@ -123,3 +123,5 @@ public class RxJavaAwaitableAdapter implements AwaitableAdapter {
         throw new IllegalArgumentException("Cannot convert to Iterable: " + source.getClass());
     }
 }
+
+// 3686ec

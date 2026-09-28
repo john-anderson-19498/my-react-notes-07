@@ -64,3 +64,4 @@ class Groovy4273Bug extends GroovyShellTestCase {
         }
     }
 }
+

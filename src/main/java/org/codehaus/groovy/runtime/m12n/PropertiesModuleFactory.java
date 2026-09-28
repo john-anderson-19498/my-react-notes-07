@@ -48,3 +48,5 @@ public abstract class PropertiesModuleFactory {
      */
     public abstract ExtensionModule newModule(Properties properties, final ClassLoader classLoader);
 }
+
+// a0d1b5

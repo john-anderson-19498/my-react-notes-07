@@ -56,3 +56,5 @@ class ProxyDefaultMethodHandle {
         return InvocationHandler.invokeDefault(proxy, method, arguments);
     }
 }
+
+// 360c3e

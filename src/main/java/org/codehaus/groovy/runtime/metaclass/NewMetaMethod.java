@@ -77,3 +77,5 @@ public class NewMetaMethod extends ReflectionMetaMethod {
         return getBytecodeParameterTypes()[0];
     }
 }
+
+// 12113c

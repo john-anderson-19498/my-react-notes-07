@@ -222,3 +222,4 @@ class STCExtensionMethodsTest extends StaticTypeCheckingTestCase {
         """
     }
 }
+

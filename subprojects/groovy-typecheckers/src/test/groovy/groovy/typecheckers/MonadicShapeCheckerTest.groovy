@@ -263,3 +263,4 @@ final class MonadicShapeCheckerTest {
         '''
     }
 }
+

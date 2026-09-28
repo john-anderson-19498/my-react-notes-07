@@ -520,3 +520,4 @@ class ThrowsIfTests extends BaseTestClass {
         '''
     }
 }
+

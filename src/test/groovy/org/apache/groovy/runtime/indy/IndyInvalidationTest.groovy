@@ -647,3 +647,4 @@ class PureCustomMetaClass implements MetaClass {
         this.delegate.initialize()
     }
 }
+

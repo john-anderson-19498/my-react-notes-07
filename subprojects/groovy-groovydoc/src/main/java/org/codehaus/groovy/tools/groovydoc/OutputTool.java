@@ -48,3 +48,5 @@ public interface OutputTool {
      */
     void copyResource(String srcPath, String dstPath) throws Exception;
 }
+
+// 0eb207

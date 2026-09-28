@@ -26,3 +26,4 @@ class Greeter {
 
 new Greeter()
 // end::greeter[]
+

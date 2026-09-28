@@ -89,3 +89,4 @@ class Groovy2605 {
         return "[A Groovy2605 object]"
     }
 }
+

@@ -65,3 +65,4 @@ final class Groovy8595Bug extends CompilableTestSupport {
         '''
     }
 }
+

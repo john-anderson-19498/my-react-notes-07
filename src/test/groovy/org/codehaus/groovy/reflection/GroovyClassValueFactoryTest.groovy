@@ -46,3 +46,4 @@ class GroovyClassValueFactoryTest {
 		assertEquals(3, counter.get(), "computeValue correctly invoked 3 times")
 	}
 }
+

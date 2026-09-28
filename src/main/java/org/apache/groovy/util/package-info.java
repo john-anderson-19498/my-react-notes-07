@@ -21,3 +21,5 @@
  * General-purpose utility classes. Miscellanea for Groovy runtime.
  */
 package org.apache.groovy.util;
+
+// 76e02f

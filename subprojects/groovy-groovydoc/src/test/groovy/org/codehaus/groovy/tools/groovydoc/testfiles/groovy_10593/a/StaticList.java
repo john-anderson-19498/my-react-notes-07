@@ -22,3 +22,4 @@ public interface StaticList {
     public static interface List {}
     public static interface ListAlias {}
 }
+// bf137b

@@ -117,3 +117,4 @@ interface ClickListener {
 abstract class ClickAdapter implements ClickListener, Serializable {
     private static final long serialVersionUID = 4L
 }
+

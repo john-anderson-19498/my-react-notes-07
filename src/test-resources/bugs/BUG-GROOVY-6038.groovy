@@ -35,3 +35,4 @@ class X {
 
 def m = X.class.declaredMethods.find { it.name == 'm' }
 assert m.declaredAnnotations[0].testInner() == 'abc'
+

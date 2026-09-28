@@ -326,3 +326,4 @@ class MetaclassChangeBench {
         bh.consume(sum)
     }
 }
+

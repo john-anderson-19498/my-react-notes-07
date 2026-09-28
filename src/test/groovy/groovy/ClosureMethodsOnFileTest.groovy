@@ -63,3 +63,4 @@ class ClosureMethodsOnFileTest {
         dir.eachFile { f -> assert f.getName() }
     }
 }
+

@@ -1083,3 +1083,4 @@ class AstSpecificationCompiler implements GroovyInterceptable {
         }
     }
 }
+

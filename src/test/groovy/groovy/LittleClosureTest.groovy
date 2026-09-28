@@ -28,3 +28,4 @@ class LittleClosureTest {
         def block = {x-> return x > 5}
     }
 }
+

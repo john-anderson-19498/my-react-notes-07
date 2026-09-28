@@ -64,3 +64,4 @@ final class Groovy12140 {
         new GroovyShell(config).evaluate SCRIPT
     }
 }
+

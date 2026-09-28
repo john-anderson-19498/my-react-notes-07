@@ -72,3 +72,4 @@ class GroovyXmlTemplateEngineTest {
         assert engine.createTemplate(xmlScript).make().toString() == xmlScript
     }
 }
+

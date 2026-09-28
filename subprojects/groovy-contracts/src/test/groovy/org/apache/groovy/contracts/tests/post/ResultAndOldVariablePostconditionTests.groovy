@@ -64,3 +64,4 @@ class EnsureVariables {
         var.concatenateColon2("part1", "part2")
     }
 }
+

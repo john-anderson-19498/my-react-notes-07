@@ -38,3 +38,4 @@ final class CachedMethodTest {
         assert cachedMethod.isVargsMethod()
     }
 }
+

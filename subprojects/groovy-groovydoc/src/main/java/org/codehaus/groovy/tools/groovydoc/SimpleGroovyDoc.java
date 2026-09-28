@@ -446,3 +446,5 @@ public class SimpleGroovyDoc implements GroovyDoc/*, GroovyTokenTypes*/ {
         this.deprecated = deprecated;
     }
 }
+
+// ed4bac

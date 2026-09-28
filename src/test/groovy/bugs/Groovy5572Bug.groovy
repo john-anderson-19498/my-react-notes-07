@@ -49,3 +49,4 @@ class Groovy5572Bug {
 
 }
 
+

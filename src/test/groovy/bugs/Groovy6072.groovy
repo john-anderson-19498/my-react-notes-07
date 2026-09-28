@@ -46,3 +46,4 @@ final class Groovy6072 {
         assert err.message.contains('No signature of static method: or for class: OhNo')
     }
 }
+

@@ -246,3 +246,5 @@ public class GroovyPromise<T> implements Awaitable<T> {
         return "GroovyPromise{pending}";
     }
 }
+
+// e06570

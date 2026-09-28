@@ -109,3 +109,5 @@ public @interface ImmutableBase {
      */
     boolean copyWith() default false;
 }
+
+// 9083ec

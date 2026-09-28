@@ -43,3 +43,5 @@ public class MixinNode extends ClassNode {
         super(name, modifiers, superType, interfaces, MixinNode.EMPTY_ARRAY);
     }
 }
+
+// 5225dc

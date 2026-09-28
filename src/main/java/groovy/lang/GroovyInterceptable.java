@@ -24,3 +24,5 @@ package groovy.lang;
  */
 public interface GroovyInterceptable extends GroovyObject {
 }
+
+// 23ed2f

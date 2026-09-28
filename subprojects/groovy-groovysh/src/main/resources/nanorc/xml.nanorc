@@ -24,3 +24,4 @@ COMMENT:  start="<!--" end="-->"
 COMMENT:  start="<!DOCTYPE" end=">"
 WHITESPACE: "[[:space:]]+$"
 WARNING:    "	+ +| +	+"
+

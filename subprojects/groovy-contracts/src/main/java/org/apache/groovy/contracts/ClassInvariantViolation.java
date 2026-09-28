@@ -94,3 +94,5 @@ public class ClassInvariantViolation extends AssertionViolation {
         super(v);
     }
 }
+
+// fdb7e2

@@ -56,3 +56,4 @@ final class Groovy9927 extends StringSourcesStubTestCase {
         assert stub.contains('java.lang.String describe(model.Logger.Level ')
     }
 }
+

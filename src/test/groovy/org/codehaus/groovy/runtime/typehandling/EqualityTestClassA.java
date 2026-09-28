@@ -25,3 +25,5 @@ public class EqualityTestClassA extends EqualityTestAbstractClass {
     }
 
 }
+
+// cc1e29

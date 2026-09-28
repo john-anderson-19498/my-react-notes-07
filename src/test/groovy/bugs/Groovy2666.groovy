@@ -40,3 +40,4 @@ final class Groovy2666 {
         fail()
     }
 }
+

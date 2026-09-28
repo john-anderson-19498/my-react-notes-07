@@ -125,3 +125,4 @@ class PowerAssertASTTransformationTest extends GroovyShellTestCase {
         """
     }
 }
+

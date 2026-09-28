@@ -67,3 +67,4 @@ class AAA {
         this."hello world"('ab', 'bc')
     }
 }
+

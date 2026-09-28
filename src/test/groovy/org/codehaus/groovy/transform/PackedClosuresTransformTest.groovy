@@ -550,3 +550,4 @@ final class PackedClosuresTransformTest {
         assertEquals([3, 0], instance(src + '\n new N()').m())
     }
 }
+

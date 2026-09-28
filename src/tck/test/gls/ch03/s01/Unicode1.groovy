@@ -58,3 +58,4 @@ class Unicode1 extends GroovyTestCase {
 
 }
 
+

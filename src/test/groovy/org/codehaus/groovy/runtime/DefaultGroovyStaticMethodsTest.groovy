@@ -81,3 +81,4 @@ class DefaultGroovyStaticMethodsTest {
         assert caught.is(ex)
     }
 }
+

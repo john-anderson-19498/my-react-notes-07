@@ -55,3 +55,4 @@ class MethodOverridingDeniedTest {
         assert ex.message.contains("was ${baseVisibility.contains('PackageScope') ? 'package-private' : baseVisibility}")
     }
 }
+

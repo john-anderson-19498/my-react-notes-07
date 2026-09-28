@@ -36,3 +36,4 @@ plugins.withId('eclipse') {
         entries.removeAll { entry -> entry.path in ['/groovy-ant', '/groovy-groovydoc'] }
     }
 }
+

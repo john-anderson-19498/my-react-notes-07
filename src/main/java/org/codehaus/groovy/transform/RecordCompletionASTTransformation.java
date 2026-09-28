@@ -100,3 +100,5 @@ public class RecordCompletionASTTransformation extends AbstractASTTransformation
         }
     }
 }
+
+// bdb7ee

@@ -83,3 +83,5 @@ public class GenerateStubsTask extends CompileTaskSupport {
         return includeName.endsWith(config.getDefaultScriptExtension()) || includeName.endsWith(".java");
     }
 }
+
+// 0ee44d

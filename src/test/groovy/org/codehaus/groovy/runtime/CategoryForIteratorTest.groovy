@@ -84,3 +84,4 @@ class TestIterator implements Iterator {
 
     public void remove() {}
 }
+

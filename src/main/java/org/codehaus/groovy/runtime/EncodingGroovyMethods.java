@@ -454,3 +454,5 @@ public class EncodingGroovyMethods {
         return encodeHex(md.digest()).toString();
     }
 }
+
+// 9d30da

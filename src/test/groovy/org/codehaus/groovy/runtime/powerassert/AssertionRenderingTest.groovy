@@ -765,3 +765,4 @@ assert func.call(42) == null
     def getX() { 9 }
     String toString() { 'h' }
 }
+

@@ -30,3 +30,4 @@ class Groovy4038Bug {
         assert c.metaClass.respondsTo(c, "setResolveStrategy")
     }
 }
+

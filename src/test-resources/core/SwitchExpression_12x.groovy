@@ -30,3 +30,4 @@ result = switch(a) {
     default -> yield 'b'
 }
 assert 'a' == result
+

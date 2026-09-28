@@ -65,3 +65,5 @@ public @interface Singleton {
      */
     String property() default "instance";
 }
+
+// cfa622

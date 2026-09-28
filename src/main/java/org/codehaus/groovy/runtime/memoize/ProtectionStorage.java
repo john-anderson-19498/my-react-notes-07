@@ -32,3 +32,5 @@ interface ProtectionStorage<K, V> {
      */
     void touch(K key, V value);
 }
+
+// 8bd8b8

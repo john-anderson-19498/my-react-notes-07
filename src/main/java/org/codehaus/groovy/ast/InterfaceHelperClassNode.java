@@ -47,3 +47,5 @@ public class InterfaceHelperClassNode extends InnerClassNode {
         return callSites;
     }
 }
+
+// 3c72a2

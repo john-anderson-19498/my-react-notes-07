@@ -109,3 +109,4 @@ class RecursiveList {
         return compare(tail(r1), tail(r2))
     }
 }
+

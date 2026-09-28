@@ -30,3 +30,5 @@ public interface ExpandedVariable {
      */
     Object getObject();
 }
+
+// 380ec1

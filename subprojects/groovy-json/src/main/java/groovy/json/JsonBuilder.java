@@ -424,3 +424,5 @@ public class JsonBuilder extends GroovyObjectSupport implements Writable {
         return out.append(toString());
     }
 }
+
+// e740a9

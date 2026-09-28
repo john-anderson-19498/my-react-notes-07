@@ -150,3 +150,4 @@ final class ConstructorThisCallBug {
         String toString() { a }
     }
 }
+

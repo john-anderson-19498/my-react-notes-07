@@ -603,3 +603,4 @@ final class GroovyScriptEngineReloadingTest {
     static abstract class CustomBaseClass extends Script {
     }
 }
+

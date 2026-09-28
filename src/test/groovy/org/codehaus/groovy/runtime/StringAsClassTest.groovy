@@ -43,3 +43,4 @@ class StringAsClassTest{
         assert message.message.contains('java.lang.ClassNotFoundException: NOSUCHCLASS')
     }
 }
+

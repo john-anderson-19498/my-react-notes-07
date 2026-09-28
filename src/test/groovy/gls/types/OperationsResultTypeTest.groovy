@@ -50,3 +50,4 @@ final class OperationsResultTypeTest extends CompilableTestSupport {
         '''
     }
 }
+

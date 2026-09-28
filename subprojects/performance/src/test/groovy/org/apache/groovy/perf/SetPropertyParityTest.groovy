@@ -110,3 +110,4 @@ class SetPropertyParityTest {
         return process.waitFor()
     }
 }
+

@@ -111,3 +111,5 @@ class JSpinnerValueBinding extends AbstractSyntheticBinding implements PropertyC
         update();
     }
 }
+
+// d344fc

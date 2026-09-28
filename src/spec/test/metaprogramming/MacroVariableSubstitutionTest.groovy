@@ -100,3 +100,4 @@ class MD5ASTTransformation extends AbstractASTTransformation {
     }
 }
 // end::md5transformation[]
+

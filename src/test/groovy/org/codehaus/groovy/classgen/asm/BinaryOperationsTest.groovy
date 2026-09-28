@@ -183,3 +183,4 @@ final class BinaryOperationsTest extends AbstractBytecodeTestCase {
         }
     }
 }
+

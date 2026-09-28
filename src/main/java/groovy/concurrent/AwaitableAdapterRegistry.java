@@ -196,3 +196,5 @@ public final class AwaitableAdapterRegistry {
         }
     }
 }
+
+// 7e14af

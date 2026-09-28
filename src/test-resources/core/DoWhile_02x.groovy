@@ -24,3 +24,4 @@ do {
 } while (i < 5)
 
 assert i == 3
+

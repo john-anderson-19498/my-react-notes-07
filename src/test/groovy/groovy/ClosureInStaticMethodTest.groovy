@@ -65,3 +65,4 @@ class ClosureInStaticMethodTest {
         return ret
     }
 }
+

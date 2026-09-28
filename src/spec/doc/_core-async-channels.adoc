@@ -202,3 +202,4 @@ through the same single-threaded delivery path as `onNext` /
 `onComplete`, preserving §1.3 signal serialization; subscribers do
 not see those signals racing on the caller's thread.
 ====
+

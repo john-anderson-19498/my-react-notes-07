@@ -23,3 +23,4 @@ record Person(String name, int age) {
         // Compact constructor should have the same name as record
     }
 }
+

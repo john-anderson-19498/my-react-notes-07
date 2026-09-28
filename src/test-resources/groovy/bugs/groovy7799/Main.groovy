@@ -28,3 +28,4 @@ def abc = new ABC<X>()
 def xyz = abc.method(new X(), new X())
 
 assert abc === xyz
+

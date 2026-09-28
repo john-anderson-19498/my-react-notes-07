@@ -85,3 +85,4 @@ new Test().callFooFromInstanceMethod()
         '''
     }
 }
+

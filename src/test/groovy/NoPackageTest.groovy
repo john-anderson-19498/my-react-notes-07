@@ -26,3 +26,4 @@ final class NoPackageTest {
         assert getClass().name == "NoPackageTest"
     }
 }
+

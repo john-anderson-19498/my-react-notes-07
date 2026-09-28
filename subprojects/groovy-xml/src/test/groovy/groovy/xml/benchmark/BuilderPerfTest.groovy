@@ -49,3 +49,4 @@ class BuilderPerfTest {
         println "Took ${System.currentTimeMillis() - start} millis"
     }
 }
+

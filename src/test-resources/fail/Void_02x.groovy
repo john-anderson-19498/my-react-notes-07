@@ -21,3 +21,4 @@ class MyClass {
         void bar = null
     }
 }
+

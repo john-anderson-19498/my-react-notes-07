@@ -63,3 +63,4 @@ collections. Here are some interesting array GDK methods:
 ----------------------------------------------------------------------------
 include::../test/gdk/WorkingWithArraysTest.groovy[tags=array_gdk,indent=0]
 ----------------------------------------------------------------------------
+

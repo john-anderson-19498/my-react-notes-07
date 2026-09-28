@@ -245,3 +245,5 @@ public class GroovyRowResult extends GroovyObjectSupport implements Map<String, 
         return result.values();
     }
 }
+
+// 0c91cd

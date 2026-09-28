@@ -108,3 +108,4 @@ class GStringBench {
         bh.consume(sum)
     }
 }
+

@@ -239,3 +239,4 @@ final class Groovy12106 {
         '''
     }
 }
+

@@ -38,3 +38,4 @@ def specialSafeIndex() {
     assert 'Shanghai' == ssi.location
 }
 specialSafeIndex()
+

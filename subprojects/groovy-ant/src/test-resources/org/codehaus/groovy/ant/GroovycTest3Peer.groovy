@@ -23,3 +23,4 @@ import groovy.transform.PackageScope
 class GroovycTest3Peer {
     @PackageScope String OK = 'OK.'
 }
+

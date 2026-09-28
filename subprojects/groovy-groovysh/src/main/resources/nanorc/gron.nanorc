@@ -24,3 +24,4 @@ VARIABLE:   "(^|:)[a-zA-Z0-9_]*="
 PLAIN:      "(=|:|\[|,|\])"
 ESCAPE:     "\\u[0-9a-fA-F]{4}|\\[bfnrt'"/\\]"
 $BALANCED_DELIMITERS  "", '"
+

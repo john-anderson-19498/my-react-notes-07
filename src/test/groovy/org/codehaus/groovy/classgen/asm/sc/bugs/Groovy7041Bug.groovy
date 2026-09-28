@@ -34,3 +34,4 @@ final class Groovy7041Bug extends StaticTypeCheckingTestCase implements StaticCo
         '''
     }
 }
+

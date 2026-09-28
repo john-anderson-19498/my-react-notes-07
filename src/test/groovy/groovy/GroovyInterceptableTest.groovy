@@ -147,3 +147,4 @@ class GI2 implements GroovyInterceptable {
         notAMethod()
     }
 }
+

@@ -89,3 +89,5 @@ public class LongCachedClass extends NumberCachedClass {
                 || classToTransformFrom == Byte.TYPE;
     }
 }
+
+// 772f2e

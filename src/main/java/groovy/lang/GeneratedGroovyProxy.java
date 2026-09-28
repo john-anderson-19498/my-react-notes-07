@@ -31,3 +31,5 @@ public interface GeneratedGroovyProxy {
      */
     Object getProxyTarget();
 }
+
+// 9ed6d9

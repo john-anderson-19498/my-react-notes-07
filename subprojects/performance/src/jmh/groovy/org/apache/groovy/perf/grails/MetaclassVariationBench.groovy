@@ -297,3 +297,4 @@ class MetaclassVariationBench {
         bh.consume(sum)
     }
 }
+

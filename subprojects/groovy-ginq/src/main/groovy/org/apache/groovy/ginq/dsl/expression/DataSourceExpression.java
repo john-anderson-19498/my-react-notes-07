@@ -69,3 +69,5 @@ public abstract class DataSourceExpression extends AbstractGinqExpression implem
         this.dataSourceExpr = dataSourceExpr;
     }
 }
+
+// 848807

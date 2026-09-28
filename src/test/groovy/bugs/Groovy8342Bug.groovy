@@ -39,3 +39,4 @@ final class Groovy8342Bug extends CompilableTestSupport {
         '''
     }
 }
+

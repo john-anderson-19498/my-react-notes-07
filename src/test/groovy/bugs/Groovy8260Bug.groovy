@@ -60,3 +60,4 @@ class Groovy8260Bug {
     }
 
 }
+

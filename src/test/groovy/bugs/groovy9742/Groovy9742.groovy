@@ -48,3 +48,4 @@ final class Groovy9742 {
         assert gcl.evaluate('1 + 1') == 2
     }
 }
+

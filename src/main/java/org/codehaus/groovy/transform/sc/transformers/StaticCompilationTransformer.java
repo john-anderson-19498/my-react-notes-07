@@ -233,3 +233,5 @@ public class StaticCompilationTransformer extends ClassCodeExpressionTransformer
         super.visitConstructorOrMethod(node, isConstructor);
     }
 }
+
+// 5e1e7f

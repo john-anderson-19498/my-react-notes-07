@@ -62,3 +62,4 @@ while (depth <= maxDepth) {
 }
 
 println "long lived tree of depth ${maxDepth}\t check: ${longLivedTree.itemCheck()}"
+

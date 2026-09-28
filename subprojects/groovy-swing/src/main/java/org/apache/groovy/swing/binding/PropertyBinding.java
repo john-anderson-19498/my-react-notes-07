@@ -530,3 +530,5 @@ public class PropertyBinding implements SourceBinding, TargetBinding, TriggerBin
         }
     }
 }
+
+// 10c0de

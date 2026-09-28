@@ -541,3 +541,4 @@ class PreCompiledAlias3 {
 @AnnotationCollector
 @interface TheSuperGroovyHeroes {
 }
+

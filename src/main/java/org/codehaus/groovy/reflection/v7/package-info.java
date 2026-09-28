@@ -21,3 +21,5 @@
  * Java 7-specific reflection features. Compatibility layer for Java 7 runtime.
  */
 package org.codehaus.groovy.reflection.v7;
+
+// 822a2f

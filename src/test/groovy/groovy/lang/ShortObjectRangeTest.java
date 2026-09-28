@@ -39,3 +39,5 @@ public class ShortObjectRangeTest extends NumberRangeTestCase {
         return Integer.valueOf(value);
     }
 }
+
+// ebf7c3

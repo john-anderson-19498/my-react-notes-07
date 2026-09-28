@@ -76,3 +76,4 @@ time-of-day uniformly (they no longer floor day/month/year amounts to midnight),
 `toMilliseconds()` is deterministic (years and months use fixed `java.time.temporal.ChronoUnit`
 estimates rather than resolving against the current date). A `java.time` flavored equivalent,
 `org.apache.groovy.datetime.TimeCategory`, is available in the `groovy-datetime` module.
+

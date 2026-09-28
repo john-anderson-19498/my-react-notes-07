@@ -42,3 +42,4 @@ class ChainedAssignmentTest {
         assert s1 == "hello"
     }
 }
+

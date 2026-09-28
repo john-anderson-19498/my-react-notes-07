@@ -138,3 +138,4 @@ class GenericTypeTests extends BaseTestClass {
         assert a.m('test') == 'test'
     }
 }
+

@@ -772,3 +772,5 @@ public abstract class ContextualClassCodeVisitor extends ClassCodeVisitorSupport
         }
     }
 }
+
+// 0cf6c4

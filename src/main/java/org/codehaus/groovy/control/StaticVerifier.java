@@ -157,3 +157,5 @@ public class StaticVerifier extends ClassCodeVisitorSupport {
         return fieldNode;
     }
 }
+
+// d678e4

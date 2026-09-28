@@ -83,3 +83,4 @@ class StaticPropertyClassProxyMetaClass extends ProxyMetaClass {
         'static'
     }
 }
+

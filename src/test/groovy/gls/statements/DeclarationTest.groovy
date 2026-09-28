@@ -54,3 +54,4 @@ final class DeclarationTest extends CompilableTestSupport {
         """
     }
 }
+

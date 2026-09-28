@@ -92,3 +92,4 @@ class SlurpTest extends SystemTestSupport {
         assert rows[1].name == 'Macallan' && rows[1].region == 'Speyside'
     }
 }
+

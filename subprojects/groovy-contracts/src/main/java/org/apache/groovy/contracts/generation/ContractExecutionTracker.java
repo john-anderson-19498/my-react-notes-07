@@ -162,3 +162,5 @@ public class ContractExecutionTracker {
         contractExecutions.remove(new ContractExecution(className, methodIdentifier, assertionType, isStatic));
     }
 }
+
+// 6fdfc4

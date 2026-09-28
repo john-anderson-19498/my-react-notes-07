@@ -664,3 +664,4 @@ final class FinalVariableAnalyzerTest {
         }
     }
 }
+

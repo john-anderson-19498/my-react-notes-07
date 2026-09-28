@@ -277,3 +277,5 @@ public class GroovyResultSetExtension extends GroovyObjectSupport {
     }
 
 }
+
+// cc5f93

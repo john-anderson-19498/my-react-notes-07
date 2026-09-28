@@ -97,3 +97,4 @@ development {
         assert config == new ConfigSlurper().parse(config.prettyPrint())
     }
 }
+

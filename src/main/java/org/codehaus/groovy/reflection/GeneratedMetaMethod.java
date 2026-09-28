@@ -268,3 +268,5 @@ public abstract class GeneratedMetaMethod extends MetaMethod {
         }
     }
 }
+
+// d3250b

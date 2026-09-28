@@ -36,3 +36,4 @@ statusPanel = panel(constraints: BorderLayout.SOUTH) {
     /** Label displaying the current caret line and column. */
     rowNumAndColNum = label('1:1', insets: [1, 3, 1, 3])
 }
+

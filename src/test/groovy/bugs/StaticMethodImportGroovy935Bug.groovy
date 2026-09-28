@@ -31,3 +31,4 @@ class StaticMethodImportGroovy935Bug {
         assert ClassWithStaticMethod.staticMethod()
     }
 }
+

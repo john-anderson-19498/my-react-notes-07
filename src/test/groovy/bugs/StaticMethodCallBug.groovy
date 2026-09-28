@@ -35,3 +35,4 @@ final class StaticMethodCallBug {
         assert value == 'cheese'
     }
 }
+

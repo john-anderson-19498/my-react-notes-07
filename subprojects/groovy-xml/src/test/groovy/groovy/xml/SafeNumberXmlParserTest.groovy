@@ -58,3 +58,4 @@ class SafeNumberXmlParserTest {
         assert xml.'**'.find { it.name() == 'someMissingInteger' }?.toInteger() == null
     }
 }
+

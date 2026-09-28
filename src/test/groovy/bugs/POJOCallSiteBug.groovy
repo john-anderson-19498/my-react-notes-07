@@ -116,3 +116,4 @@ class POJOCallSiteBugProxyMetaClass extends ProxyMetaClass {
         result
     }
 }
+

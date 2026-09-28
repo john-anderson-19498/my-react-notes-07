@@ -1512,3 +1512,4 @@ class ArraysAndCollectionsSTCTest extends StaticTypeCheckingTestCase {
         'Cannot find matching constructor MVM(', 'Map', ')'
     }
 }
+

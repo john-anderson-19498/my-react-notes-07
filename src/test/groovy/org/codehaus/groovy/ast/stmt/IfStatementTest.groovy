@@ -50,3 +50,4 @@ final class IfStatementTest {
         assert stmt.text == 'if (list) return list; else { return null }'
     }
 }
+

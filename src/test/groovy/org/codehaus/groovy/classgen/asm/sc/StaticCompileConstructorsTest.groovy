@@ -137,3 +137,4 @@ final class StaticCompileConstructorsTest extends ConstructorsSTCTest implements
         "Cannot access method: setFoo(java.lang.String) of class: ${Pojo11956.canonicalName} @ line 2, column 27"
     }
 }
+

@@ -32,3 +32,4 @@ class LocalFieldTest {
         assert this.x != "def"
     }
 }
+

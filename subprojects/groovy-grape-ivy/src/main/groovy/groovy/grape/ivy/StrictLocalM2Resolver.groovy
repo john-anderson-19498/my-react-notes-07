@@ -137,3 +137,4 @@ class StrictLocalM2Resolver extends IBiblioResolver {
         null
     }
 }
+

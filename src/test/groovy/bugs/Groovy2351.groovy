@@ -36,3 +36,4 @@ final class Groovy2351 {
         def method(Integer... args) { 'method with Integer' }
     }
 }
+

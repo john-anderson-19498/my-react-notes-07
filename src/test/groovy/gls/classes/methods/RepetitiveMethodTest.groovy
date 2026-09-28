@@ -63,3 +63,4 @@ final class RepetitiveMethodTest extends CompilableTestSupport {
         assert message.contains('duplicates another constructor of the same signature')
     }
 }
+

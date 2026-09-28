@@ -33,3 +33,5 @@ class JavaInheritDocRichTagBase {
         return value.toUpperCase();
     }
 }
+
+// 426906

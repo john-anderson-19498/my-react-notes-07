@@ -27,3 +27,4 @@ final class FullyQualifiedClassBug {
         java.lang.System.err.println("Hello world")
     }
 }
+

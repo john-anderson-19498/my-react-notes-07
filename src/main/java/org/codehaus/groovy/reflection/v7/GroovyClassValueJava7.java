@@ -35,3 +35,5 @@ public class GroovyClassValueJava7<T> extends ClassValue<T> implements GroovyCla
       return computeValue.computeValue(type);
    }
 }
+
+// cac65f

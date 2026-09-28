@@ -31,3 +31,4 @@ record Fruit(String name, double price) implements Eatable {
 
 def apple = new Fruit('Apple', 11.6)
 assert 'Apple eaten, 11.6 used' == apple.eat()
+

@@ -846,3 +846,5 @@ public class XmlUtil {
         return StAXSupport.streamElements(reader, namespaceURI, localName, allowDocTypeDeclaration);
     }
 }
+
+// d92b69

@@ -31,3 +31,4 @@ groovyLibrary {
         staticExtensionClasses = 'org.codehaus.groovy.jsr223.ScriptStaticExtensions'
     }
 }
+

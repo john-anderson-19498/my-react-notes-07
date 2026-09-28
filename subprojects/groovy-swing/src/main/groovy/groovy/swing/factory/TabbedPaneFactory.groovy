@@ -236,3 +236,4 @@ class TabbedPaneFactory extends BeanFactory {
 
 
 }
+

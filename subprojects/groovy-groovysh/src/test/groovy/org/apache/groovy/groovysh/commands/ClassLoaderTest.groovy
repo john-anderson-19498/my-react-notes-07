@@ -44,3 +44,4 @@ class ClassLoaderTest extends SystemTestSupport {
         assert out.contains('classPath=')
     }
 }
+

@@ -38,3 +38,4 @@ class Groovy7812Bug extends AntTestCase {
         }
     }
 }
+

@@ -347,3 +347,5 @@ public class ReflectionUtils {
         GET_PERMITTED_SUBCLASSES_METHODHANDLE = getPermittedSubclassesMethodHandle;
     }
 }
+
+// 488f74

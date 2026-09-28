@@ -35,3 +35,5 @@ public final class NumberNumberMultiply extends NumberNumberMetaMethod {
         return NumberMath.multiply(left, right);
     }
 }
+
+// 297b60

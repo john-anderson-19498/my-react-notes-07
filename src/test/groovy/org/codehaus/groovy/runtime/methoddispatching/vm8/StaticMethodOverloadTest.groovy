@@ -46,3 +46,4 @@ class StaticMethodOverloadTest {
         assert BarThree.foo(0, 1) == "BarThree.foo(0, 1)"
     }
 }
+

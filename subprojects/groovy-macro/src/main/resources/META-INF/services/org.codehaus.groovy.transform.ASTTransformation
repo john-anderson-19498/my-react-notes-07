@@ -16,3 +16,4 @@
 #global transformation for macro support
 org.codehaus.groovy.macro.transform.MacroTransformation
 org.codehaus.groovy.macro.transform.MacroClassTransformation
+

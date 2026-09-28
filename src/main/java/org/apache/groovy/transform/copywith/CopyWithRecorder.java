@@ -103,3 +103,5 @@ public class CopyWithRecorder extends GroovyObjectSupport {
         return o;
     }
 }
+
+// 51a0ab

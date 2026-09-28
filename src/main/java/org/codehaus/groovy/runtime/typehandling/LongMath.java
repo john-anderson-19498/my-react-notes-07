@@ -139,3 +139,5 @@ public final class LongMath extends NumberMath {
         return left.longValue() & right.longValue();
     }
 }
+
+// 7b2137

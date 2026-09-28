@@ -518,3 +518,5 @@ public abstract class OwnedMetaClass extends DelegatingMetaClass {
         return ownerMetaClass.selectConstructorAndTransformArguments(numberOfConstructors, arguments);
     }
 }
+
+// bac4d9

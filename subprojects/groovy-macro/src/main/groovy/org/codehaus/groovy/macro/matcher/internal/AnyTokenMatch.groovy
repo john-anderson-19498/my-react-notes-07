@@ -46,3 +46,4 @@ class AnyTokenMatch implements ConstraintPredicate<Token> {
         true
     }
 }
+

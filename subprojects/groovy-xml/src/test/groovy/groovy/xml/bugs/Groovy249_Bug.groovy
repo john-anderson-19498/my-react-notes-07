@@ -78,3 +78,4 @@ EOF
 class Bean249 {
     String b
 }
+

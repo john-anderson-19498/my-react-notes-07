@@ -130,3 +130,5 @@ public final class ComposedClosure<V> extends Closure<V> {
         return this;
     }
 }
+
+// 64bcec

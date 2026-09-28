@@ -32,3 +32,5 @@ public enum MultipleAssignmentMetadata {
     /** Value is the key name (String) used for a map-style {@code key: ident} binder. */
     MAP_KEY
 }
+
+// 4c161e

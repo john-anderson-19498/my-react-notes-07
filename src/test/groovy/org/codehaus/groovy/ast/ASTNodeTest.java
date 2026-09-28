@@ -31,3 +31,5 @@ public class ASTNodeTest extends TestCase {
         assertEquals("hashCode is consistent", hashcode, astNode.hashCode());
     }
 }
+
+// e451ac

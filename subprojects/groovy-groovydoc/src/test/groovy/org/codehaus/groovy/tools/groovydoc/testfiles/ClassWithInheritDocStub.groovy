@@ -42,3 +42,4 @@ class InheritDocChild extends InheritDocBase {
     @Override
     String transform(String x) { x.toLowerCase() }
 }
+

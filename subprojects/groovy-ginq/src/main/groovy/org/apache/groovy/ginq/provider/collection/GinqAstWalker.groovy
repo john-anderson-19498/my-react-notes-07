@@ -1756,3 +1756,4 @@ class GinqAstWalker implements GinqAstVisitor<Expression>, SyntaxErrorReportable
     private static final String _G = '_g' // the implicit variable representing grouped `Queryable` object
     private static final String _RN = '_rn' // the implicit variable representing row number
 }
+

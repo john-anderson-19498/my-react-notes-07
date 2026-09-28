@@ -135,3 +135,4 @@ class DoubleOperationsTest {
         assert x == Math.sin(7.0D);
     }
 }
+

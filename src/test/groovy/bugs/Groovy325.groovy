@@ -32,3 +32,4 @@ final class Groovy325 {
         assert c()
     }
 }
+

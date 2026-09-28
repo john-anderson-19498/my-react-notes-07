@@ -59,3 +59,5 @@ public class EnumTypeCheckingExtension extends TypeCheckingExtension {
         return false;
     }
 }
+
+// 5b3e97

@@ -89,3 +89,4 @@ class Groovy674_Bug {
     fail ( "Should have thrown MissingPropertyException" ) ;
   }
 }
+

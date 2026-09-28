@@ -816,3 +816,4 @@ final class Groovy11792 {
         '''
     }
 }
+

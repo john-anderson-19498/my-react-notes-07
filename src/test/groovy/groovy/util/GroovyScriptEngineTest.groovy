@@ -87,3 +87,4 @@ final class GroovyScriptEngineTest {
         assert counts['Foo'] == 1
     }
 }
+

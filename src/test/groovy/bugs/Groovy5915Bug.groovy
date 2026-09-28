@@ -55,3 +55,4 @@ class Groovy5915Bug {
         }
     }
 }
+

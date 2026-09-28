@@ -480,3 +480,4 @@ final class StreamingTemplateEngineTest {
         assert cloned == gcl.loadedClasses
     }
 }
+

@@ -128,3 +128,5 @@ public class HandleMetaClass extends DelegatingMetaClass {
         static final MetaClass META_CLASS = InvokerHelper.getMetaClass(HandleMetaClass.class);
     }
 }
+
+// f6412d

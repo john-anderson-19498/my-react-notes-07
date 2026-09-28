@@ -190,3 +190,4 @@ final class InstanceofPatternLvtTest extends AbstractBytecodeTestCase {
         assertNoneCover(mn, entries, 'in-else')
     }
 }
+

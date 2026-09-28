@@ -37,3 +37,4 @@ class StringHelperTest {
     assert tokenizeUnquoted("\"a 'b'") == ["\"a 'b'"]
   }
 }
+

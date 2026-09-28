@@ -105,3 +105,4 @@ class GroovyPrinterTest {
         assert names.actual as Set == ['Groovy', 'JSON'] as Set // bad entry skipped, not fatal
     }
 }
+

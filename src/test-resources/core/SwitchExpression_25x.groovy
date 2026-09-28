@@ -29,3 +29,4 @@ int result = switch (s) {
         yield 0;
 };
 assert 2 == result
+

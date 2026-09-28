@@ -40,3 +40,4 @@ class Groovy4285Bug extends GroovyShellTestCase {
         assert serializedXml.contains('bar')
     }
 }
+

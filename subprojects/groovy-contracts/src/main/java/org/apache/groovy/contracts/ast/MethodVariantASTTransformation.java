@@ -157,3 +157,4 @@ public class MethodVariantASTTransformation implements ASTTransformation {
         return null;
     }
 }
+// ed80bb

@@ -80,3 +80,4 @@ class DgmConverter extends DefaultTask {
         }
     }
 }
+

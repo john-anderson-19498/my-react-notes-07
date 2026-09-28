@@ -24,3 +24,5 @@ public interface Face {
     }
     Object foo(String s);
 }
+
+// baecc0

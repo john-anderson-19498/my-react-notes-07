@@ -30,3 +30,5 @@ public class JavaInheritDocTagChild extends JavaInheritDocTagBase {
         return value.toLowerCase();
     }
 }
+
+// 176246

@@ -185,3 +185,5 @@ public class BuilderASTStubber extends AbstractASTTransformation {
                 : prefix + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
     }
 }
+
+// 2e2586

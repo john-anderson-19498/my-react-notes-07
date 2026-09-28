@@ -71,3 +71,4 @@ class CandidateChecksTests {
                 "private constructors should by now NOT support class invariants")
     }
 }
+

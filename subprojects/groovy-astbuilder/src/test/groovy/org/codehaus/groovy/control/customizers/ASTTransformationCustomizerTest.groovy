@@ -133,3 +133,4 @@ class ContractAnnotation implements ASTTransformation, Opcodes {
 @interface Contract2 {
     Class value();
 }
+

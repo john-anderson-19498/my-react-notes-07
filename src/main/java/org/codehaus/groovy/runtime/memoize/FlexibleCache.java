@@ -35,3 +35,5 @@ public interface FlexibleCache<K, V> extends EvictableCache<K, V> {
      */
     V getAndPut(K key, ValueProvider<? super K, ? extends V> valueProvider, boolean shouldCache);
 }
+
+// 7d76c2

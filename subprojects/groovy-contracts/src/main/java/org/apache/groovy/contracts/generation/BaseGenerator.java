@@ -252,3 +252,5 @@ public abstract class BaseGenerator {
                 && Boolean.FALSE.equals(constant.getValue());
     }
 }
+
+// 7d65e7

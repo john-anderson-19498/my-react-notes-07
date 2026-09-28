@@ -136,3 +136,4 @@ class GroovyPosixCommandsTest {
         assert !output.contains('line11')
     }
 }
+

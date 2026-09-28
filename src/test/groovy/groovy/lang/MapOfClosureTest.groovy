@@ -128,3 +128,4 @@ class MapOfClosureTest {
         String methodTwo()
     }
 }
+

@@ -32,3 +32,4 @@ public abstract class AbstractGenericGroovySuperclass<T> {
 
    protected abstract void doSomething(T note);
 }
+

@@ -215,3 +215,5 @@ public class GroovyDocTemplateEngine {
         }
     }
 }
+
+// 0b7b0d

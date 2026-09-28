@@ -40,3 +40,4 @@ class CurryFoo4170 {
          this.&foo2.curry('anything', 1).call()
      }
 }
+

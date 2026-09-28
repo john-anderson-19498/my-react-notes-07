@@ -24,3 +24,5 @@ import java.util.Collection;
 public class PluginPathAwareFileSystemResourceLoader {
     void setSearchLocations(Collection c) {}
 }
+
+// 8146fa

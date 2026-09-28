@@ -260,3 +260,5 @@ public class AntProjectPropertiesDelegate extends Hashtable<String, Object> {
         return oldValue;
     }
 }
+
+// b88c47

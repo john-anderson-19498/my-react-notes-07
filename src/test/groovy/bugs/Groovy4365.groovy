@@ -34,3 +34,4 @@ final class Groovy4365 {
         assert err.message =~ /unable to resolve class HashMap.Entry/
     }
 }
+

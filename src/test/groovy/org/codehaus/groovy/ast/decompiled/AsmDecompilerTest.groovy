@@ -482,3 +482,4 @@ final class AsmDecompilerTest {
         return new DecompiledClassNode(stub, new AsmReferenceResolver(new ClassNodeResolver(), unit))
     }
 }
+

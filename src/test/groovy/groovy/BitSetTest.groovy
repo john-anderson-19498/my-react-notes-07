@@ -204,3 +204,4 @@ class BitSetTest{
         assertFalse bitset[index], 'index ' + index + ' should have been false'
     }
 }
+

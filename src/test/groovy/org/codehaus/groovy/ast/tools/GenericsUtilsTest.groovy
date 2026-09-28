@@ -383,3 +383,4 @@ final class GenericsUtilsTest {
         assert listType.genericsTypes[0].type.name == 'java.lang.Object'
     }
 }
+

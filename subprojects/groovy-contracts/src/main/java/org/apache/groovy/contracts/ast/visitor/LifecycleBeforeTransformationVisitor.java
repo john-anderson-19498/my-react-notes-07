@@ -79,3 +79,5 @@ public class LifecycleBeforeTransformationVisitor extends BaseVisitor {
         }
     }
 }
+
+// 2b3ef5

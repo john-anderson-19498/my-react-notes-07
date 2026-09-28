@@ -43,3 +43,4 @@ final class Groovy3868 {
         assert result.class == klazz
     }
 }
+

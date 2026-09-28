@@ -1085,3 +1085,5 @@ public class SwingExtensions {
         button.setMnemonic(c);
     }
 }
+
+// 3cf764

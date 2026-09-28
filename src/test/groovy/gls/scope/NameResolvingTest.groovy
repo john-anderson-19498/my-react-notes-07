@@ -90,3 +90,4 @@ final class NameResolvingTest extends CompilableTestSupport {
         """
     }
 }
+

@@ -37,3 +37,5 @@ public class JavaShellCompilationException extends GroovyRuntimeException {
         super(message);
     }
 }
+
+// 7d93e6

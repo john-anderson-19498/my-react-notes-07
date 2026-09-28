@@ -108,3 +108,4 @@ class MultiplyDivideEqualsTest {
         assert x == 5.2
     }
 }
+

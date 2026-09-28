@@ -63,3 +63,5 @@ public class ScriptReference extends Reference {
         script.getBinding().setVariable(variable, value);
     }
 }
+
+// 135c98

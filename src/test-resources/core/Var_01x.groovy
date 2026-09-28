@@ -26,3 +26,4 @@ assert "Daniel" == name
 
 var var = "var variable name"
 assert "var variable name" == var
+

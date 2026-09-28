@@ -269,3 +269,5 @@ public abstract class Script extends GroovyObjectSupport {
         shell.run(file, arguments);
     }
 }
+
+// 96011c

@@ -130,3 +130,4 @@ class C extends B {
     }
 
 }
+

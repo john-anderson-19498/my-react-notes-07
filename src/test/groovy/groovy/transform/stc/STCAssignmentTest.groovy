@@ -1559,3 +1559,4 @@ class STCAssignmentTest extends StaticTypeCheckingTestCase {
         'The variable [_] is undeclared'
     }
 }
+

@@ -627,3 +627,5 @@ public class GinqAstBuilder extends CodeVisitorSupport implements SyntaxErrorRep
         KEYWORD_SET = Collections.unmodifiableSet(keywordSet);
     }
 }
+
+// f18628

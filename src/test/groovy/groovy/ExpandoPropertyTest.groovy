@@ -130,3 +130,4 @@ final class ExpandoPropertyTest {
         String toString() { dump() }
     }
 }
+

@@ -29,3 +29,4 @@ interface WithArgsI {
     @Unparsed List remaining()
 }
 // end::withArgumentInterfaceSpec[]
+

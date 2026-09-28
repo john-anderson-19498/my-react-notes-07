@@ -47,3 +47,4 @@ final class InterfaceWithDefaultMethodStubTest extends StringSourcesStubTestCase
         assert stub.contains('default  java.lang.String m2() { return null; }')
     }
 }
+

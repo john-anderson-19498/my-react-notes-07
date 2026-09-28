@@ -65,3 +65,4 @@ final class WrongCastForGenericReturnValueOfMethodStubsTest extends StringSource
 
     }
 }
+

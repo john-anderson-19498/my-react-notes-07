@@ -25,3 +25,4 @@ import groovy.transform.stc.ResourceGMClosureParamTypeInferenceSTCTest
  */
 final class ResourceGMClosureParamTypeInferenceStaticCompileTest extends ResourceGMClosureParamTypeInferenceSTCTest implements StaticCompilationTestSupport {
 }
+

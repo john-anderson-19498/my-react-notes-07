@@ -36,3 +36,5 @@ public interface Weigher<V> {
    */
   int weightOf(V value);
 }
+
+// 4eb3b8

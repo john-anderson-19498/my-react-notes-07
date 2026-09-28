@@ -24,3 +24,4 @@
 Provides tests for the declarative logging AST transformations. Documentation is kept with the tests but the code is in the core module.
 
 See link:src/spec/doc/logging-transforms.adoc[logging-transforms.adoc] for detailed documentation.
+

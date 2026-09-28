@@ -269,3 +269,5 @@ public class ASTHelper {
         output.addStarImport( dot(importPackage), annotations );
     }
 }
+
+// 39b7a3

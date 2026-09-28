@@ -137,3 +137,4 @@ trait StaticCompilationTestSupport {
         }
     }
 }
+

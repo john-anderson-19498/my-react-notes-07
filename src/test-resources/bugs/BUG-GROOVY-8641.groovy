@@ -30,3 +30,4 @@ delegate.with {
     trait.foo
     as.foo
 }
+

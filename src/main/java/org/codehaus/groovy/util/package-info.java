@@ -21,3 +21,5 @@
  * Core utility classes. General-purpose utilities for Groovy implementation.
  */
 package org.codehaus.groovy.util;
+
+// 148418

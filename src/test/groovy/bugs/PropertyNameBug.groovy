@@ -41,3 +41,4 @@ class PropertyNameBug {
         map."foo.=;&|^*-+-/\\'?.*:arbitrary()[]{}%#@!" = "Any character"
     }
 }
+

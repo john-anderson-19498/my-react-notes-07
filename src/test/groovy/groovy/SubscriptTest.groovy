@@ -269,3 +269,4 @@ class SubscriptTest {
         assert value == 'Gromit'
     }
 }
+

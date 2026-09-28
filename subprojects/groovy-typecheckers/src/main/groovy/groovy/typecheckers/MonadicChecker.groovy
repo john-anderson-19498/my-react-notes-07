@@ -284,3 +284,4 @@ class MonadicChecker extends GroovyTypeCheckingExtensionSupport.TypeCheckingDSL 
         (gts && gts.length > 0 && gts[0].type) ? gts[0].type : null
     }
 }
+

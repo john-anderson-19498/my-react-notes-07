@@ -88,3 +88,4 @@ final class AnnotationDefaultValuesStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains('Color[] colors() default { Color.GREEN, Color.BLUE };')
     }
 }
+

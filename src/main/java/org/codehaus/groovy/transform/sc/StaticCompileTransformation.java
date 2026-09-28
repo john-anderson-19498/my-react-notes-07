@@ -109,3 +109,5 @@ public class StaticCompileTransformation extends StaticTypesTransformation {
         return new StaticCompilationVisitor(unit, node);
     }
 }
+
+// f57a53

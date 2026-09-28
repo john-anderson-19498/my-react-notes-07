@@ -155,3 +155,4 @@ include::../test/groovy/yaml/YamlBuilderTest.groovy[tags=build_text,indent=0]
 ----
 include::../test/groovy/yaml/YamlBuilderTest.groovy[tags=typed_writing,indent=0]
 ----
+

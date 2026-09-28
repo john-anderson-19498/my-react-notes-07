@@ -55,3 +55,5 @@ public class nsievebits
       System.out.println("Primes up to " + padNumber(m, 8) + " " + padNumber(nsieve(m,bits), 8));
    }
 }
+
+// 6a23d6

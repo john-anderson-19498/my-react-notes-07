@@ -47,3 +47,5 @@ final class Groovy1567 {
         gse.run(file, binding);
     }
 }
+
+// b01a55

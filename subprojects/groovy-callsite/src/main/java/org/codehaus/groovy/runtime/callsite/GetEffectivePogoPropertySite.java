@@ -93,3 +93,5 @@ class GetEffectivePogoPropertySite extends AbstractCallSite {
         }
     }
 }
+
+// 0da860

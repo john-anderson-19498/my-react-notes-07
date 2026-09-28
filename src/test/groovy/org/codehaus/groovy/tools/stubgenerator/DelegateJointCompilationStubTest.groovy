@@ -278,3 +278,4 @@ final class DelegateJointCompilationStubTest extends StringSourcesStubTestCase {
         assert bag.get(0) == 'hello'
     }
 }
+

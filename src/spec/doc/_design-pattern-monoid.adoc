@@ -245,3 +245,4 @@ in parallel:
 ----
 include::../test/DesignPatternsTest.groovy[tags=monoids_average_reworked_parallel,indent=0]
 ----
+

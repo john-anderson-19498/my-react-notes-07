@@ -39,3 +39,5 @@
  *      http://code.google.com/p/concurrentlinkedhashmap/</a>
  */
 package org.apache.groovy.util.concurrent.concurrentlinkedhashmap;
+
+// ead6f3

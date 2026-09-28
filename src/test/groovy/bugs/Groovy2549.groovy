@@ -41,3 +41,4 @@ final class Groovy2549 {
         assert zzz == 3
     }
 }
+

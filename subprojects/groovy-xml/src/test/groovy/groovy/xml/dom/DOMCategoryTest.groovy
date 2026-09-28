@@ -220,3 +220,4 @@ class Foo {
         return name.size()
     }
 }
+

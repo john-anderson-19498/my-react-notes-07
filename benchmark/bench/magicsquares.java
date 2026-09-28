@@ -232,3 +232,5 @@ public class magicsquares {
 
     }
 }
+
+// 0a5f13

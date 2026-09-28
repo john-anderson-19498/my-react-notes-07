@@ -123,3 +123,4 @@ final class ClosureMissingMethodTest {
         assert count == 1
     }
 }
+

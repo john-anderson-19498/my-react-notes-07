@@ -23,3 +23,4 @@
 package org.codehaus.groovy.tools.groovydoc.testfiles
 
 println 'body not important'
+

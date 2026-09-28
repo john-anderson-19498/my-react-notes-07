@@ -49,3 +49,4 @@ final class MarkupWithWriterTest extends TestXmlSupport {
         assertScriptFile 'src/test/groovy/groovy/xml/UseMarkupWithWriterScript.groovy'
     }
 }
+

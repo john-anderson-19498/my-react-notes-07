@@ -51,3 +51,4 @@ abstract class AnnotationClosureExhaustiveTestSupport {
         verify(level.getAnnotation(getAnnotationClass()).elem())
     }
 }
+

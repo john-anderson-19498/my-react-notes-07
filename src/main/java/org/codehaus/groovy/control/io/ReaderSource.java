@@ -67,3 +67,5 @@ public interface ReaderSource extends HasCleanup {
      */
     URI getURI();
 }
+
+// 8bbd9a

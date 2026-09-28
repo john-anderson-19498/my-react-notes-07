@@ -690,3 +690,5 @@ public class StaticImportVisitor extends ClassCodeExpressionTransformer {
         return sourceUnit;
     }
 }
+
+// dd0c1e

@@ -228,3 +228,5 @@ public class DefaultTypeCheckingExtension extends TypeCheckingExtension {
         }
     }
 }
+
+// 934608

@@ -24,3 +24,4 @@ package broken
 class BrokenSyntax {
     def foo(
 }
+

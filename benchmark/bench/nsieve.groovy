@@ -53,3 +53,4 @@ def flags = new boolean[m+1]
     def s2 = padNumber(countSieve(k, flags), 9)
     println("Primes up to $s1$s2")
 }
+

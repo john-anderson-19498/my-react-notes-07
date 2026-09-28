@@ -50,3 +50,4 @@ final class Groovy3818 {
         assert result.size() == 2
     }
 }
+

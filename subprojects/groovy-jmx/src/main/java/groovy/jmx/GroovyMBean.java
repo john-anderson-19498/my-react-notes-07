@@ -467,3 +467,5 @@ public class GroovyMBean extends GroovyObjectSupport {
         }
     }
 }
+
+// f8839c

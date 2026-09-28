@@ -49,3 +49,5 @@ public class LongObjectRangeTest extends NumberRangeTestCase {
         assertEquals("wrong 'to' value", to, range.getTo());
     }
 }
+
+// 65390b

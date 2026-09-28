@@ -54,3 +54,5 @@ public class SortableASTStubber extends AbstractASTTransformation {
 		}
 	}
 }
+
+// 3ecec5

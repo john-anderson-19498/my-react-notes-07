@@ -52,3 +52,5 @@ public abstract class NumberNumberMetaMethod extends MetaMethod {
         return NUMBER_CLASS;
     }
 }
+
+// 806d96

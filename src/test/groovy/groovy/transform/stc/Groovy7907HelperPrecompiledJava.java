@@ -21,3 +21,5 @@ package groovy.transform.stc;
 public class Groovy7907HelperPrecompiledJava {
     public <T> T create(Class<T> type, Object... args) { return null; }
 }
+
+// 802af0

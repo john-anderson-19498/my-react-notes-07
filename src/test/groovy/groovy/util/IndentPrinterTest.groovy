@@ -83,3 +83,4 @@ class IndentPrinterTest {
         assert 'parent1\n  child 1\n  child 2\nparent2\n' == out.toString()
     }
 }
+

@@ -811,3 +811,4 @@ class NullChecker extends GroovyTypeCheckingExtensionSupport.TypeCheckingDSL {
         Set<Variable> whenFalse = new HashSet<>()
     }
 }
+

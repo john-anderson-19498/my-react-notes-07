@@ -340,3 +340,4 @@ final class EvaluationTest {
 @groovy.transform.PackageScope class MethodPointers {
     def inc(x) { x + 1 }
 }
+

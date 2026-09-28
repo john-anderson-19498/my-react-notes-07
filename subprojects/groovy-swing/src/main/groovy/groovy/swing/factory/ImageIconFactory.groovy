@@ -98,3 +98,4 @@ class ImageIconFactory extends AbstractFactory {
     }
 
 }
+

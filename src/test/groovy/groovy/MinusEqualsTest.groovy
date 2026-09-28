@@ -89,3 +89,4 @@ class MinusEqualsTest {
         assertTrue sortedSet.contains('four'), 'sortedSet should have contained the word four'
     }
 }
+

@@ -35,3 +35,4 @@ final class Groovy3718 {
         assertFalse null ==~ null
     }
 }
+

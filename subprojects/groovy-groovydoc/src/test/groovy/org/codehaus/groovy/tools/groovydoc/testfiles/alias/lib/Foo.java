@@ -24,3 +24,5 @@ package org.codehaus.groovy.tools.groovydoc.testfiles.alias.lib;
  */
 public class Foo {
 }
+
+// f65472

@@ -38,3 +38,4 @@ final class Groovy8065 {
         '''
     }
 }
+

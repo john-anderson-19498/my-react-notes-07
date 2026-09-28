@@ -25,3 +25,5 @@ public class JavaHiddenInterfaceInheritDocStaticDefiningClosure extends JavaHidd
         return null;
     }
 }
+
+// 13e927

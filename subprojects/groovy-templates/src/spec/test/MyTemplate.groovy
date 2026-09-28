@@ -48,3 +48,4 @@ public abstract class MyTemplate extends BaseTemplate {
 class Module {
     String name
 }
+

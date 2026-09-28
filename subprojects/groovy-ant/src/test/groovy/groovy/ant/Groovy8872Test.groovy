@@ -104,3 +104,4 @@ class Groovy8872Test extends AntTestCase {
         }
     }
 }
+

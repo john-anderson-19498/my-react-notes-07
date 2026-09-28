@@ -496,3 +496,5 @@ public class MethodNode extends AnnotatedNode {
         return super.toString() + "[" + methodDescriptor(this, true) + (declaringClass == null ? "" : " from " + formatTypeName(declaringClass)) + "]";
     }
 }
+
+// 9cee8b

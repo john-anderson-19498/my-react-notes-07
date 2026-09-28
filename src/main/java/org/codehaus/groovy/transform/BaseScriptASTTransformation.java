@@ -164,3 +164,5 @@ public class BaseScriptASTTransformation extends AbstractASTTransformation {
                             && mn.getDeclaringClass().equals(ClassHelper.SCRIPT_TYPE));
     }
 }
+
+// 151ba0

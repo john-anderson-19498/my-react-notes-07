@@ -261,3 +261,4 @@ assert book.price == 1.5f
 '''
     }
 }
+

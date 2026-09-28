@@ -113,3 +113,5 @@ public class SynchronizedASTTransformation extends AbstractASTTransformation {
     }
 
 }
+
+// dd3602

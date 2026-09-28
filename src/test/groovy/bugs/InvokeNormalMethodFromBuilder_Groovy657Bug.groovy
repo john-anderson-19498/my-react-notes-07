@@ -56,3 +56,4 @@ class Builder extends BuilderSupport {
     String callOtherStaticallyTypedMethod() { return "second" }
 
 }
+

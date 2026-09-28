@@ -28,3 +28,5 @@ public class JavaWithFailingStaticInit {
         throw new RuntimeException("!");
     }
 }
+
+// bb9c6b

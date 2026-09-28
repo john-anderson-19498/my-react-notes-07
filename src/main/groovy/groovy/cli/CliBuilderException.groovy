@@ -27,3 +27,4 @@ import groovy.transform.InheritConstructors
 class CliBuilderException extends RuntimeException {
     private static final long serialVersionUID = 3996705753888714632L
 }
+

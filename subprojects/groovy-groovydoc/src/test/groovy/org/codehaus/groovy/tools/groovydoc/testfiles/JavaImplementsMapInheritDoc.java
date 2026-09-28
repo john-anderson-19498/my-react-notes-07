@@ -110,3 +110,5 @@ public class JavaImplementsMapInheritDoc implements Map<String, Object> {
         return delegate.hashCode();
     }
 }
+
+// 5f7950

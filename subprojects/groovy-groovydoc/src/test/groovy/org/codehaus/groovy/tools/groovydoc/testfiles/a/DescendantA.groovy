@@ -20,3 +20,4 @@ package org.codehaus.groovy.tools.groovydoc.testfiles.a
 
 class DescendantA extends Base {
 }
+

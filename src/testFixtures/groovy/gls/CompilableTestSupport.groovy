@@ -117,3 +117,4 @@ abstract class CompilableTestSupport {
         fail('the compilation succeeded but should have failed')
     }
 }
+

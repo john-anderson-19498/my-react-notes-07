@@ -367,3 +367,5 @@ public class InnerClassVisitor extends InnerClassVisitorHelper {
         innerClass.addConstructor(0, parameters.toArray(Parameter[]::new), ClassNode.EMPTY_ARRAY, block);
     }
 }
+
+// 91d764

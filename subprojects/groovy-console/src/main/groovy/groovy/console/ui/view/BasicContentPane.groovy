@@ -180,3 +180,4 @@ if (detachedOutputFlag) {
     splitPane.resizeWeight = 1.0
     outputWindow.add(scrollArea, BorderLayout.CENTER)
 }
+

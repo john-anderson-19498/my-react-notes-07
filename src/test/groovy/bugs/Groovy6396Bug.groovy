@@ -37,3 +37,4 @@ class Groovy6396Bug {
         """
     }
 }
+

@@ -32,3 +32,5 @@ public abstract class MetaClassSite extends AbstractCallSite {
         this.metaClass = metaClass;
     }
 }
+
+// 424066

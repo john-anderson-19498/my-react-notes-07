@@ -21,3 +21,5 @@ package org.codehaus.groovy.classgen.asm.sc.bugs.support;
 public class Groovy6962Ext extends Groovy6962Base {
 
 }
+
+// d64c1c

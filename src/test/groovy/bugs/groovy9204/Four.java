@@ -22,3 +22,5 @@ import java.util.LinkedList;
 
 public class Four extends Two<LinkedList> {
 }
+
+// a9226a

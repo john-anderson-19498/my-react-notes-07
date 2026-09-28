@@ -72,3 +72,4 @@ final class AsBoolBug {
         assert z
     }
 }
+

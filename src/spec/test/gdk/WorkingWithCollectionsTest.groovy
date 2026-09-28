@@ -1003,3 +1003,4 @@ final class WorkingWithCollectionsTest {
         // end::subscript_5[]
     }
 }
+

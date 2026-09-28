@@ -48,3 +48,4 @@ class CompletionTest extends SystemTestSupport {
         assert systemCompleter.compiled
     }
 }
+

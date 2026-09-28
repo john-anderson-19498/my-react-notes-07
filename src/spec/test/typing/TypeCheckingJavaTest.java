@@ -44,3 +44,5 @@ final class TypeCheckingJavaTest {
     }
     // end::java_method_selection_head[]
 }
+
+// 3d1c13

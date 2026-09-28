@@ -124,3 +124,5 @@ public class InheritConstructorsASTTransformation extends AbstractASTTransformat
         return classNode.getDeclaredConstructors().stream().anyMatch(ctor -> parametersEqual(params, ctor.getParameters()));
     }
 }
+
+// 14d998

@@ -146,3 +146,4 @@ class LayoutFactory extends groovy.swing.factory.BeanFactory {
     }
 
 }
+

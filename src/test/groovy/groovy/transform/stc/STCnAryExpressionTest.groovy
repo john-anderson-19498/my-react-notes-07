@@ -344,3 +344,4 @@ class STCnAryExpressionTest extends StaticTypeCheckingTestCase {
         'Cannot call java.lang.String#compareTo(java.lang.String) with arguments [int]'
     }
 }
+

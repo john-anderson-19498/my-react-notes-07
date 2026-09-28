@@ -192,3 +192,4 @@ final class ReferenceManagerTest {
         }
     }
 }
+

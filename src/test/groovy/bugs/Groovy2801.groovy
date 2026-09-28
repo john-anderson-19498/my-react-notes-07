@@ -32,3 +32,4 @@ final class Groovy2801 {
         String foo()
     }
 }
+

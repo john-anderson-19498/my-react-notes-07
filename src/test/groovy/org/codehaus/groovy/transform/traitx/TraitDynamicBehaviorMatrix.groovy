@@ -273,3 +273,4 @@ class TraitDynamicBehaviorMatrix {
         assert r == [true, 'hi'] : "row13: a Closure coerced to a single-abstract-method trait must implement that method (got ${r})"
     }
 }
+

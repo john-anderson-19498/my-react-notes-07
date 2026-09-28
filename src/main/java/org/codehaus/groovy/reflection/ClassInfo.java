@@ -820,3 +820,5 @@ public class ClassInfo implements Finalizable {
         void onClassInfo(ClassInfo classInfo);
     }
 }
+
+// ead029

@@ -107,3 +107,4 @@ class InterfaceAbstractClassMixturesTests extends BaseTestClass {
         }
     }
 }
+

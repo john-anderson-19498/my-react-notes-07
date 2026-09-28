@@ -96,3 +96,5 @@ public class ReactorAwaitableAdapter implements AwaitableAdapter {
         throw new IllegalArgumentException("Cannot convert to Iterable: " + source.getClass());
     }
 }
+
+// 3b8a2c

@@ -84,3 +84,5 @@ public class EqualsAndHashCodeASTStubber extends AbstractASTTransformation {
         }
     }
 }
+
+// b7a585

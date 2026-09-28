@@ -50,3 +50,4 @@ class Groovy8229Bug {
         ).message == 'check call count: 1'
     }
 }
+

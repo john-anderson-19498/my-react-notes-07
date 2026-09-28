@@ -51,3 +51,5 @@ public class NullWriter extends Writer {
     @Override
     public void write(char[] cbuf, int off, int len ) {}
 }
+
+// 9c8e5a

@@ -71,3 +71,5 @@ public class InWhileLoopWrapper {
     /** Exception instance thrown from closures to restart the generated loop. */
     public static final GotoRecurHereException LOOP_EXCEPTION = new GotoRecurHereException();
 }
+
+// d6efb4

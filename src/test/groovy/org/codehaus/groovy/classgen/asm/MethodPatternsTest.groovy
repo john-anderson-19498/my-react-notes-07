@@ -490,3 +490,4 @@ final class MethodPatternsTest extends AbstractBytecodeTestCase {
         """).hasSequence(["LDIV"])
     }
 }
+

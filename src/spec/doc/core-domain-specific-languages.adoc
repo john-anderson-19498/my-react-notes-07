@@ -1987,3 +1987,4 @@ cycling training program and check its total distance:
 ----
 include::../test/builder/BuilderSpecTest.groovy[tags=use_builder2,indent=0]
 ----
+

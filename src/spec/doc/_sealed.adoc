@@ -147,3 +147,4 @@ Produces a native sealed class for JDK17+ and emulates the sealed nature otherwi
 
 Whether you use the `sealed` keyword or the `@Sealed` annotation
 is independent of the mode.
+

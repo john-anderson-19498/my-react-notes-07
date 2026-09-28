@@ -32,3 +32,4 @@ package bugs
          "TestDerived" + super.doSomething()
      }
  }
+

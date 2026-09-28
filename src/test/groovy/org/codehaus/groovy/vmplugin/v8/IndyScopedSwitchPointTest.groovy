@@ -223,3 +223,4 @@ final class IndyScopedSwitchPointTest {
         String ping() { 'ok' }
     }
 }
+

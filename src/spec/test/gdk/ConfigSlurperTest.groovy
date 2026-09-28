@@ -125,3 +125,4 @@ final class ConfigSlurperTest {
         // end::properties[]
     }
 }
+

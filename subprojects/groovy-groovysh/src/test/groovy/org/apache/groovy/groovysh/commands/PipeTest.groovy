@@ -59,3 +59,4 @@ class PipeTest extends SystemTestSupport {
     }
 
 }
+

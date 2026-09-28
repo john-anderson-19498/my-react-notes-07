@@ -21,3 +21,5 @@
  * Utility functions and helper classes for contract processing and validation.
  */
 package org.apache.groovy.contracts.util;
+
+// 872b38

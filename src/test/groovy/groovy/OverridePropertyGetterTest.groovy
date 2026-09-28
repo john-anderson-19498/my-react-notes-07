@@ -45,3 +45,4 @@ class OverridePropertyGetterTest {
         return cheese
     }
 }
+

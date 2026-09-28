@@ -845,3 +845,4 @@ final class Groovy12191 {
     static class McOwnerHost {}
     static class PropOwnHost {}
 }
+

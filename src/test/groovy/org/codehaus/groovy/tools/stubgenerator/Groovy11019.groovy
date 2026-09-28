@@ -50,3 +50,4 @@ final class Groovy11019 extends StringSourcesStubTestCase {
         assert pojo.m() == 'hello world'
     }
 }
+

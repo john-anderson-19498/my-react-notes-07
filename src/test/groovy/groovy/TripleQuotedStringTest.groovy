@@ -41,3 +41,4 @@ class TripleQuotedStringTest {
         o.testTripleQuotedString();
     }
 }
+

@@ -618,3 +618,4 @@ class SwingBuilderConsoleTest extends GroovySwingTestCase {
         assert thread == null || !thread.alive
     }
 }
+

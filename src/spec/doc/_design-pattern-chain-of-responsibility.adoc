@@ -126,3 +126,4 @@ Other variations to this pattern:
 * we could decide at some point to not respond and not pass down the chain (pre-emptive abort)
 * we could use Groovy’s meta-programming capabilities to pass unknown methods down the chain, e.g. combine
 chain of responsibility with the use of `methodMissing`
+

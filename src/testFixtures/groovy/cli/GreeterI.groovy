@@ -28,3 +28,4 @@ interface GreeterI {
     @Unparsed(description = "positional parameters") List remaining()         // <3>
 }
 // end::annotationInterfaceSpec[]
+

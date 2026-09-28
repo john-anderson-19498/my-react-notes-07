@@ -311,3 +311,4 @@ abstract class RepackageJarTask extends ShadowJar {
     }
 
 }
+

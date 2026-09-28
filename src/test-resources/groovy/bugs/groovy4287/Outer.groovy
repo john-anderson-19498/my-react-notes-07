@@ -23,3 +23,4 @@ class Outer {
         def innerName = "outer.inner"
     }
 }
+

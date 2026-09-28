@@ -223,3 +223,4 @@ class StreamingDOMBuilder extends AbstractStreamingBuilder {
         }
     }
 }
+

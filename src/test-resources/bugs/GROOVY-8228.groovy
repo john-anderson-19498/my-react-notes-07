@@ -99,3 +99,4 @@ assert nameField.annotatedType.type == String
 // 3)
 def bounds = JSR308Interface2.typeParameters[0].annotatedBounds
 assert bounds.collect(bt -> bt.type)[0] in [CharSequence, null]
+

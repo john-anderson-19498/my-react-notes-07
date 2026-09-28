@@ -19,3 +19,4 @@
 
 sealed non-sealed interface ShapeI permits Circle, Rectangle { }
 
+

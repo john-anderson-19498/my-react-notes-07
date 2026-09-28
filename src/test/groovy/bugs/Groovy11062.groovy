@@ -49,3 +49,4 @@ final class Groovy11062 {
     @interface Collector11062 {
     }
 }
+

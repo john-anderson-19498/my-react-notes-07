@@ -328,3 +328,5 @@ public class StaticTypesClosureWriter extends ClosureWriter {
         }
     }
 }
+
+// f873b1

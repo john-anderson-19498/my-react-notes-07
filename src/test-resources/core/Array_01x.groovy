@@ -109,3 +109,4 @@ def testArrayInitializerCS() {
     ['a', 'b'] as String[]
 }
 testArrayInitializerCS()
+

@@ -469,3 +469,4 @@ final class Slf4jTest {
         assert appender.events.isEmpty()
     }
 }
+

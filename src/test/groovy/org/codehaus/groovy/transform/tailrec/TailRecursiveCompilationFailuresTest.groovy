@@ -117,3 +117,4 @@ class TailRecursiveCompilationFailuresTest extends GroovyShellTestCase {
     }
 
 }
+

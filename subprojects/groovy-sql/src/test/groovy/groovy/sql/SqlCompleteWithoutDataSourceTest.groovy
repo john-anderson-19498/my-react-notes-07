@@ -32,3 +32,4 @@ class SqlCompleteWithoutDataSourceTest extends SqlCompleteTest {
         return new Sql(DriverManager.getConnection(uri, [user:'sa', password:''] as Properties))
     }
 }
+

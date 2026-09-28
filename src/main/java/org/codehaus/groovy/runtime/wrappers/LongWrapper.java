@@ -32,3 +32,5 @@ public class LongWrapper extends PojoWrapper {
         super(wrapped, long.class);
     }
 }
+
+// cfb4a3

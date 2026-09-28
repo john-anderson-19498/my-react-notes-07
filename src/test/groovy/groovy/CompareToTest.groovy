@@ -60,3 +60,4 @@ class CompareToTest {
         assert result == 0
     }
 }
+

@@ -79,3 +79,4 @@ class ClassExpressionTest {
        assert foo.name == "[I"
     }
 }
+

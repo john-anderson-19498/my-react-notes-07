@@ -20,3 +20,5 @@ package bugs.groovy8468;
 
 public interface Face {
 }
+
+// c45c4f

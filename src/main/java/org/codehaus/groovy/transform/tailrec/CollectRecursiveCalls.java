@@ -47,3 +47,5 @@ public class CollectRecursiveCalls {
                 .stream().map(Expression.class::cast).collect(Collectors.toList());
     }
 }
+
+// 841d38

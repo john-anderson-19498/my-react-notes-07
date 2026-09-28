@@ -50,3 +50,5 @@ public class RequiresAnnotationProcessor extends AnnotationProcessor {
         contract.preconditions().or(methodNode, new Precondition(blockStatement, booleanExpression));
     }
 }
+
+// addaef

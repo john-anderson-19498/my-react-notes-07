@@ -71,3 +71,4 @@ class GeneratorTest {
         closure.call("C")
     }
 }
+

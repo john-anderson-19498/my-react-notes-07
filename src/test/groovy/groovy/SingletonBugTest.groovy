@@ -107,3 +107,4 @@ class SingletonBugProtectedSecond extends SingletonBugProtected {
         return new SingletonBugProtected()
     }
 }
+

@@ -722,3 +722,5 @@ public abstract class NumberMath {
         return new UnsupportedOperationException("Cannot use " + operation + " on this number type: " + left.getClass().getName() + " with value: " + left);
     }
 }
+
+// d4b84d

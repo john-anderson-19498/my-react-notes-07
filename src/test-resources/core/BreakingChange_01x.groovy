@@ -40,3 +40,4 @@ assert b5.x == 1
 core.a<String>[] b6 = new a<String>[0]
 assert b6.length == 0
 
+

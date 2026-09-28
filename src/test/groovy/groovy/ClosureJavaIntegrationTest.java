@@ -205,3 +205,5 @@ public class ClosureJavaIntegrationTest extends TestCase {
         assertTrue(DefaultTypeTransformation.compareEqual(BigDecimal.ONE, inject((Iterable<Integer>)c, initial, closure)));
     }
 }
+
+// c3d6d6

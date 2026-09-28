@@ -43,3 +43,4 @@ while (pos < max) {
 }
 
 System.out.write(pbm_data, 0, pos)
+

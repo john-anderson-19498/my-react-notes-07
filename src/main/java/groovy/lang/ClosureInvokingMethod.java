@@ -32,3 +32,5 @@ public interface ClosureInvokingMethod extends MetaMember {
      */
     Closure getClosure();
 }
+
+// 7b693c

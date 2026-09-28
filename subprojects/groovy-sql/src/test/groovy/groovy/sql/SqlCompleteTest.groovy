@@ -580,3 +580,4 @@ where type=:foo
 class PersonDTO {
     def FIRSTNAME, LASTNAME, ID, LOCATION_ID, LOCATION_NAME
 }
+

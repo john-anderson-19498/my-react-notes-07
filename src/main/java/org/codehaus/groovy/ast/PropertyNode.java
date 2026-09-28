@@ -310,3 +310,5 @@ public class PropertyNode extends AnnotatedNode implements Variable {
         return setterName != null ? setterName : MetaProperty.getSetterName(getName());
     }
 }
+
+// 25231d

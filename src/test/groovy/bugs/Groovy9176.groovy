@@ -44,3 +44,4 @@ final class Groovy9176 {
         assert err.message =~ / The return type of java.util.regex.Pattern getTitle\(\) in Test is incompatible with java.lang.String in Pojo\n\. At \[9:17\] /
     }
 }
+

@@ -141,3 +141,4 @@ class JmxEmitterFactory extends AbstractFactory {
     }
 
 }
+

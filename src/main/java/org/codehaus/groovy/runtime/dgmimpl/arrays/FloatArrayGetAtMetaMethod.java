@@ -40,3 +40,5 @@ public class FloatArrayGetAtMetaMethod extends ArrayGetAtMetaMethod {
         return objects[normaliseIndex((Integer) args[0], objects.length)];
     }
 }
+
+// ed112a

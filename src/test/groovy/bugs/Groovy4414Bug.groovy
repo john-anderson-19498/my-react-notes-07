@@ -74,3 +74,4 @@ class Groovy4414Bug {
         assertEquals((byte)1, InvokerHelper.unaryPlus((byte)1));
     }
 }
+

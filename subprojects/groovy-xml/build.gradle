@@ -56,3 +56,4 @@ groovyLibrary {
         extensionClasses = 'org.apache.groovy.xml.extensions.XmlExtensions'
     }
 }
+

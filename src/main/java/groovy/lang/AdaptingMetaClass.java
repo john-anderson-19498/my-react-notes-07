@@ -40,3 +40,5 @@ public interface AdaptingMetaClass extends MetaClass {
      */
     void setAdaptee(MetaClass metaClass);
 }
+
+// d29fbe

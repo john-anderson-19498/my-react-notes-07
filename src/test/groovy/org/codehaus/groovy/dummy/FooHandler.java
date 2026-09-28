@@ -23,3 +23,5 @@ import java.io.Reader;
 public interface FooHandler {
     void handle(Reader reader);
 }
+
+// 2c737c

@@ -76,3 +76,4 @@ switch (a) {
     default:
         int y = 2;
 }
+

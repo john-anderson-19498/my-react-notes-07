@@ -218,3 +218,5 @@ public class InnerClassCompletionVisitor extends InnerClassVisitorHelper {
         return namePrefix;
     }
 }
+
+// 06ed9c

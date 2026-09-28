@@ -45,3 +45,4 @@ class VarargsMethodParamsStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains('foo(java.lang.String... args)')
     }
 }
+

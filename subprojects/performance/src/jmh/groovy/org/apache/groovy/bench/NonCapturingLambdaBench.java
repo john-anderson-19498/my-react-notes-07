@@ -80,3 +80,5 @@ public class NonCapturingLambdaBench {
         return NonCapturingLambda.streamReduceNonCapturing(100);
     }
 }
+
+// 4c63a0

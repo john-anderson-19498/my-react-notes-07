@@ -21,3 +21,5 @@ package org.codehaus.groovy.dummy;
 public abstract class Groovy8144BBase {
     public int answer() { return 42; }
 }
+
+// 9b9dfa

@@ -36,3 +36,5 @@ public interface GroovyDocParserI {
      */
     Map<String, GroovyClassDoc> getClassDocsFromSingleSource(String packagePath, String file, String src);
 }
+
+// 728a3b

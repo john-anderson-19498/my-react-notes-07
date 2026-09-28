@@ -38,3 +38,4 @@ final class Groovy_7196 {
         assert Groovy7196SupportTraitImpl.org_codehaus_groovy_transform_traitx_Groovy7196SupportTrait__someString == 'ok'
     }
 }
+

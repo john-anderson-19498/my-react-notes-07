@@ -22,3 +22,4 @@ switch(a) {
     case 8 ->
     case 9 -> 'a'
 }
+

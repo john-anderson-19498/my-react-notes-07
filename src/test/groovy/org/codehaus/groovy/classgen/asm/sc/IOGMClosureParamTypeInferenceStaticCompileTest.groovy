@@ -25,3 +25,4 @@ import groovy.transform.stc.IOGMClosureParamTypeInferenceSTCTest
  */
 final class IOGMClosureParamTypeInferenceStaticCompileTest extends IOGMClosureParamTypeInferenceSTCTest implements StaticCompilationTestSupport {
 }
+

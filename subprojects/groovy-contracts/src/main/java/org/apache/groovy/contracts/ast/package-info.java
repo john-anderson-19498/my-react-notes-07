@@ -21,3 +21,5 @@
  * AST transformations for implementing Design by Contract semantics, including precondition, postcondition, and invariant validation transformations.
  */
 package org.apache.groovy.contracts.ast;
+
+// af5d78

@@ -65,3 +65,5 @@ public class ClasspathResourceManager implements ResourceManager {
     }
 
 }
+
+// b41b68

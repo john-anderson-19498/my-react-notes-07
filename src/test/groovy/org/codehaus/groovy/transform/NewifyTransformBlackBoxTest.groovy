@@ -557,3 +557,4 @@ final class NewifyTransformBlackBoxTest {
     throw new Exception("Script was expected to throw here!")
   }
 }
+

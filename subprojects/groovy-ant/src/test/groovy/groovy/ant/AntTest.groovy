@@ -323,3 +323,4 @@ class SimpleListener extends org.apache.tools.ant.DefaultLogger {
         task.taskName + task.wrapper.attributeMap
     }
 }
+

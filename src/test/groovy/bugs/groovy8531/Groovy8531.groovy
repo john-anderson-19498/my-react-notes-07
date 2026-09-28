@@ -108,3 +108,4 @@ final class Groovy8531 {
         assert err.message.contains('unable to resolve class PackagePrivateContext')
     }
 }
+

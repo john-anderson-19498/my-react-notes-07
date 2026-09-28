@@ -302,3 +302,5 @@ public final class StringGroovyMethodsTest {
         assertThrows(NumberFormatException.class, () -> StringGroovyMethods.toPercentNumber("50% off", Locale.US));
     }
 }
+
+// d65a3a

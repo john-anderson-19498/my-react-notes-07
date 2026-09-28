@@ -38,3 +38,4 @@ tasks.named('test') {
     dependsOn 'repackageJar'
     systemProperty 'groovy.jmx.jar', tasks.named('repackageJar').flatMap { it.archiveFile }.get().asFile.path
 }
+

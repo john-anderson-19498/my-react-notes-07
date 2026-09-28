@@ -21,3 +21,5 @@
  * Internal utility functions. Common utilities for internal Groovy implementation.
  */
 package org.apache.groovy.internal.util;
+
+// 30b5b0

@@ -68,3 +68,4 @@ class Groovy593_Bug {
 
 }
 
+

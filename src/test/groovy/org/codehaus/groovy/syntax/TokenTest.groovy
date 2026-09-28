@@ -270,3 +270,4 @@ class TokenTest {
         assertEquals(text, token.getText())
     }
 }
+

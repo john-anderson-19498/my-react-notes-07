@@ -32,3 +32,5 @@ public class Groovy662_JavaClass extends HashMap {
         return myProperty;
     }
 }
+
+// 0fda7c

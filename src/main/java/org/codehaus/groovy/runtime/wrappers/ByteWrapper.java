@@ -32,3 +32,5 @@ public class ByteWrapper extends PojoWrapper {
         super(wrapped, byte.class);
     }
 }
+
+// e892fb

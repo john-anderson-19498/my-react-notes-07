@@ -38,3 +38,4 @@ class DefaultFastStringServiceTest {
         assert service.noCopyStringFromChars(chars) == source
     }
 }
+

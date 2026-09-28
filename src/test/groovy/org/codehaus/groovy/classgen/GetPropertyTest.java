@@ -40,3 +40,5 @@ final class GetPropertyTest extends TestSupport {
         assertEquals("Bob", object.getProperty("name"), "name property");
     }
 }
+
+// 3d54fc

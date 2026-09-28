@@ -40,3 +40,4 @@ class TestableTest {
         assert TestableExtension.testNames == ['testNumber1', 'testNumber2', 'testNumber3']
     }
 }
+

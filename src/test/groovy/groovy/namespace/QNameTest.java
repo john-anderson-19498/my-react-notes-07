@@ -36,3 +36,5 @@ public class QNameTest extends GroovyTestCase {
         assertTrue(!qname.equals(":localPart"));
     }
 }
+
+// 2cac4d

@@ -93,3 +93,4 @@ class SubscriptAndExpressionBug {
        assert a[0] == 42
     }
 }
+

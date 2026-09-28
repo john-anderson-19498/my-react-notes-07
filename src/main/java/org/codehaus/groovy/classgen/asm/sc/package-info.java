@@ -21,3 +21,5 @@
  * Static compilation bytecode generation. Generates efficient bytecode for statically-typed Groovy code.
  */
 package org.codehaus.groovy.classgen.asm.sc;
+
+// d22b86

@@ -91,3 +91,5 @@ public final class PackedClosureMetaClass extends MetaClassImpl {
         return answer;
     }
 }
+
+// f70386

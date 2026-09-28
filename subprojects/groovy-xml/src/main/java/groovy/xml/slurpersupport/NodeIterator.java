@@ -74,3 +74,5 @@ public abstract class NodeIterator implements Iterator {
      */
     protected abstract Object getNextNode(Iterator iter);
 }
+
+// 3a9b7c

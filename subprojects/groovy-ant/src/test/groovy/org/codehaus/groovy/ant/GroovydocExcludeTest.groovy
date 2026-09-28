@@ -61,3 +61,4 @@ class GroovydocExcludeTest {
         assert names == ['com.foo', 'com.bar', 'com.baz']
     }
 }
+

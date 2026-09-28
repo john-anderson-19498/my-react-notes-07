@@ -59,3 +59,4 @@ final class Groovy8614 extends AbstractBytecodeTestCase {
         assert !bytecode.hasSequence(['static synthetic INNERCLASS X$1 X 1'])
     }
 }
+

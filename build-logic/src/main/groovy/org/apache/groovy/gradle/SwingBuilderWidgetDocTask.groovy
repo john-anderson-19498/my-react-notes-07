@@ -82,3 +82,4 @@ class SwingBuilderWidgetDocTask extends DefaultTask {
         }
     }
 }
+

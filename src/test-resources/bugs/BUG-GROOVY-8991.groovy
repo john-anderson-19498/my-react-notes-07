@@ -66,3 +66,4 @@ assert 3 == result3
 def foo5(c) {c()}
 def c2 = foo5 { { Integer x -> 1} }
 assert 1 == c2()
+

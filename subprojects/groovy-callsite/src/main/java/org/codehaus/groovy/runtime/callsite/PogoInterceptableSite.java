@@ -57,3 +57,5 @@ public class PogoInterceptableSite extends AbstractCallSite {
         return call(receiver, args);
     }
 }
+
+// 16fab9

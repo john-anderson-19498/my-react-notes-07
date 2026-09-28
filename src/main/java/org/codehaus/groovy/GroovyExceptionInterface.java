@@ -41,3 +41,5 @@ public interface GroovyExceptionInterface {
     void setFatal(boolean fatal);
 
 }
+
+// 9b1268

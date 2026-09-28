@@ -151,3 +151,4 @@ final class AutoFinalTransformBlackBoxTest extends CompilableTestSupport {
         }
     }
 }
+

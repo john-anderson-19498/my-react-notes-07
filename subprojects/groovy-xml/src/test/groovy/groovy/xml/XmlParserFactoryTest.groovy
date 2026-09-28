@@ -29,3 +29,4 @@ class XmlParserFactoryTest {
         assert root.children()[0].name() == 'old'
     }
 }
+

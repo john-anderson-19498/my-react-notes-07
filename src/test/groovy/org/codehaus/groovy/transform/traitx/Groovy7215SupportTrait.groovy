@@ -28,3 +28,4 @@ trait Groovy7215SupportTrait {
         'ok'
     }
 }
+

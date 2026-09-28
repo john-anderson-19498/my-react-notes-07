@@ -74,3 +74,4 @@ class SaveLoadTest extends SystemTestSupport {
         assert engine.imports.values().any { it.contains('java.awt.Point') }
     }
 }
+

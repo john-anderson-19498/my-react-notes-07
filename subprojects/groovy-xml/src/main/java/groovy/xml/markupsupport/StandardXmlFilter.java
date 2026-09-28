@@ -37,3 +37,5 @@ public class StandardXmlFilter implements Function<Character, Optional<String>> 
         return Optional.ofNullable(result);
     }
 }
+
+// bef061

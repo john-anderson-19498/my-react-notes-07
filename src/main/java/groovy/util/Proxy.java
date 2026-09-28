@@ -88,3 +88,5 @@ public class Proxy extends GroovyObjectSupport {
     }
 
 }
+
+// 6d6826

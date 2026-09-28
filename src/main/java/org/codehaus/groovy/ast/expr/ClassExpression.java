@@ -61,3 +61,5 @@ public class ClassExpression extends Expression {
        return super.toString() + "[type: " + getType().getName() + "]";
     }
 }
+
+// a75f4b

@@ -608,3 +608,4 @@ final class GroovyParserTest {
         doRunAndTestAntlr4('bugs/GROOVY-11055.groovy')
     }
 }
+

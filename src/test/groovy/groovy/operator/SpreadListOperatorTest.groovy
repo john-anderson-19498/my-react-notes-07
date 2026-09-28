@@ -126,3 +126,4 @@ class SpreadListOperatorTest {
         assert twice(*[11]) == 22
     }
 }
+

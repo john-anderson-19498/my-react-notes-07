@@ -38,3 +38,5 @@ public interface TypeChooser {
     ClassNode resolveType(final Expression expression, ClassNode classNode);
 
 }
+
+// b7aafd

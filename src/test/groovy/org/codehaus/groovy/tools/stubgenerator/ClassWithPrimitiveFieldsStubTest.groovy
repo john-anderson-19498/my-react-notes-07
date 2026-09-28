@@ -61,3 +61,4 @@ final class ClassWithPrimitiveFieldsStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains('java.lang.Boolean flag2 = null')
     }
 }
+

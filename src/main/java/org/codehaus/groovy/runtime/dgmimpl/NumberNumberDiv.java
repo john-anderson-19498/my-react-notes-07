@@ -45,3 +45,5 @@ public final class NumberNumberDiv extends NumberNumberMetaMethod {
         return NumberMath.divide(left, right);
     }
 }
+
+// 346803

@@ -44,3 +44,5 @@ public class PackageNode extends AnnotatedNode {
     public void visit(GroovyCodeVisitor visitor) {
     }
 }
+
+// ee6a79

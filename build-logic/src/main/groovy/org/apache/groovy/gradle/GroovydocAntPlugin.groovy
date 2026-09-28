@@ -221,3 +221,4 @@ class GroovydocAntPlugin implements Plugin<Project> {
         new File(value.toString())
     }
 }
+

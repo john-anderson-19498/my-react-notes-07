@@ -51,3 +51,5 @@ public class SimpleGroovyAbstractableElementDoc extends SimpleGroovyProgramEleme
         return abstractElement;
     }
 }
+
+// 1832ac

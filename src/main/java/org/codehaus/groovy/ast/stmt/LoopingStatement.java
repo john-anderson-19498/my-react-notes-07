@@ -34,3 +34,5 @@ public interface LoopingStatement {
      */
      void setLoopBlock(Statement loopBlock);
 }
+
+// 1549ef

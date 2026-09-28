@@ -32,3 +32,5 @@ public interface JavaCompilerFactory {
      */
     JavaCompiler createCompiler(CompilerConfiguration config);
 }
+
+// ac04cd

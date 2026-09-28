@@ -57,3 +57,4 @@ final class Groovy7510 extends StringSourcesStubTestCase {
         assert !stub.contains('import static p.A.aString')
     }
 }
+

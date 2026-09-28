@@ -145,3 +145,4 @@ final class ClosuresStaticCompileTest extends ClosuresSTCTest implements StaticC
         '''
     }
 }
+

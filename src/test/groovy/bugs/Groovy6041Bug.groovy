@@ -50,3 +50,4 @@ class Groovy6041Bug extends StringSourcesStubTestCase {
         def stubSource = stubJavaSourceFor('Tool')
     }
 }
+

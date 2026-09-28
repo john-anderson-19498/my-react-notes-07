@@ -41,3 +41,5 @@ public interface GroovyDocErrorReporter{
      */
     void printWarning(String arg0);
 }
+
+// bb2368

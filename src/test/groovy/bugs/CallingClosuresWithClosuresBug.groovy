@@ -34,3 +34,4 @@ final class CallingClosuresWithClosuresBug {
         assert value == 1
     }
 }
+

@@ -22,3 +22,4 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 interface Bar {}
+

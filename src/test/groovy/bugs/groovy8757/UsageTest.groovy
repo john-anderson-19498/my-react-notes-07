@@ -35,3 +35,4 @@ final class UsageTest {
         assertEquals(42L, c0.foo(Long))
     }
 }
+

@@ -65,3 +65,4 @@ class HistoryRecord {
         return exception ? exception : result
     }
 }
+

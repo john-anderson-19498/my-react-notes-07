@@ -68,3 +68,5 @@ public class SharedVariableCollector extends ClassCodeVisitorSupport {
         super.visitVariableExpression(expression);
     }
 }
+
+// b1142d

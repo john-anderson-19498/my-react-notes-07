@@ -35,3 +35,4 @@ assert b instanceof StringBuffer
     '''
     }
 }
+

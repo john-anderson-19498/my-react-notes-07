@@ -40,3 +40,4 @@ class Groovy5033Bug {
         """
     }
 }
+

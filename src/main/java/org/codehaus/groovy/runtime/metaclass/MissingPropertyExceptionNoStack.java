@@ -54,3 +54,5 @@ public class MissingPropertyExceptionNoStack extends MissingPropertyException {
         return this;
     }
 }
+
+// 24f6c3

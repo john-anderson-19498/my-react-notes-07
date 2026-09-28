@@ -437,3 +437,5 @@ class TraitReceiverTransformer extends ClassCodeExpressionTransformer {
         return newArgs;
     }
 }
+
+// b45893

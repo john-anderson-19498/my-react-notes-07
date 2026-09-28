@@ -46,3 +46,4 @@ class TestTransformConversion extends TestTransform { }
 
 @GroovyASTTransformation(phase=CompilePhase.CLASS_GENERATION)
 class TestTransformClassGeneration extends TestTransform { }
+

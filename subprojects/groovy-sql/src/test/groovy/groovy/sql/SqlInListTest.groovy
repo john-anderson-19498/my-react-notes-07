@@ -132,3 +132,4 @@ class SqlInListTest extends GroovyTestCase {
         assert rows*.id == [1, 3, 5]
     }
 }
+

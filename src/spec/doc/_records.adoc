@@ -317,3 +317,4 @@ Equivalent to `NATIVE` at Groovy 6's JDK17+ baseline (default).
 
 Whether you use the `record` keyword or the `@RecordType` annotation
 is independent of the mode.
+

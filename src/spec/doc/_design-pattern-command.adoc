@@ -108,3 +108,4 @@ we can forgo using the switch map and just have a list of tasks to invoke as sho
 ----
 include::../test/DesignPatternsTest.groovy[tags=command_lambda_variant,indent=0]
 ----
+

@@ -31,3 +31,4 @@ class Groovy9505 extends GroovyTestCase {
         """
     }
 }
+

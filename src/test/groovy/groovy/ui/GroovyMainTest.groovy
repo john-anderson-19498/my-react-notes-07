@@ -189,3 +189,4 @@ assert new MyConcreteClass() != null"""
         }
     }
 }
+

@@ -36,3 +36,4 @@ class SqlTransactionConnectionTest extends SqlTransactionTestCase {
     }
 
 }
+

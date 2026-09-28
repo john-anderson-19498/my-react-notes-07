@@ -59,3 +59,4 @@ class SimpleGStringTemplateEngineTest {
         assert sw.toString() == '[e, f, g, h]'
     }
 }
+

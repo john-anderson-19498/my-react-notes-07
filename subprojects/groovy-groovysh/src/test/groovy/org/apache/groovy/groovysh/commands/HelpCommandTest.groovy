@@ -45,3 +45,4 @@ class HelpCommandTest extends SystemTestSupport {
         assert out.contains('exit')
     }
 }
+

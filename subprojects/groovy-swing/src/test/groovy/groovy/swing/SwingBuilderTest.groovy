@@ -1736,3 +1736,4 @@ final class SwingBuilderTest {
         }
     }
 }
+

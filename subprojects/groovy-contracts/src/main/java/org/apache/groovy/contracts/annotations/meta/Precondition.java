@@ -31,3 +31,4 @@ import java.lang.annotation.RetentionPolicy;
 @ContractElement
 public @interface Precondition {
 }
+// 23e30f

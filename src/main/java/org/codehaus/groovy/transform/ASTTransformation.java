@@ -47,3 +47,5 @@ public interface ASTTransformation {
      */
     void visit(ASTNode[] nodes, SourceUnit source);
 }
+
+// 0c0c4a

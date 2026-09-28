@@ -28,3 +28,4 @@ final class BadScriptNameBug {
         cl.parseClass("println 'oops!'", "/script.groovy");
     }
 }
+

@@ -607,3 +607,5 @@ public class ExternalGroovyClassDoc implements GroovyClassDoc {
         return 0;
     }
 }
+
+// c03d1a

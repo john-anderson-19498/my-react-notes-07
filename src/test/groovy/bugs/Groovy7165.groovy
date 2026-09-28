@@ -93,3 +93,4 @@ final class Groovy7165 {
         assert err.message =~ /Access to A#CONST is forbidden/
     }
 }
+

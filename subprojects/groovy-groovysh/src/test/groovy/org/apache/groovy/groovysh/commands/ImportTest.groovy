@@ -39,3 +39,4 @@ class ImportTest extends SystemTestSupport {
         system.execute('assert Connection.name == "java.sql.Connection"')
     }
 }
+

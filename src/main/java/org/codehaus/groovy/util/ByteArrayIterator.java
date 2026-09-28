@@ -61,3 +61,5 @@ public class ByteArrayIterator implements Iterator<Byte> {
         throw new UnsupportedOperationException("Remove not supported for arrays");
     }
 }
+
+// b757b9

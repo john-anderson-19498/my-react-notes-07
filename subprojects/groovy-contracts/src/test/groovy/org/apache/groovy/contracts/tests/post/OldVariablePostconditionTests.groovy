@@ -158,3 +158,4 @@ final class OldVariablePostconditionTests extends BaseTestClass {
         assert betterAccount.balance == 25.0
     }
 }
+

@@ -88,3 +88,4 @@ final class RuntimeResolveTests {
         runScript('/groovy/bugs/groovyA196/Main.groovy')
     }
 }
+

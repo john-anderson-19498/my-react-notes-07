@@ -2737,3 +2737,4 @@ class Parent8914 {
 class Outer8914 {
     static class Nested extends Parent8914.Nested {}
 }
+

@@ -299,3 +299,5 @@ public class InspectorTest implements Serializable {
         private String hidden = "you can't see me";
     }
 }
+
+// f8cdbd

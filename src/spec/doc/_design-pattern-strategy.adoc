@@ -98,3 +98,4 @@ Or we can use the built-in JDK `BiFunction` class:
 ----
 include::../test/DesignPatternsTest.groovy[tags=strategy_lambdas_using_bifunction,indent=0]
 ----
+

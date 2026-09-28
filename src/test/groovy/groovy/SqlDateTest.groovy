@@ -85,3 +85,4 @@ class SqlDateTest {
         assertEquals 1000 * 60 * 60 * 24, diff, "decrementing a java.sql.Date did not work properly"
     }
 }
+

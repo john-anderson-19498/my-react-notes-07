@@ -236,3 +236,5 @@ public class BindingProxy extends GroovyObjectSupport implements BindingUpdatabl
     }
 
 }
+
+// ae2e00

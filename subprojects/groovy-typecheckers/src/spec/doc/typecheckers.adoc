@@ -1637,3 +1637,4 @@ The checker has a `strict` option that tightens what it flags; in lenient
 (default) mode only high-confidence violations are reported. The sister
 `MonadicChecker` (above) covers the `DO`-macro path; this checker covers
 the hand-written path.
+

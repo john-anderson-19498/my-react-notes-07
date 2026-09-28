@@ -85,3 +85,5 @@ public interface GroovyRootDoc extends GroovyDoc, GroovyDocErrorReporter {
      */
     Map<String, GroovyClassDoc> getResolvedClasses();
 }
+
+// 479560

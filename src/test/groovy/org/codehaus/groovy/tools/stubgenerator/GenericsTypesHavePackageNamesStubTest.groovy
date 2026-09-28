@@ -53,3 +53,4 @@ class GenericsTypesHavePackageNamesStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains(/java.util.List<other_package.Year> getYears()/)
     }
 }
+

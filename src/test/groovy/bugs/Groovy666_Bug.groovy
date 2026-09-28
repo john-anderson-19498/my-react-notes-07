@@ -25,3 +25,4 @@ class Groovy666_Bug extends GroovyShellTestCase {
     evaluate("x = 1")
   }
 }
+

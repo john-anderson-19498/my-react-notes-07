@@ -90,3 +90,5 @@ public class PogoMetaClassSite extends MetaClassSite {
         return (receiver instanceof GroovyObject && ((GroovyObject) receiver).getMetaClass() == metaClass);
     }
 }
+
+// e94458

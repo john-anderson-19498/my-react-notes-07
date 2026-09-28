@@ -57,3 +57,4 @@ final class Groovy3831 {
         }
     }
 }
+

@@ -28,3 +28,4 @@ final class FullyQualifiedVariableTypeBug {
         assert s.length() == 3
     }
 }
+

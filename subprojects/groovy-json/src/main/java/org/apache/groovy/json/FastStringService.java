@@ -34,3 +34,5 @@ public interface FastStringService {
      */
     String noCopyStringFromChars(char[] chars);
 }
+
+// 2fc89e

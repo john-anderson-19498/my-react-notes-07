@@ -170,3 +170,5 @@ abstract class AbstractJComponentBinding extends AbstractSyntheticBinding implem
     @Override
     public void componentResized(ComponentEvent event) {}
 }
+
+// 262c11

@@ -41,3 +41,4 @@ Sql.withInstance(db.url, db.user, db.password, db.driver) { sql ->
         println "${row.name.padRight(10)} ($row.url)"
     }
 }
+

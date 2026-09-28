@@ -126,3 +126,4 @@ class GStringEndTest {
         assert text.contains('line 3, column 39')
     }
 }
+

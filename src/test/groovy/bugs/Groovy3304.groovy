@@ -33,3 +33,4 @@ final class Groovy3304 {
         assert syntaxError?.line == 2
     }
 }
+

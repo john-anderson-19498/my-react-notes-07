@@ -998,3 +998,5 @@ class LazyConstructorNode extends ConstructorNode implements LazyInitializable {
         return delegate.getNodeMetaData();
     }
 }
+
+// 07f3bf

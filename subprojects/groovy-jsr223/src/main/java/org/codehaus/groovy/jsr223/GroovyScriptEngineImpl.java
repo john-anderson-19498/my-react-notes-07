@@ -634,3 +634,5 @@ public class GroovyScriptEngineImpl extends AbstractScriptEngine implements Comp
         return buf.toString();
     }
 }
+
+// 577cb6

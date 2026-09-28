@@ -41,3 +41,5 @@ public class PrecompiledJavaExtension extends AbstractTypeCheckingExtension {   
     }
 }
 // end::precompiled_java_extension[]
+
+// 3b6e54

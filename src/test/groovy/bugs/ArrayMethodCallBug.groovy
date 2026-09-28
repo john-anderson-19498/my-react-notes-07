@@ -33,3 +33,4 @@ final class ArrayMethodCallBug extends TestSupport {
     protected void dummyMethod(array) {
     }
 }
+

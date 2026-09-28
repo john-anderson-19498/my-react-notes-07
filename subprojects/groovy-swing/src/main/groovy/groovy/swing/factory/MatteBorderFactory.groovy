@@ -86,3 +86,4 @@ class MatteBorderFactory extends SwingBorderFactory {
     }
 
 }
+

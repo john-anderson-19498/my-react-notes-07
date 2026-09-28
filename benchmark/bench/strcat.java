@@ -20,3 +20,5 @@ public class strcat {
         System.out.println(stringBuffer.length());
     }
 }
+
+// bdafdd

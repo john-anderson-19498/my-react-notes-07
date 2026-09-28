@@ -282,3 +282,4 @@ try (r1 = new Resource(1)
 assert Resource.closedResourceIds == [2, 1]
 assert 2 == a
 
+

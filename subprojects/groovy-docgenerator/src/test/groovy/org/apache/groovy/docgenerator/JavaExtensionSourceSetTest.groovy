@@ -223,3 +223,4 @@ class JavaExtensionSourceSetTest {
         assert JavadocInfo.parse(null).description == ''
     }
 }
+

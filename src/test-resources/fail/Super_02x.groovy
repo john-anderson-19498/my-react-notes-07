@@ -21,3 +21,4 @@ class A {
         (Object) super
     }
 }
+

@@ -34,3 +34,5 @@ public interface GroovyClassValue<T> {
 	void remove(Class<?> type);
 	
 }
+
+// 0dbf38

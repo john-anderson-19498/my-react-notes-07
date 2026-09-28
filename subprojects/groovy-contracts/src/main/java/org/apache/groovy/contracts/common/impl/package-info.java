@@ -21,3 +21,5 @@
  * Default implementations of contract abstractions including preconditions, postconditions, and invariants.
  */
 package org.apache.groovy.contracts.common.impl;
+
+// 39349f

@@ -180,3 +180,4 @@ final class NotYetImplementedTransformTest {
         assert output.failures.first().exception instanceof AssertionError : 'succeeding @Test method marked with @CompileStatic and @NotYetImplemented must throw an AssertionError'
     }
 }
+

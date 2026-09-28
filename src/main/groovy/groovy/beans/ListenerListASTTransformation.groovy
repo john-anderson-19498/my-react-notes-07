@@ -340,3 +340,4 @@ class ListenerListASTTransformation implements ASTTransformation, Opcodes {
         declaringClass.addMethod(methodName, methodModifiers, methodReturnType, params as Parameter[], [] as ClassNode[], block)
     }
 }
+

@@ -124,3 +124,5 @@ public class AssertionMap<T extends Assertion<T>> implements Iterable<Map.Entry<
         return internalMap.get(methodNode);
     }
 }
+
+// 5dc1ff

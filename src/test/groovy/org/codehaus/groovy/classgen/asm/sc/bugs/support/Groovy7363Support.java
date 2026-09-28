@@ -49,3 +49,5 @@ public class Groovy7363Support {
         }
     }
 }
+
+// 00d107

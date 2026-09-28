@@ -19,3 +19,4 @@
 package core
 
 abstract record Bad(int x) { }
+

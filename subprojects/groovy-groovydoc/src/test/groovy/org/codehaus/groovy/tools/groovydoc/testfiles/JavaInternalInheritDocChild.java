@@ -25,3 +25,5 @@ public class JavaInternalInheritDocChild extends JavaInternalInheritDocBase {
         return null;
     }
 }
+
+// cd0b34

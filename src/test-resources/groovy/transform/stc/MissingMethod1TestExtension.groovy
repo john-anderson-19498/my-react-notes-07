@@ -22,3 +22,4 @@ methodNotFound { receiver, name, argumentList, argTypes, call ->
         return newMethod(name, STRING_TYPE)
     }
 }
+

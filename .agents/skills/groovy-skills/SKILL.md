@@ -325,3 +325,4 @@ Before declaring a new or refactored skill ready:
 - [`AGENTS.md`](../../../AGENTS.md) — project-wide AI-contributor policy and the `## Skills` table this skill mutates.
 - [`groovy-build`](../groovy-build/SKILL.md), [`groovy-fix-workflow`](../groovy-fix-workflow/SKILL.md), [`groovy-internals`](../groovy-internals/SKILL.md), [`groovy-jira`](../groovy-jira/SKILL.md), [`groovy-reassess`](../groovy-reassess/SKILL.md), [`groovy-reproducer`](../groovy-reproducer/SKILL.md), [`groovy-tests`](../groovy-tests/SKILL.md), [`groovy-triage`](../groovy-triage/SKILL.md), [`groovysh`](../groovysh/SKILL.md) — the corpus this skill describes and the canonical source for any convention it leaves under-specified.
 - The `groovy-triage` ↔ `groovy-jira` split — worked example of the "Procedure for splitting an existing skill" above.
+

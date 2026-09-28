@@ -66,3 +66,4 @@ String being `phantom` to use phantom references, `weak` to use weak
 references or `soft` to use soft references - casing is ignored. Any
 other string will cause the use of hard references.
 
+

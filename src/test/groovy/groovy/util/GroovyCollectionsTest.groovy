@@ -125,3 +125,4 @@ final class GroovyCollectionsTest {
         assert ([[1:2],[2:3]]-[["b":"a"]]) == [[1:2],[2:3]]
     }
 }
+

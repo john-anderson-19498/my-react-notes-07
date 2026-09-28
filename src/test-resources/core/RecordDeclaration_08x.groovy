@@ -53,3 +53,4 @@ try {
 } catch (e) {
     assert 'Invalid person: Devil' == e.message
 }
+

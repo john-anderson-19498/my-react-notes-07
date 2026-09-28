@@ -53,3 +53,4 @@ final class Groovy252 {
          return null
     }
 }
+

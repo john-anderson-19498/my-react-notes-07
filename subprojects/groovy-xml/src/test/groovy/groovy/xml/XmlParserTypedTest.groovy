@@ -145,3 +145,4 @@ class XmlParserTypedTest {
         assert config.debug == true
     }
 }
+

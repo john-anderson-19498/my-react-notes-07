@@ -39,3 +39,4 @@ class Groovy4107Bug {
         }
     }
 }
+

@@ -89,3 +89,5 @@ final class IfElseTest extends TestSupport {
         assertGetProperty(bean, "result", "worked");
     }
 }
+
+// a8ddfb

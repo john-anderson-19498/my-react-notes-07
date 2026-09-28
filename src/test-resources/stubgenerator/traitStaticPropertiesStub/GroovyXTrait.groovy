@@ -23,3 +23,4 @@ trait GroovyXTrait {
     boolean foo
     String baz() { 'baz' }
 }
+

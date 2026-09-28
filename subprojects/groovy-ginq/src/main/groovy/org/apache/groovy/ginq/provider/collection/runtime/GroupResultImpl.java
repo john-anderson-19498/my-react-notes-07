@@ -74,3 +74,5 @@ class GroupResultImpl<K, T> extends QueryableCollection<T> implements GroupResul
                 "get(String) is only supported for groupby with named keys (using 'as' aliases). Use getKey() for single-key.");
     }
 }
+
+// 1a55eb

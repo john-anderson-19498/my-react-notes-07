@@ -120,3 +120,4 @@ class GroovySystemTest {
         GroovySystem.stopThreadedReferenceManager()
     }
 }
+

@@ -28,3 +28,5 @@ final class MarkupInScriptBug extends TestSupport {
         assertScriptFile("src/test/groovy/groovy/xml/script/AtomTestScript.groovy");
     }
 }
+
+// e716fb

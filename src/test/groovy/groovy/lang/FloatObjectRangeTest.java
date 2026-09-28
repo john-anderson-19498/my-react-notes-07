@@ -40,3 +40,5 @@ public class FloatObjectRangeTest extends NumberRangeTestCase {
     }
 
 }
+
+// 3f9144

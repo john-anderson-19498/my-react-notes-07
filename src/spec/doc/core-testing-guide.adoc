@@ -693,3 +693,4 @@ the `Browser` configuration is externalized. `GebTest` delegates methods like `g
 
 In the previous section we only scratched the surface of the available Geb features. More information on Geb can be found
 at the http://gebish.org[project homepage].
+

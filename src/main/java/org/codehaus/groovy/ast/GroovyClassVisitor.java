@@ -52,3 +52,5 @@ public interface GroovyClassVisitor {
     */ 
     void visitProperty(PropertyNode node);
 }
+
+// b4c5d9

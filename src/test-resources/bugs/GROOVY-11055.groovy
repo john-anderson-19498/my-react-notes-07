@@ -27,3 +27,4 @@ def m(Map paramMap) {
 
 m(hello: n -> 'Hello, ' + n, name: 'Daniel')
 m(hello: n -> 'Hello, ' + n, hi: n -> 'Hi, ' + n, name: 'Daniel')
+

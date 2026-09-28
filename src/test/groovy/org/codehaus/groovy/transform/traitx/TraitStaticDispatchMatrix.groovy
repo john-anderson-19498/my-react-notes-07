@@ -753,3 +753,4 @@ class TraitStaticDispatchMatrix {
         assert r == 'P:SimpleArgument' : "row17esc: P.super.make() must reach P's own @Virtual copy (declarer-bound), got ${r}"
     }
 }
+

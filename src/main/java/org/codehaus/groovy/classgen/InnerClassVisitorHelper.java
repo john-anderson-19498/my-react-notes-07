@@ -160,3 +160,5 @@ public abstract class InnerClassVisitorHelper extends ClassCodeVisitorSupport {
                 && cn.getAnnotations().stream().noneMatch(aNode -> "groovy.transform.RecordType".equals(aNode.getClassNode().getName())); // GROOVY-11600
     }
 }
+
+// 149a6f

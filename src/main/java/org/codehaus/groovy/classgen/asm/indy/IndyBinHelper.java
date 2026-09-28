@@ -121,3 +121,5 @@ public class IndyBinHelper extends BinaryExpressionHelper {
         compileStack.popLHS();
     }
 }
+
+// 2493ad

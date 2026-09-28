@@ -25,3 +25,4 @@ import groovy.transform.stc.TypeInferenceSTCTest
  */
 final class TypeInferenceStaticCompileTest extends TypeInferenceSTCTest implements StaticCompilationTestSupport {
 }
+

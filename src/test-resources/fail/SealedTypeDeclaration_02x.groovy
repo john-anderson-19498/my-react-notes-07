@@ -18,3 +18,4 @@
  */
 
 sealed enum ShapeI permits Circle, Rectangle { }
+

@@ -104,3 +104,4 @@ class PrimitiveTypesTest {
         new PrimitiveTypesTest().testPrimitiveTypes()
     }
 }
+

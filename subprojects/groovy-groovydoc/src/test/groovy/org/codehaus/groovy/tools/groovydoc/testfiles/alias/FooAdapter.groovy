@@ -30,3 +30,4 @@ import org.codehaus.groovy.tools.groovydoc.testfiles.alias.lib.Foo as FooImpl
 class FooAdapter implements Foo {
     FooAdapter(FooImpl foo) {}
 }
+

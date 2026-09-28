@@ -206,3 +206,4 @@ final class StaticCompileClosureCallTest extends AbstractBytecodeTestCase {
         '''
     }
 }
+

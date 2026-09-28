@@ -114,3 +114,5 @@ public class GroovyBugError extends AssertionError {
         this.message = msg;
     }
 }
+
+// a89514

@@ -23,3 +23,4 @@ trait T0 {
         c.newInstance(42)
     }
 }
+

@@ -39,3 +39,4 @@ final class Bytecode3Bug {
         }
     }
 }
+

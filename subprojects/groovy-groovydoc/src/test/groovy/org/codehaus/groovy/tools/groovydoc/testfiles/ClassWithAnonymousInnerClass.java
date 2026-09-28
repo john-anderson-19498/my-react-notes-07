@@ -68,3 +68,5 @@ public class ClassWithAnonymousInnerClass {
         Object getValue();
     }
 }
+
+// ffa24b

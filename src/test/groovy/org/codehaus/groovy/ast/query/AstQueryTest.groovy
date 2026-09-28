@@ -139,3 +139,4 @@ final class AstQueryTest extends GroovyTestCase {
         assert q.count() == 2
     }
 }
+

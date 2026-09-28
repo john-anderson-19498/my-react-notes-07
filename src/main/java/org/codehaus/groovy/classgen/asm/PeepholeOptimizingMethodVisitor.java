@@ -1794,3 +1794,5 @@ public final class PeepholeOptimizingMethodVisitor extends MethodVisitor {
         }
     }
 }
+
+// 42ddb6

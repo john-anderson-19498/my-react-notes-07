@@ -32,3 +32,5 @@ public class MissingPropertyExceptionTest extends TestCase {
     }
 
 }
+
+// de1ee3

@@ -27,3 +27,4 @@ enum EnumWithDeprecatedConstants {
      */
     blah
 }
+

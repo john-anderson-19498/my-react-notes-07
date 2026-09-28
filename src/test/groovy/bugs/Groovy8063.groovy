@@ -62,3 +62,4 @@ final class Groovy8063 {
         assert err.message =~ / X /
     }
 }
+

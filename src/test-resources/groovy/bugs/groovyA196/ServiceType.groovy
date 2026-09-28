@@ -20,3 +20,4 @@ package groovy.bugs.groovyA196
 
 class ServiceType {
 }
+

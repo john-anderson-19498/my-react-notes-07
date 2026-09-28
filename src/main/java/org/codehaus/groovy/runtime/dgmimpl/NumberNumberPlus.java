@@ -42,3 +42,5 @@ public final class NumberNumberPlus extends NumberNumberMetaMethod {
         return NumberMath.add(left, right);
     }
 }
+
+// 5590ff

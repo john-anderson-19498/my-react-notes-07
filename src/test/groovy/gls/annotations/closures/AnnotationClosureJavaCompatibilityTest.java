@@ -47,3 +47,5 @@ public class AnnotationClosureJavaCompatibilityTest extends AnnotationClosureExh
     }
 }
 
+
+// 517173

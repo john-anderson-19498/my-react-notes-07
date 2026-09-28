@@ -47,3 +47,5 @@ public class ClassGeneratorException extends RuntimeException {
     }
 
 }
+
+// f42534

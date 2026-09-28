@@ -67,3 +67,4 @@ final class NodeBuilderTest {
         assert !clonedNode.children().any { it.name() == 'c' }
     }
 }
+

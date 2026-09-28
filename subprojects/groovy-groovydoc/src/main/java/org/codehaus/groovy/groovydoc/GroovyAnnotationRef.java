@@ -46,3 +46,5 @@ public interface GroovyAnnotationRef {
      */
     String description();
 }
+
+// a3059c

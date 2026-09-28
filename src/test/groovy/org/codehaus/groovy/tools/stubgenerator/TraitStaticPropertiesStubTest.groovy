@@ -34,3 +34,4 @@ class TraitStaticPropertiesStubTest extends StubTestCase {
         }
     }
 }
+

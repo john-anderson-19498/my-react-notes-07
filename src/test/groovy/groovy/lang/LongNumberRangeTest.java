@@ -49,3 +49,5 @@ public class LongNumberRangeTest extends NumberRangeTestCase {
         assertEquals("wrong 'to' value", to, range.getTo());
     }
 }
+
+// 922ecf

@@ -41,3 +41,5 @@ public abstract class CustomBaseTemplate extends BaseTemplate {
         this.version = version;
     }
 }
+
+// 7483e1

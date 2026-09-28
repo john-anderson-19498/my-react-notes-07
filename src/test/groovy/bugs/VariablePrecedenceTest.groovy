@@ -48,3 +48,4 @@ class VariablePrecedenceTest {
         assert z == 39;
     }
 }
+

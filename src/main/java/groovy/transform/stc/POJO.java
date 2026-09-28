@@ -37,3 +37,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface POJO {
 }
+
+// 5ea186

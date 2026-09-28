@@ -24,3 +24,4 @@ class X extends A implements D {
 def x = new X()
 assert x.manager.base === x
 assert x.manager.stringValue == 'string value'
+

@@ -177,3 +177,4 @@ ${depsXml}
         assert ex.message.contains("should not contain '..'")
     }
 }
+

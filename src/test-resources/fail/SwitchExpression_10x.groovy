@@ -18,3 +18,4 @@
  */
 
 println switch (10) {}
+

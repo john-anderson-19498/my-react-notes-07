@@ -46,3 +46,4 @@ class CallOnOwner {
         def aLocal
     }
 }
+

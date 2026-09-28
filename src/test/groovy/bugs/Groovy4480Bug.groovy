@@ -37,3 +37,4 @@ class Groovy4480Bug {
         assert ifelse(false) == 4
     }
 }
+

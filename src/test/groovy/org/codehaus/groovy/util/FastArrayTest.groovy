@@ -370,3 +370,4 @@ class FastArrayTest {
         assertEquals(true, fa.get(3))
     }
 }
+

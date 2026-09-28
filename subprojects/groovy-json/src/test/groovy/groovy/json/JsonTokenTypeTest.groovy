@@ -132,3 +132,4 @@ class JsonTokenTypeTest {
         assert startingWith('0' as char) == NUMBER
     }
 }
+

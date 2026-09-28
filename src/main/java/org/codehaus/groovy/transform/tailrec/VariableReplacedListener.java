@@ -37,3 +37,5 @@ public interface VariableReplacedListener {
      */
     void variableReplaced(VariableExpression oldVar, VariableExpression newVar);
 }
+
+// 118ce5

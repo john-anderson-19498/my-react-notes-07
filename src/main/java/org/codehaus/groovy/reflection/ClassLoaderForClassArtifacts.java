@@ -155,3 +155,5 @@ public class ClassLoaderForClassArtifacts extends ClassLoader {
         return suffix == -1 ? base : base + "$" + suffix;
     }
 }
+
+// 019f4f

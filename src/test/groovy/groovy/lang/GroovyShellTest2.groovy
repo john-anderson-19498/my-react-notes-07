@@ -97,3 +97,4 @@ class GroovyShellTest2 {
         assert result == arg0
     }
 }
+

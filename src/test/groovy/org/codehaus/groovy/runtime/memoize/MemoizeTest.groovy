@@ -205,3 +205,4 @@ class MemoizeTest extends AbstractMemoizeTestCase {
         }.memoizeAtLeast(4)
     }
 }
+

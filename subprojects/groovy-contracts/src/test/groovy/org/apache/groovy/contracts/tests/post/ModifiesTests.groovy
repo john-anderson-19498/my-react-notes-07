@@ -254,3 +254,4 @@ class ModifiesTests extends BaseTestClass {
         }
     }
 }
+

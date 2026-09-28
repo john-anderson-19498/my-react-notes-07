@@ -31,3 +31,4 @@ import java.lang.annotation.RetentionPolicy;
 @ContractElement
 public @interface ClassInvariant {
 }
+// 194b1b

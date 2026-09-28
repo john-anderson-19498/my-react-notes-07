@@ -78,3 +78,5 @@ public class GStringTest extends GroovyTestCase {
         assertEquals("a <=> b", -1, a.compareTo(c));
     }
 }
+
+// 78232a

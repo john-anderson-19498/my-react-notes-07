@@ -2224,3 +2224,4 @@ class TypeInferenceSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

@@ -318,3 +318,5 @@ public class CompileUnit implements NodeMetaDataHandler {
         generatedInnerClasses.put(icn.getName(), icn);
     }
 }
+
+// 7f3983

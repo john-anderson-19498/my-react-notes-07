@@ -21,3 +21,4 @@
  * GINQ provider implementation for querying in-memory collections and streams with SQL-like operations.
  */
 package org.apache.groovy.ginq.provider.collection;
+

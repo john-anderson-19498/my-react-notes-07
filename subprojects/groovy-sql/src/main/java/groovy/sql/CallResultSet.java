@@ -82,3 +82,5 @@ class CallResultSet extends GroovyResultSetExtension {
         return proxy.getImpl();
     }
 }
+
+// 54aed7

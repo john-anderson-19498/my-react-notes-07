@@ -53,3 +53,4 @@ class MethodCallTest {
         assert n.endsWith("MethodCallTest")
     }
 }
+

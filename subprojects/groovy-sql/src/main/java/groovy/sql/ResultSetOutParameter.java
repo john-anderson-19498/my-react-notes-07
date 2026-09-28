@@ -24,3 +24,5 @@ package groovy.sql;
 public interface ResultSetOutParameter extends OutParameter{
 
 }
+
+// 1f4c24

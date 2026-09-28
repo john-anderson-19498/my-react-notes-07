@@ -53,3 +53,4 @@ final class IncrementalRecompilationWithStubsTest extends StubTestCase {
     void verifyStubs() {
     }
 }
+

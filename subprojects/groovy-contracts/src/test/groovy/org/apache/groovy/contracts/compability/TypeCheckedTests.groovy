@@ -97,3 +97,4 @@ class TypeCheckedTests extends GroovyShellTestCase {
         '''
     }
 }
+

@@ -269,3 +269,4 @@ DSL which allows to formulate an object graph which is then converted to JSON.
 [NOTE]
 For more details on builders, have a look at the builders chapter which covers both <<{core-domain-specific-languages}#_jsonbuilder,JsonBuilder>>
 and <<{core-domain-specific-languages}#_streamingjsonbuilder,StreamingJsonBuilder>>.
+

@@ -52,3 +52,4 @@ final class IfPropertyTest {
         assert cheese == 2
     }
 }
+

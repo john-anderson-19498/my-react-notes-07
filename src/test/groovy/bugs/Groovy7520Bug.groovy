@@ -40,3 +40,4 @@ class Groovy7520Bug {
         assert msg.message.contains("Abstract method 'java.lang.String getName()' is not implemented but a method of the same name but different return type is defined: static method 'int getName()'")
     }
 }
+

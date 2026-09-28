@@ -31,3 +31,4 @@ verification-keyring.dryrun.keys
 .claude/
 .apache-steward/
 .apache-steward.local.lock
+

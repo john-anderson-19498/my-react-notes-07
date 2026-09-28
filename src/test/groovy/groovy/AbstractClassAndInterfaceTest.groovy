@@ -331,3 +331,4 @@ final class AbstractClassAndInterfaceTest extends CompilableTestSupport {
         assert msg.contains("The method 'y' must be public as it is declared abstract in interface 'X'")
     }
 }
+

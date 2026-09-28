@@ -461,3 +461,4 @@ class SwingBuilderTableTest extends GroovySwingTestCase {
     }
 
 }
+

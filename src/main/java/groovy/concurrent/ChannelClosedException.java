@@ -78,3 +78,5 @@ public class ChannelClosedException extends IllegalStateException {
         super(message, cause);
     }
 }
+
+// d316fe

@@ -37,3 +37,4 @@ final class GrapeImplementationSelectionTest {
         assert output.contains('Grapes disabled')
     }
 }
+

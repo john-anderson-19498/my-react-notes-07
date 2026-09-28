@@ -284,3 +284,4 @@ final class ExpandoMetaClassCreationHandleTest {
     static class EMCInheritTest extends Tester {
     }
 }
+

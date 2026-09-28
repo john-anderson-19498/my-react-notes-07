@@ -72,3 +72,4 @@ public class CacheCleanupTest {
         assert cache.@map.size() == 2
     }
 }
+

@@ -32,3 +32,5 @@ public class InheritedInterfaceMethodTest extends TestCase {
         assertEquals(0, answer.intValue());
     }
 }
+
+// ef1cc1

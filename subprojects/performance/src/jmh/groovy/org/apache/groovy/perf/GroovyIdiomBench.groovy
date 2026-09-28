@@ -294,3 +294,4 @@ class GroovyIdiomBench {
         bh.consume(sum)
     }
 }
+

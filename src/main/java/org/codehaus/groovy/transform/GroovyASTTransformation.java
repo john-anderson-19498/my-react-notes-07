@@ -49,3 +49,5 @@ import java.lang.annotation.Target;
 public @interface GroovyASTTransformation {
     CompilePhase phase() default CompilePhase.CANONICALIZATION;
 }
+
+// f6216c

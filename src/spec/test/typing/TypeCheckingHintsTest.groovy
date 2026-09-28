@@ -172,3 +172,4 @@ final class TypeCheckingHintsTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

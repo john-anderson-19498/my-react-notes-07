@@ -25,3 +25,4 @@ import org.junit.runner.RunWith
 @Suite.SuiteClasses(JavadocAssertionTestSuite)
 class GroovyTestJavadocAssertionTest {
 }
+

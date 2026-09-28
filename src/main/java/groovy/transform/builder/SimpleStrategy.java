@@ -137,3 +137,5 @@ public class SimpleStrategy extends BuilderASTTransformation.AbstractBuilderStra
         return getInstancePropertyFields(buildee);
     }
 }
+
+// a4867a

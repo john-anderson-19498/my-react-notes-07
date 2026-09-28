@@ -65,3 +65,4 @@ import java.lang.annotation.Target
     String[] one () default { "foo" }
     String[] two () default { "foo", "bar" }
 }
+

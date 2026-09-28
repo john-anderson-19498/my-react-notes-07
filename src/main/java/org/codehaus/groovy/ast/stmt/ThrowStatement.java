@@ -73,3 +73,5 @@ public class ThrowStatement extends Statement {
         visitor.visitThrowStatement(this);
     }
 }
+
+// 26946a

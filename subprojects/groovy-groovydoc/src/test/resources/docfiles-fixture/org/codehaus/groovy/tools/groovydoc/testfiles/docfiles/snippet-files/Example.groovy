@@ -18,3 +18,4 @@
  */
 // GROOVY-5986 / GROOVY-11938: sample snippet for future {@snippet file=...} use.
 println "hello from Example"
+

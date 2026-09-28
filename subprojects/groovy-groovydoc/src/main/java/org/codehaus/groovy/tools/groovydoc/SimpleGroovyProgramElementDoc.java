@@ -186,3 +186,5 @@ public class SimpleGroovyProgramElementDoc extends SimpleGroovyDoc implements Gr
     @Override
     public String qualifiedName() {/*todo*/return null;}
 }
+
+// ee141e

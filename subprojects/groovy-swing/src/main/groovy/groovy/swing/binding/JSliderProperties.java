@@ -112,3 +112,5 @@ class JSliderValueBinding extends AbstractSyntheticBinding implements PropertyCh
         update();
     }
 }
+
+// 259f06

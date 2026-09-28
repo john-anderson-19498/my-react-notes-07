@@ -156,3 +156,5 @@ public class MetaBeanProperty extends MetaProperty {
         this.setter = setter;
     }
 }
+
+// f77f21

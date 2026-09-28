@@ -43,3 +43,4 @@ class InternalFrameFactory extends groovy.swing.factory.RootPaneContainerFactory
         return frame;
     }
 }
+

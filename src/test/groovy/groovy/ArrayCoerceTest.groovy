@@ -224,3 +224,4 @@ final class ArrayCoerceTest {
         assert field.length == 3
     }
 }
+

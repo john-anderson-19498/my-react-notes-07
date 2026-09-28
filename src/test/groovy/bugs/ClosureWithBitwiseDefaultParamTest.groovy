@@ -35,3 +35,4 @@ final class ClosureWithBitwiseDefaultParamTest {
         //c.call()
     }
 }
+

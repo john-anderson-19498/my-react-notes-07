@@ -311,3 +311,4 @@ final class IllegalAccessTests {
         assert f.name
     }
 }
+

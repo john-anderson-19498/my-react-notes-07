@@ -81,3 +81,4 @@ final class Groovy596 {
 
     static class D extends C {}
 }
+

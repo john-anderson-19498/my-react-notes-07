@@ -51,3 +51,4 @@ final class Groovy8405Bug extends CompilableTestSupport {
         '''
     }
 }
+

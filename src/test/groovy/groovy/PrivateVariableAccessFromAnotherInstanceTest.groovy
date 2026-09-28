@@ -53,3 +53,4 @@ class PrivateVariableAccessFromAnotherInstanceTest implements Cloneable {
         assert !(barney.is(fred))
     }
 }
+

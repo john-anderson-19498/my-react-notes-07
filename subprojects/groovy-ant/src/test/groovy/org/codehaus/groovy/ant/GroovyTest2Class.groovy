@@ -23,3 +23,4 @@ class GroovyTest2Class {
         org.codehaus.groovy.ant.GroovyTest.FLAG = 'from GroovyTest2Class.doSomething()'
     }
 }
+

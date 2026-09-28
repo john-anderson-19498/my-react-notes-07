@@ -158,3 +158,5 @@ public @interface BaseScript {
      */
     Class value() default Script.class;
 }
+
+// de2586

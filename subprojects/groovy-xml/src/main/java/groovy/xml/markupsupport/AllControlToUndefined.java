@@ -37,3 +37,5 @@ public class AllControlToUndefined extends StandardControlToUndefined {
         return 0xFDD0 <= ch && ch <= 0xFDEF || ((ch ^ 0xFFFE) == 0 || (ch ^ 0xFFFF) == 0);
     }
 }
+
+// 272e18

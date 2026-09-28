@@ -115,3 +115,4 @@ class StringDecorator extends Proxy{
     String toString()     { adaptee.toString()}
     String someNewMethod(){ 'new Method reached' }
 }
+

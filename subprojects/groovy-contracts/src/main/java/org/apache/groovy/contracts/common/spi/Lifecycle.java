@@ -115,3 +115,5 @@ public interface Lifecycle {
      */
     void afterProcessingConstructorNode(ProcessingContextInformation processingContextInformation, ClassNode classNode, MethodNode constructorNode);
 }
+
+// 18be40

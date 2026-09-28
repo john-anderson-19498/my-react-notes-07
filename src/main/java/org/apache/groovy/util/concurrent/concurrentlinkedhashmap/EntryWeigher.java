@@ -37,3 +37,5 @@ public interface EntryWeigher<K, V> {
    */
   int weightOf(K key, V value);
 }
+
+// cf4ada

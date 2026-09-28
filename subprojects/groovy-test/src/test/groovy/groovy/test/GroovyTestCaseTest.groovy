@@ -98,3 +98,4 @@ final class GroovyTestCaseTest extends GroovyTestCase {
         super((Throwable) cause)
     }
 }
+

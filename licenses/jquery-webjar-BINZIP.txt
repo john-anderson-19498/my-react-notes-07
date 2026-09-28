@@ -3,3 +3,4 @@ for its report generation)
 
 This product bundles the jquery webjar, which is available under the
 MIT License.  For details, see licenses/jquery-js-license.txt.
+

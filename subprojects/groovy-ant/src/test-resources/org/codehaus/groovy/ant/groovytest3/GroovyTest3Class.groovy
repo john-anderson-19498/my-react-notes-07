@@ -25,3 +25,4 @@ class GroovyTest3Class {
         org.codehaus.groovy.ant.GroovyTest.FLAG = "from groovytest3.GroovyTest3Class.doSomethingWithArgs() " + args.join(" ")
     }
 }
+

@@ -363,3 +363,4 @@ final class ClosureMethodTest {
         assert answer == [1, 2, 3, 4, 5]
     }
 }
+

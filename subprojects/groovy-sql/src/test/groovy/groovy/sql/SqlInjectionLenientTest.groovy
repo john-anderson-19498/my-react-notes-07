@@ -86,3 +86,4 @@ final class SqlInjectionLenientTest {
         return sql
     }
 }
+

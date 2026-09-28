@@ -25,3 +25,4 @@ nf.setMaximumFractionDigits(9)
 nf.setMinimumFractionDigits(9)
 nf.setGroupingUsed(false)
 println nf.format(gen_random(100D))
+

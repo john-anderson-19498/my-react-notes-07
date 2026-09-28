@@ -102,3 +102,4 @@ final class DesignPatternsTest extends CompilableTestSupport {
         '''
     }
 }
+

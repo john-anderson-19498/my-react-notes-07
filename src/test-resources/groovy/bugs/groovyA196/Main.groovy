@@ -23,3 +23,4 @@ package groovy.bugs.groovyA196
 }
 
 new Service().method(null)
+

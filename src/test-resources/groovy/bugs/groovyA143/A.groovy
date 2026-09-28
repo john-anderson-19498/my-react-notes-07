@@ -20,3 +20,4 @@ package groovy.bugs.groovyA143
 
 abstract class A {
 }
+

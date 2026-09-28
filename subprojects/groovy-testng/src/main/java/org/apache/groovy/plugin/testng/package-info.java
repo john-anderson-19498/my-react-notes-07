@@ -21,3 +21,5 @@
  * Classes to support running TestNG tests as scripts.
  */
 package org.apache.groovy.plugin.testng;
+
+// b99c4f

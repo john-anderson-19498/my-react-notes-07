@@ -171,3 +171,4 @@ class MockSourceGeneratorTest {
         assert new File(outputDir, 'primitives/PrimitiveInt.java').exists()
     }
 }
+

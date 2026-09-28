@@ -22,3 +22,5 @@
  * stub generation and javac execution.
  */
 package org.codehaus.groovy.tools.javac;
+
+// 3b0e8a

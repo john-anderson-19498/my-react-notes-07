@@ -190,3 +190,4 @@ array: [/* comment in array */"a"/* comment in array */,"b"]
     }
 
 }
+

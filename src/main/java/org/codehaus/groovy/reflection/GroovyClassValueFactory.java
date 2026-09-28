@@ -26,3 +26,5 @@ class GroovyClassValueFactory {
 		return new GroovyClassValueJava7<>(computeValue);
 	}
 }
+
+// 3ef0f3

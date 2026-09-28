@@ -275,3 +275,4 @@ class GenericsBytecodeTest extends GenericsTestBase {
         createClassInfo 'class Bar extends gls.generics.GenericsTestData.Abstract<String> {}'
     }
 }
+

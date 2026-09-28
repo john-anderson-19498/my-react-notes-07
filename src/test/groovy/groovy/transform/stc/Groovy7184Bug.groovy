@@ -36,3 +36,4 @@ final class Groovy7184Bug extends StaticTypeCheckingTestCase {
         'Cannot assign value of type groovy.util.ConfigObject to variable of type Config'
     }
 }
+

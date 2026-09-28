@@ -102,3 +102,4 @@ class CompareTypesTest {
         assert a > b
     }
 }
+

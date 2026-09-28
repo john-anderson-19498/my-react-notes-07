@@ -74,3 +74,4 @@ class RangesSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

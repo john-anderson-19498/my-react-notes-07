@@ -46,3 +46,4 @@ final class Groovy10587 {
         """
     }
 }
+

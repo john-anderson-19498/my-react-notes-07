@@ -142,3 +142,5 @@ public class ReadWriteLockASTTransformation extends AbstractASTTransformation {
         return ctorX(LOCK_TYPE);
     }
 }
+
+// 0e5a67

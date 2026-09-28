@@ -19,3 +19,4 @@
 package core
 
 class Fruit(String name, double price) {}
+

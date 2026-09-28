@@ -47,3 +47,4 @@ public class SingletonASTTransformationTest {
     }
 
 }
+// 6028de

@@ -34,3 +34,4 @@ class ShowTest extends ConsoleTestSupport {
         assert printer.output.any{it == '[foo:bar]' }
     }
 }
+

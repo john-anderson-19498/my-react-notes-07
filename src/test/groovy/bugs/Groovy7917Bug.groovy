@@ -40,3 +40,4 @@ class Groovy7917Bug {
         '''
     }
 }
+

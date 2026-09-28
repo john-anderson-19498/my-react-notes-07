@@ -66,3 +66,4 @@ class GroovyPosixContext extends PosixCommands.Context {
         currentDir
     }
 }
+

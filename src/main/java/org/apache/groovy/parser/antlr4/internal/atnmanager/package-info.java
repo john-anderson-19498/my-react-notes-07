@@ -21,3 +21,5 @@
  * Manages Augmented Transition Network (ATN) state and caching for ANTLR4 parser optimization. Handles parser state serialization and recovery.
  */
 package org.apache.groovy.parser.antlr4.internal.atnmanager;
+
+// f20f8a

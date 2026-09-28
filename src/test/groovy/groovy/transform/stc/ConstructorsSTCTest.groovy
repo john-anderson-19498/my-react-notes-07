@@ -697,3 +697,4 @@ import static groovy.test.GroovyAssert.shouldFail
         'Cannot find matching constructor C()'
     }
 }
+

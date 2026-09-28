@@ -549,3 +549,4 @@ final class ClassTagStaticTest extends StaticTypeCheckingTestCase {
         }
     }
 }
+

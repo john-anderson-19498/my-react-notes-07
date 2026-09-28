@@ -131,3 +131,5 @@ public class StaticMethodCallIndyColdBench {
         return s;
     }
 }
+
+// f07867

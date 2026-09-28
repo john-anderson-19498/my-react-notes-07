@@ -76,3 +76,5 @@ public class StaticTypesTypeChooser extends StatementMetaTypeChooser {
         return target;
     }
 }
+
+// ad93e7

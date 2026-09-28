@@ -113,3 +113,5 @@ public abstract class MetaProperty implements MetaMember {
         return PROPERTY_SET_PREFIX + capitalize(propertyName);
     }
 }
+
+// 9d491f

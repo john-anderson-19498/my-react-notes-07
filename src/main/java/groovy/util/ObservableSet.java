@@ -652,3 +652,5 @@ public class ObservableSet<E> implements Set<E> {
         }
     }
 }
+
+// fb33b9

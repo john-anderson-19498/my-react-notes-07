@@ -95,3 +95,5 @@ public class GroovyException extends Exception implements GroovyExceptionInterfa
         this.fatal = fatal;
     }
 }
+
+// 2e0213

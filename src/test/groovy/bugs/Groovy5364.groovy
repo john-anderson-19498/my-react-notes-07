@@ -118,3 +118,4 @@ final class Groovy5364 {
         assert err.message =~ /Apparent variable 'nonStaticProperty' was found in a static scope but doesn't refer to a local variable, static field or class/
     }
 }
+

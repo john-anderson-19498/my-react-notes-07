@@ -99,3 +99,5 @@ public class ClassInfoLeakStressTest {
     }
 
 }
+
+// 3cb974

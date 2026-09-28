@@ -107,3 +107,5 @@ public abstract class MethodCallTransformation implements ASTTransformation {
 
     protected abstract GroovyCodeVisitor getTransformer(ASTNode[] nodes, SourceUnit sourceUnit);
 }
+
+// f0f177

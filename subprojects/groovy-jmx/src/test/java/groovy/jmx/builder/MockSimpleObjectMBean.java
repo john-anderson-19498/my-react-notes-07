@@ -27,3 +27,5 @@ public interface MockSimpleObjectMBean {
 
     String getId();
 }
+
+// 3ef631

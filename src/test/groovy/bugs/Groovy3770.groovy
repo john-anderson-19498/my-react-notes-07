@@ -61,3 +61,4 @@ final class Groovy3770 {
         assert orig != curriedOrig.getOwner()
     }
 }
+

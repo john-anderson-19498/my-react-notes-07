@@ -317,3 +317,5 @@ public class GroovyTestCase extends TestCase {
         assertEquals(null, expected, actual);
     }
 }
+
+// ba2fae

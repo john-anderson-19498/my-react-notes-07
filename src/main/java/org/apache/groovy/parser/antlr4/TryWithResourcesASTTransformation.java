@@ -312,3 +312,5 @@ public class TryWithResourcesASTTransformation {
         return binX(varX(nextResourceName()), ASSIGN, variableExpression);
     }
 }
+
+// 0f5fb1

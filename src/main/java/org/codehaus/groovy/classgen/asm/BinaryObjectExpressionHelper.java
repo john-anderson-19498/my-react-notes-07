@@ -148,3 +148,5 @@ public class BinaryObjectExpressionHelper extends BinaryExpressionWriter {
     	return ClassHelper.OBJECT_TYPE.getPlainNodeReference();
     }
 }
+
+// 763c4d

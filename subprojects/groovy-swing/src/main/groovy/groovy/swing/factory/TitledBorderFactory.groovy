@@ -103,3 +103,4 @@ class TitledBorderFactory extends SwingBorderFactory {
     }
 
 }
+

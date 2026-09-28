@@ -43,3 +43,5 @@ public class JO {
 //        ASMifierClassVisitor.main(new String[]{"build/test-classes/groovy/bugs/CustomMetaClassTest.class"});
     }
 }
+
+// 549471

@@ -148,3 +148,5 @@ public class GroovyDocTest {
         assertTrue(lines.contains("<title>Record</title>"), "\"<title>Record</title>\" not in: " + lines);
     }
 }
+
+// cedc1c

@@ -263,3 +263,4 @@ final class LambdaHoistTest {
         [lineCount: lineCount[0], locals: locals, synthetic: synthetic[0]]
     }
 }
+

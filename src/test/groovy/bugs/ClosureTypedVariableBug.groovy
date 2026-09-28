@@ -88,3 +88,4 @@ final class ClosureTypedVariableBug {
         assert l1==10l
     }
 }
+

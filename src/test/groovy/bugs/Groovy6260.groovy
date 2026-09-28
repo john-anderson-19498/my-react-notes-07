@@ -72,3 +72,4 @@ final class Groovy6260 {
         assert err.message == 'No such property: bar for class: Foo\nPossible solutions: baz'
     }
 }
+

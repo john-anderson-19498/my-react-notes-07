@@ -109,3 +109,5 @@ public class Reference<T> extends GroovyObjectSupport implements Serializable {
         this.value = value;
     }
 }
+
+// fcb9b5

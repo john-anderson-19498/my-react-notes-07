@@ -110,3 +110,5 @@ public class GroovyObjectWrapper extends Wrapper {
         return this.wrapped.getMetaClass();
     }
 }
+
+// 288d36

@@ -458,3 +458,4 @@ class ObjectBrowser {
     /** Zero-based index of the visible card. */
     int current = 0
 }
+

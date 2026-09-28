@@ -31,3 +31,5 @@ public interface BytecodeProcessor {
      */
     byte[] processBytecode(String name, byte[] original);
 }
+
+// 26d5fc

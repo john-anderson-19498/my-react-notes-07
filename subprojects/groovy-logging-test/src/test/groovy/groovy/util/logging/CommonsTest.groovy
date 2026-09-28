@@ -320,3 +320,4 @@ class CommonsTest {
         assert redirectedSystemOut.toString().contains('customCategory')
     }
 }
+

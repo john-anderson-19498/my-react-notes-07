@@ -53,3 +53,4 @@ staticExtensionClasses=${staticExtensionClasses}"""
     }
 
 }
+

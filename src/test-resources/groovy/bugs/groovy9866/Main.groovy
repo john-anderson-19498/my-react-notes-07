@@ -34,3 +34,4 @@ class C implements I {
 }
 
 new C()
+

@@ -37,3 +37,5 @@ public class EnumConstantClassNode extends InnerClassNode {
         super(outerClass, name, modifiers, superClass);
     }
 }
+
+// 3ebf47

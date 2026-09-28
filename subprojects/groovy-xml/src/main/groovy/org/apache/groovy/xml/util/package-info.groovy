@@ -21,3 +21,4 @@
  * Utility functions for XML operations including namespace handling and element traversal.
  */
 package org.apache.groovy.xml.util;
+

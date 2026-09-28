@@ -32,3 +32,4 @@ class Foo2 {
     private Object method3() {}
     protected Object method4() {}
 }
+

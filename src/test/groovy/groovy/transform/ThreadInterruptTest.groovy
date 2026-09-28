@@ -438,3 +438,4 @@ class InterruptingThread extends Thread {
 @groovy.transform.InheritConstructors
 class CustomException extends Exception {
 }
+

@@ -46,3 +46,5 @@ public class PlatformLineWriterTest extends TestCase {
         assertEquals("Tom" + LS + "Adams" + LS, stringWriter.toString());
     }
 }
+
+// 58ea6e

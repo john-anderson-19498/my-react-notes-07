@@ -267,3 +267,5 @@ final class MetaClassTest {
         }
     }
 }
+
+// dbe15e

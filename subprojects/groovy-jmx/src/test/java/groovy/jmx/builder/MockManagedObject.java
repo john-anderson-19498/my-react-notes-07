@@ -86,3 +86,5 @@ public class MockManagedObject {
         return str;
     }
 }
+
+// 43b825

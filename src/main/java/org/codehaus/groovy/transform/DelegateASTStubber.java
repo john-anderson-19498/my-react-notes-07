@@ -291,3 +291,5 @@ public class DelegateASTStubber extends AbstractASTTransformation {
                 EmptyStatement.INSTANCE);
     }
 }
+
+// 6d9b7e

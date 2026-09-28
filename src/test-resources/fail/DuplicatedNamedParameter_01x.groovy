@@ -19,3 +19,4 @@
 
 def closure = { println it }
 closure debit: 30, credit: 40, debit: 50, {}
+

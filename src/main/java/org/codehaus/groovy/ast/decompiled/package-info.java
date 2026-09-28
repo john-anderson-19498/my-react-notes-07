@@ -21,3 +21,5 @@
  * Tools for converting decompiled Java bytecode back into AST representation. Enables inspection of compiled Groovy classes.
  */
 package org.codehaus.groovy.ast.decompiled;
+
+// c734d5

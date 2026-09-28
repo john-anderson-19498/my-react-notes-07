@@ -56,3 +56,4 @@ tasks.named('rat') {
             'src/test/resources/groovy9802.json'
     ]
 }
+

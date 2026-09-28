@@ -21,3 +21,4 @@ package org.codehaus.groovy.tools.groovydoc.testfiles
 class InnerClassProperty {
     InnerEnum.Enum anEnum
 }
+

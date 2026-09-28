@@ -115,3 +115,4 @@ final class CanonicalJointCompilationStubTest extends StringSourcesStubTestCase 
         assert empty.age == 0
     }
 }
+

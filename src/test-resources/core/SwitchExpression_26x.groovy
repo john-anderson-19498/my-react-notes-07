@@ -31,3 +31,4 @@ def result = switch (s) {
         yield "$x, $y"
 };
 assert "5, 4" == result
+

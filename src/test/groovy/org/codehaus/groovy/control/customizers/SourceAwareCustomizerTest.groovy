@@ -83,3 +83,4 @@ final class SourceAwareCustomizerTest {
         assert recorder.seen.isEmpty()
     }
 }
+

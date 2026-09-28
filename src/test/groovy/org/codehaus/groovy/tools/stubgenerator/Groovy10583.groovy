@@ -46,3 +46,4 @@ final class Groovy10583 extends StringSourcesStubTestCase {
         assert stub.contains('Collection<? extends S> input') // not S<S extends java.lang.CharSequence>>
     }
 }
+

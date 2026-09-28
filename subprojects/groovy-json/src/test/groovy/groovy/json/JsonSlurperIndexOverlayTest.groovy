@@ -27,3 +27,4 @@ class JsonSlurperIndexOverlayTest extends JsonSlurperTest {
         parser = new JsonSlurper().setType(JsonParserType.INDEX_OVERLAY)
     }
 }
+

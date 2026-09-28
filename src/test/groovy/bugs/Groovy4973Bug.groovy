@@ -28,3 +28,4 @@ class Groovy4973Bug {
         assert (1..10L).every { it.class == Long }
     }
 }
+

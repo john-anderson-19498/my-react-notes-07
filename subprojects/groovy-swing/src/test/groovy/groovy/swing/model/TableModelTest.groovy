@@ -57,3 +57,4 @@ class TableModelTest {
         assert value == expected , "for row " + row + " col " + col
     }
 }
+

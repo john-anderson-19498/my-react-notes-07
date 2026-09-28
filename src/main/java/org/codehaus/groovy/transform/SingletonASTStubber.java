@@ -82,3 +82,5 @@ public class SingletonASTStubber extends AbstractASTTransformation {
                 returnS(constX(null)));
     }
 }
+
+// ccbeca

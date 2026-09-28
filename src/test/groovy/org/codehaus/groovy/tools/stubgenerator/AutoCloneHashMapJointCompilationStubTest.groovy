@@ -80,3 +80,4 @@ final class AutoCloneHashMapJointCompilationStubTest extends StringSourcesStubTe
         assert copy.getClass() == settingsClass
     }
 }
+

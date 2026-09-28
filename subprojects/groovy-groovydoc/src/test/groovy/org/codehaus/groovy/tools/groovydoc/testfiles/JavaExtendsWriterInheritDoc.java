@@ -37,3 +37,5 @@ public class JavaExtendsWriterInheritDoc extends Writer {
     public void close() throws IOException {
     }
 }
+
+// 7c09f0

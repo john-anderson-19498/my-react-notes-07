@@ -43,3 +43,5 @@ public class IntArrayIterable implements Iterable<Integer> {
         return new IntArrayIterator(array);
     }
 }
+
+// e4db82

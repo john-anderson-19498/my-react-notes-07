@@ -99,3 +99,4 @@ final class IfElseBytecodeReachabilityTest extends AbstractBytecodeTestCase {
         assert new GroovyShell().evaluate(source) == expected
     }
 }
+

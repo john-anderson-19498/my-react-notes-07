@@ -56,3 +56,5 @@ public class GetEffectivePojoPropertySite extends AbstractCallSite {
         }
     }
 }
+
+// 6d2d95

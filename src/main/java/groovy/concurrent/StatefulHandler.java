@@ -53,3 +53,5 @@ public interface StatefulHandler<S, T> {
      */
     S apply(ActorContext<T> ctx, S state, T message);
 }
+
+// 3e09ae

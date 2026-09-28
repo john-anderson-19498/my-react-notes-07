@@ -143,3 +143,5 @@ class NAryOperationRewriter extends ClassCodeExpressionTransformer {
         return result;
     }
 }
+
+// 5865e0

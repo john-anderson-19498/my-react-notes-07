@@ -67,3 +67,4 @@ class Foo implements Serializable {
         return super.toString() + " name: ${name} location: ${location}"
     }
 }
+

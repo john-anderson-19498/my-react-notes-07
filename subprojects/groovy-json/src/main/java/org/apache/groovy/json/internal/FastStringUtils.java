@@ -85,3 +85,5 @@ public class FastStringUtils {
         return getService().noCopyStringFromChars(chars);
     }
 }
+
+// cb1b81

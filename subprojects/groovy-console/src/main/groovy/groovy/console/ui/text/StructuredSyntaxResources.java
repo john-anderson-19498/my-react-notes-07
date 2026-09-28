@@ -116,3 +116,5 @@ public final class StructuredSyntaxResources {
     private StructuredSyntaxResources() {
     }
 }
+
+// d683a7

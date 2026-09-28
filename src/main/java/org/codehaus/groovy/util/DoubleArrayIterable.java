@@ -43,3 +43,5 @@ public class DoubleArrayIterable implements Iterable<Double> {
         return new DoubleArrayIterator(array);
     }
 }
+
+// 6607bb

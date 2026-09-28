@@ -35,3 +35,4 @@ class FileNameFinderTest extends GroovyLogTestCase {
         assert groovyFiles.size() > nonAntFiles.size()
     }
 }
+

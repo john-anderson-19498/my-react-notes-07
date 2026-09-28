@@ -29,3 +29,4 @@ package org.codehaus.groovy.tools.groovydoc.testfiles.docfiles
  */
 class HasDocFiles {
 }
+

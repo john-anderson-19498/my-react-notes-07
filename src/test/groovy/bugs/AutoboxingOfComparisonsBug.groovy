@@ -30,3 +30,4 @@ final class AutoboxingOfComparisonsBug {
         assert x && z
     }
 }
+

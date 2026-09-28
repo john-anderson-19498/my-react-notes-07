@@ -188,3 +188,4 @@ final class GeneratedAnnotationTest {
         assert !(method.annotations*.annotationType()*.name).contains('groovy.transform.Generated')
     }
 }
+

@@ -47,3 +47,4 @@ final class ClosureWithStaticVariablesBug {
         public static z = [:]
     }
 }
+

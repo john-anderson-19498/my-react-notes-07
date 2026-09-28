@@ -64,3 +64,5 @@ public class ReverseListIterator<T> implements Iterator<T> {
         delegate.remove();
     }
 }
+
+// 4ced55

@@ -30,3 +30,5 @@ public abstract class AbstractLexer extends Lexer implements SyntaxErrorReportab
         super(input);
     }
 }
+
+// ba9f88

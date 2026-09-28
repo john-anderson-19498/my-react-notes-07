@@ -72,3 +72,4 @@ class Groovy7248Bug {
     }
 
 }
+

@@ -258,3 +258,4 @@ class NestedAnnotationWithDefault {}
 
 @AnnWithClassElement(elem = { list -> "list has ${list.size()} elements" })
 class ClosureWithGString {}
+

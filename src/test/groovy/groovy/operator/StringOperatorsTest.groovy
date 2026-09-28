@@ -74,3 +74,4 @@ class StringOperatorsTest {
         assert p instanceof java.util.regex.Pattern
     }
 }
+

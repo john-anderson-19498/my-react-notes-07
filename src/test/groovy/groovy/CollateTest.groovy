@@ -142,3 +142,4 @@ class CollateTest {
     assert list.collate( 2 ).transpose() == [ [ 'tim', 'dave', 'steve' ], [ 20, 14, 23 ] ]
   }
 }
+

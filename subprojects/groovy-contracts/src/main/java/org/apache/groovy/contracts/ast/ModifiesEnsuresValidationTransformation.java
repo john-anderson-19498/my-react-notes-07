@@ -87,3 +87,5 @@ public class ModifiesEnsuresValidationTransformation implements ASTTransformatio
         return false;
     }
 }
+
+// 8dd6db

@@ -59,3 +59,4 @@ final class Groovy9462 extends StringSourcesStubTestCase {
         assert stub.contains("public Neo4jRelationship(F from, T to,")
     }
 }
+

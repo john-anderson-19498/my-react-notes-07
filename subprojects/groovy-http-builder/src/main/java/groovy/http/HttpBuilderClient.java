@@ -73,3 +73,5 @@ public @interface HttpBuilderClient {
      */
     boolean confineToBaseUri() default false;
 }
+
+// 7e3a60

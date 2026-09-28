@@ -727,3 +727,4 @@ class GStringTest extends GroovyTestCase {
         String toString() { v }
     }
 }
+

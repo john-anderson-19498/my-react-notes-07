@@ -157,3 +157,5 @@ public class BlockStatement extends Statement {
         this.scope = scope;
     }
 }
+
+// 6f406a

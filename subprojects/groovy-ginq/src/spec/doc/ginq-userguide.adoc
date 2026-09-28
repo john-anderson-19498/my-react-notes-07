@@ -1238,3 +1238,4 @@ include::../test/org/apache/groovy/ginq/GinqTest.groovy[tags=ginq_examples_01,in
 link: the latest https://github.com/apache/groovy/blob/master/subprojects/groovy-ginq/src/spec/test/org/apache/groovy/ginq/GinqTest.groovy[GINQ examples]
 [NOTE]
 Some examples in the above link require the latest SNAPSHOT version of Groovy to run.
+

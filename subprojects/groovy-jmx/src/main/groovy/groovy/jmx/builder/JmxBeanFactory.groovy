@@ -191,3 +191,4 @@ class JmxBeanFactory extends AbstractFactory {
         metaMap
     }
 }
+

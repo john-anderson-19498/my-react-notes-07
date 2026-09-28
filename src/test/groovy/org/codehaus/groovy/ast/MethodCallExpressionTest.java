@@ -84,3 +84,5 @@ public class MethodCallExpressionTest extends ASTTest {
         assertTrue(isImplicitThis);
     }
 }
+
+// 5fbc77

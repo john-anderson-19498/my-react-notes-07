@@ -30,3 +30,4 @@ class StaticImportTarget {
         assert false, "this.z()/super.z() was resolved to statically imported method"
     }
 }
+

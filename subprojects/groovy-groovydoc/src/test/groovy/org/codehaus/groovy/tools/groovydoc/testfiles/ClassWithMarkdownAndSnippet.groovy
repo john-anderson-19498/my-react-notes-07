@@ -36,3 +36,4 @@ package org.codehaus.groovy.tools.groovydoc.testfiles
 /// ```
 class ClassWithMarkdownAndSnippet {
 }
+

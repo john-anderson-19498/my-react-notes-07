@@ -25,3 +25,5 @@ package org.codehaus.groovy.control;
 public interface HasCleanup {
     void cleanup();
 }
+
+// 8d6055

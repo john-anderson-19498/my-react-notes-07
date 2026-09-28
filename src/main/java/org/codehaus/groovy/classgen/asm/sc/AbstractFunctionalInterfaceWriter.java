@@ -466,3 +466,5 @@ public interface AbstractFunctionalInterfaceWriter {
                                        String instantiatedMethodType, int capturedArgCount) {
     }
 }
+
+// e12c9a

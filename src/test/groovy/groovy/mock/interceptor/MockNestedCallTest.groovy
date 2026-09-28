@@ -47,3 +47,4 @@ class MockNestedCallTest {
 class Coin {
     def flip() { "edge" }
 }
+

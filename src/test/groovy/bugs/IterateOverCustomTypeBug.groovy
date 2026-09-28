@@ -38,3 +38,4 @@ final class IterateOverCustomTypeBug extends TestSupport {
         assert answer == ['a', 'b', 'c']
     }
 }
+

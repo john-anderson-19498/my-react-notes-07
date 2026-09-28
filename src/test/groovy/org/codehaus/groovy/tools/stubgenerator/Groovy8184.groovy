@@ -52,3 +52,4 @@ final class Groovy8184 extends StringSourcesStubTestCase {
         assert pojo.m() != null
     }
 }
+

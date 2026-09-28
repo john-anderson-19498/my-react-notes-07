@@ -156,3 +156,4 @@ include::../test/groovy/toml/TomlBuilderTest.groovy[tags=build_text,indent=0]
 ----
 include::../test/groovy/toml/TomlBuilderTest.groovy[tags=typed_writing,indent=0]
 ----
+

@@ -50,3 +50,4 @@ final class JUnit4ExampleTests {
     // tag::junit4_example[]
 }
 // end::junit4_example[]
+

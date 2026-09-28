@@ -81,3 +81,4 @@ final class Groovy11968 {
         new GroovyShell(this.class.classLoader, new Binding(), config).evaluate(SCRIPT)
     }
 }
+

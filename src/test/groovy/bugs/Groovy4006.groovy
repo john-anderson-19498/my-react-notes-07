@@ -140,3 +140,4 @@ final class Groovy4006 {
         assert ex.message == 'V4 - Inner class now successfully refers to implicitly passed outer this reference!'
     }
 }
+

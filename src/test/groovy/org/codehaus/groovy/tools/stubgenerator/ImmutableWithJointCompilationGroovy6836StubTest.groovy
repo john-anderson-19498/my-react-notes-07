@@ -53,3 +53,4 @@ class ImmutableWithJointCompilationGroovy6836StubTest extends StringSourcesStubT
         test.run()
     }
 }
+

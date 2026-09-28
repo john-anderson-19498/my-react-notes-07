@@ -149,3 +149,4 @@ class DocumentationExampleTests extends BaseTestClass {
         }
     }
 }
+

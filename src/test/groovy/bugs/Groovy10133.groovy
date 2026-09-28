@@ -269,3 +269,4 @@ final class Groovy10133 {
         assert err.message =~ /No such property: x for class: C/
     }
 }
+

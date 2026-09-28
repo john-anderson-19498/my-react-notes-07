@@ -31,3 +31,4 @@ The Parrot parser is based on antlr4 and introduced since Groovy 3.0.0. It provi
 | groovy.antlr4.sll.threshold | Parrot parser will try SLL mode and then try LL mode if SLL failed. But the more tokens to parse, the more likely SLL will fail. If SLL threshold hits, SLL will be skipped. Setting the threshold to `0` means never trying SLL mode, which is not recommended at most cases because SLL is the fastest mode though SLL is less powerful than LL. **Note: ** the threshold specified is the token count | `-1` (disabled by default) | 3.0.9+ | -Dgroovy.antlr4.sll.threshold=1000
 | groovy.antlr4.clear.lexer.dfa.cache | Clear the DFA cache for lexer. The DFA cache for lexer is always small and important for parsing performance, so it's strongly recommended to leave it as it is until OutOfMemoryError will truly occur | `false`| 3.0.9+ | -Dgroovy.antlr4.clear.lexer.dfa.cache=true
 |=======================================================================
+

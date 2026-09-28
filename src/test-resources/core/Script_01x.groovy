@@ -21,3 +21,4 @@ protected String getGroovySql() {
 }
 
 assert "abc" == getGroovySql()
+

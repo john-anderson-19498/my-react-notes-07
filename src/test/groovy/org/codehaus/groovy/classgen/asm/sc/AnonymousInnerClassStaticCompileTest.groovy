@@ -25,3 +25,4 @@ import groovy.transform.stc.AnonymousInnerClassSTCTest
  */
 final class AnonymousInnerClassStaticCompileTest extends AnonymousInnerClassSTCTest implements StaticCompilationTestSupport {
 }
+

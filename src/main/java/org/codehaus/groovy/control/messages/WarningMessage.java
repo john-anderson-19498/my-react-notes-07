@@ -98,3 +98,5 @@ public class WarningMessage extends LocatedMessage {
         super.write(writer, janitor);
     }
 }
+
+// 89b247

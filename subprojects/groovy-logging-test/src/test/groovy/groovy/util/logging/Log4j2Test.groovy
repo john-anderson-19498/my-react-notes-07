@@ -358,3 +358,4 @@ final class Log4j2Test {
         assert appender.getEvents().size() == 0
     }
 }
+

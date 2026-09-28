@@ -973,3 +973,5 @@ public class ProxyGeneratorAdapter extends ClassVisitor {
         }
     }
 }
+
+// 477c4e

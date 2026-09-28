@@ -21,3 +21,5 @@
  * Meta-annotations for contract support, providing annotation stereotypes and composable contract definitions.
  */
 package org.apache.groovy.contracts.annotations.meta;
+
+// f92021

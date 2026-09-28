@@ -105,3 +105,5 @@ class TemplateASTTransformer extends CompilationCustomizer {
         classNode.addConstructor(ctor);
     }
 }
+
+// 439f68

@@ -36,3 +36,4 @@ final class CategoriesSTCTest extends StaticTypeCheckingTestCase {
         'No such property: day for class: java.lang.Integer'
     }
 }
+

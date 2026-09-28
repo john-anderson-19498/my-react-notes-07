@@ -23,3 +23,5 @@ public class Pojo11956 {
     public  String getFoo() { return this.foo; }
     protected void setFoo(String foo) { this.foo = foo; }
 }
+
+// 960f3f

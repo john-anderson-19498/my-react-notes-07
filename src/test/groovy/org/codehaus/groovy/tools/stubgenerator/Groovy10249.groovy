@@ -55,3 +55,4 @@ final class Groovy10249 extends StringSourcesStubTestCase {
         assert stub.contains("void test(${name}.C... param0)")
     }
 }
+

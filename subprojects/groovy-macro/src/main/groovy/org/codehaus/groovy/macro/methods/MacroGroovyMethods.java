@@ -284,3 +284,5 @@ public class MacroGroovyMethods {
         return (ClosureExpression) result;
     }
 }
+
+// 4a3d90

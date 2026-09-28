@@ -36,3 +36,4 @@ class InheritDocTagChild extends InheritDocTagBase {
     @Override
     String transform(String value) { value.toLowerCase() }
 }
+

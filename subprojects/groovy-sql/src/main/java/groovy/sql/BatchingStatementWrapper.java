@@ -175,3 +175,5 @@ public class BatchingStatementWrapper extends GroovyObjectSupport implements Aut
         delegate.close();
     }
 }
+
+// 3ee844

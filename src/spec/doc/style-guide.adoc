@@ -698,3 +698,4 @@ you should always favor the use of strong typing, it helps making the contract s
 avoids possible passed arguments type mistakes, gives better documentation, and also helps the IDE with code completion.
 Whenever the code is for your use only, like private methods,
 or when the IDE can easily infer the type, then you're more free to decide when to type or not.
+

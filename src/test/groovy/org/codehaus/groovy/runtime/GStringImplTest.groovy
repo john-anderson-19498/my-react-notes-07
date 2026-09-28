@@ -481,3 +481,4 @@ class GStringImplTest {
         assertEquals("Hello World!", result)
     }
 }
+

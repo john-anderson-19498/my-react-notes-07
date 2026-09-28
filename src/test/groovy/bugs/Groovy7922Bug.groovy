@@ -60,3 +60,4 @@ final class Groovy7922Bug extends CompilableTestSupport {
         '''
     }
 }
+

@@ -95,3 +95,4 @@ class GroovyCategoryStressTest extends GroovyTestCase {
     }
 
 }
+

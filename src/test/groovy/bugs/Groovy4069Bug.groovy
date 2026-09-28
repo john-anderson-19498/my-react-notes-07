@@ -139,3 +139,4 @@ class Groovy4069Bug {
         """
     }
 }
+

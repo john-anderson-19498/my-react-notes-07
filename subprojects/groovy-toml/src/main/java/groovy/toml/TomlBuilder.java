@@ -319,3 +319,5 @@ public class TomlBuilder extends GroovyObjectSupport implements Writable {
         return out.append(toString());
     }
 }
+
+// 12f293

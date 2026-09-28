@@ -111,3 +111,5 @@ class AbstractButtonSelectedBinding extends AbstractSyntheticBinding implements 
         update();
     }
 }
+
+// 0503c6

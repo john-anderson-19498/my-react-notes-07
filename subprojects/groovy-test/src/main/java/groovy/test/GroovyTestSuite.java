@@ -124,3 +124,5 @@ public class GroovyTestSuite extends TestSuite {
         return loader.parseClass(new File(fileName));
     }
 }
+
+// 9a9d57

@@ -21,3 +21,5 @@
  * Internal metaclass utilities. Implementation details for Groovy's metaclass system.
  */
 package org.apache.groovy.internal.metaclass;
+
+// 90b9e9

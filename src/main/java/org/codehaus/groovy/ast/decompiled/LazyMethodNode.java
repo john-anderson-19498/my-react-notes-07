@@ -994,3 +994,5 @@ class LazyMethodNode extends MethodNode implements LazyInitializable {
         return delegate.getNodeMetaData();
     }
 }
+
+// 932396

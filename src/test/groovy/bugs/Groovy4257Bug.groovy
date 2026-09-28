@@ -43,3 +43,4 @@ class Groovy4257Bug {
         assert orig == expected
     }
 }
+

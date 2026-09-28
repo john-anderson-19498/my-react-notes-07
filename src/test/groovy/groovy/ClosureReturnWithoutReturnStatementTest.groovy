@@ -49,3 +49,4 @@ class ClosureReturnWithoutReturnStatementTest {
         x > 5
     }
 }
+

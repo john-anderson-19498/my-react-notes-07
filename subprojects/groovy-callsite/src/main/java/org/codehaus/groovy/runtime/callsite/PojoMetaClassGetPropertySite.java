@@ -50,3 +50,5 @@ public class PojoMetaClassGetPropertySite extends AbstractCallSite {
         }
     }
 }
+
+// 848bde

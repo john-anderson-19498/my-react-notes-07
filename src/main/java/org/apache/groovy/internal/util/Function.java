@@ -29,3 +29,4 @@ import org.apache.groovy.lang.annotation.Incubating;
 public interface Function<T, R> {
     R apply(T t);
 }
+// 56485d

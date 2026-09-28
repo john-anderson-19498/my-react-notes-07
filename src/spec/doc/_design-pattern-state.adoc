@@ -112,3 +112,4 @@ Instead, it defines the entire state machine on the fly as needed.
 See the https://web.archive.org/web/20170624004445/http://www.bytemycode.com:80/snippets/snippet/640/[previous reference] for more elaborate examples of this style.
 
 See also: https://web.archive.org/web/20150102211229/http://groovy.codehaus.org/Model-based+testing+using+ModelJUnit[Model-based testing using ModelJUnit]
+

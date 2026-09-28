@@ -36,3 +36,4 @@ enum EnumWithAbstractMethodAndConstantBodies {
 
     abstract String draw()
 }
+

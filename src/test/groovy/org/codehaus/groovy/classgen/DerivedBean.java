@@ -34,3 +34,5 @@ public class DerivedBean extends org.codehaus.groovy.runtime.DummyBean {
         this.bar = value;
     }
 }
+
+// 57a647

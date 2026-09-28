@@ -472,3 +472,5 @@ public class ConfigObject extends GroovyObjectSupport implements Writable, Map, 
         return sw.toString();
     }
 }
+
+// 064835

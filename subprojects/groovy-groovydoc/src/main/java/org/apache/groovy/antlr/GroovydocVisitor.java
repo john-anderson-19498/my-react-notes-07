@@ -801,3 +801,5 @@ public class GroovydocVisitor extends ClassCodeVisitorSupport {
         return String.valueOf(value);
     }
 }
+
+// 5509df

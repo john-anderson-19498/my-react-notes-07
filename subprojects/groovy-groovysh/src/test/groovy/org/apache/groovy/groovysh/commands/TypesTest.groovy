@@ -54,3 +54,4 @@ class TypesTest extends SystemTestSupport {
         assert engine.types.keySet().toSet() == before
     }
 }
+

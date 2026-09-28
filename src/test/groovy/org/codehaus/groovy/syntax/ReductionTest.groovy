@@ -261,3 +261,4 @@ class ReductionTest {
         assertSame(child2, reduction1.get(2))
     }
 }
+

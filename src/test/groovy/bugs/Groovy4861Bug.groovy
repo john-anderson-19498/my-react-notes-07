@@ -39,3 +39,4 @@ class Groovy4861Bug {
     static class Inner<X> {}
     static Inner<A> method() { null }
 }
+

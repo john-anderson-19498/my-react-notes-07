@@ -115,3 +115,4 @@ for (n in [1, 2, 3]) {
                 "fresh Reference after Iterator.next must not appear:\n${bytecode}"
     }
 }
+

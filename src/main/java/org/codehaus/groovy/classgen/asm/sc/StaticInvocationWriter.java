@@ -744,3 +744,5 @@ public class StaticInvocationWriter extends InvocationWriter {
         }
     }
 }
+
+// 5a0d57

@@ -21,3 +21,4 @@ Details can be found in: licenses/jline3-license.txt
 
 This product bundles several JLine3 jars (optional dependency used with groovysh),
 which are available under a BSD License.  For details, see licenses/jline3-license.txt.
+

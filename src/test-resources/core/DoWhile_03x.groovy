@@ -27,3 +27,4 @@ do {
 } while (true)
 
 assert j == 3
+

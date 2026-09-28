@@ -46,3 +46,5 @@ import java.lang.annotation.Target;
 })
 public @interface RecordBase {
 }
+
+// 10b73c

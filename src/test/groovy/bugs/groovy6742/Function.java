@@ -22,3 +22,5 @@ package bugs.groovy6742;
 public interface Function<F, T> {
     T apply(F input);
 }
+
+// 99bb86

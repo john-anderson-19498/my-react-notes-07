@@ -41,3 +41,4 @@ final class Groovy5912 {
         assert err.message.contains('Cannot find matching method bugs.groovy5912.PluginPathAwareFileSystemResourceLoader#setSearchLocations')
     }
 }
+

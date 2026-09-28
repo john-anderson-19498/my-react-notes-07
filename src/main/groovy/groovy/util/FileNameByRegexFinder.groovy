@@ -40,3 +40,4 @@ class FileNameByRegexFinder implements IFileNameFinder {
         result
     }
 }
+

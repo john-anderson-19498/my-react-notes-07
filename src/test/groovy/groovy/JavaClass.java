@@ -38,3 +38,5 @@ public class JavaClass {
 
     static final StaticInner CONST = new StaticInner();
 }
+
+// ae880b

@@ -71,3 +71,4 @@ class ColumnModelFactory extends AbstractFactory {
         }
     }
 }
+

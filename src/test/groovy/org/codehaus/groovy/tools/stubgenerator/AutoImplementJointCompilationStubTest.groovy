@@ -159,3 +159,4 @@ final class AutoImplementJointCompilationStubTest extends StringSourcesStubTestC
         assert painterClass.newInstance().render() == null
     }
 }
+

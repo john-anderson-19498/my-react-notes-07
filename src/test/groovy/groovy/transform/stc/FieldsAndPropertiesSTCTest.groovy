@@ -2559,3 +2559,4 @@ class FieldsAndPropertiesSTCTest extends StaticTypeCheckingTestCase {
     static class Public extends PackagePrivate {
     }
 }
+

@@ -38,3 +38,5 @@ public class MockSimpleObject implements MockSimpleObjectMBean {
         return id;
     }
 }
+
+// be6188

@@ -87,3 +87,4 @@ class CustomJsonGeneratorTest {
         Closure c
     }
 }
+

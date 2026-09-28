@@ -110,3 +110,5 @@ public class ResultSetMetaDataWrapper extends GroovyObjectSupport {
         throw new ReadOnlyPropertyException(property, target.getClass());
     }
 }
+
+// 3317cc

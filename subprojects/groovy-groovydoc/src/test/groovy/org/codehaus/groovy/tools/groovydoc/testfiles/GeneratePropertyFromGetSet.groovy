@@ -87,3 +87,4 @@ public class GeneratePropertyFromGetSet {
         return true;
     }
 }
+

@@ -332,3 +332,4 @@ class GinqAstOptimizer extends GinqAstBaseVisitor {
     private static final List<Integer> LOGICAL_OP_TYPE_LIST = [Types.LOGICAL_AND, Types.LOGICAL_OR]
     private static final String TO_OPTIMIZE = "TO_OPTIMIZE"
 }
+

@@ -25,3 +25,4 @@ import java.lang.annotation.RetentionPolicy;
 public @interface JavaAnnotationWithClassElement {
     Class elem();
 }
+// 22f337

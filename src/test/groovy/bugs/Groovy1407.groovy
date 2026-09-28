@@ -46,3 +46,4 @@ final class Groovy1407 {
       assert expected == actual
    }
 }
+

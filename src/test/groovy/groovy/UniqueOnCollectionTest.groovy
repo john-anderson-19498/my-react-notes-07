@@ -144,3 +144,4 @@ class UniqueOnCollectionTest {
         assert it == [1]
     }
 }
+

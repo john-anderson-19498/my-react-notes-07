@@ -51,3 +51,5 @@ public class MetaArrayLengthProperty extends MetaProperty {
         throw new ReadOnlyPropertyException("length", object.getClass());
     }
 }
+
+// 7896a6

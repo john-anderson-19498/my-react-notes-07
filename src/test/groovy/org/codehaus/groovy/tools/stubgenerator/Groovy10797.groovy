@@ -53,3 +53,4 @@ final class Groovy10797 extends StringSourcesStubTestCase {
         assert stub.contains('public static <T extends A<?>> B<T> test() { return null; }');
     }
 }
+

@@ -29,3 +29,5 @@ public class AnnotationClosureJavaCompatibilityParameterizedTest extends Annotat
         return JavaCompatibilityParameterized.class;
     }
 }
+
+// ff4e97

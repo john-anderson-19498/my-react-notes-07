@@ -34,3 +34,4 @@ final class ByteIndexBug {
         new GroovyShell(b).evaluate(sb.toString(), 'foo')
     }
 }
+

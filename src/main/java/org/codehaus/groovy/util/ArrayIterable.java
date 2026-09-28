@@ -43,3 +43,5 @@ public class ArrayIterable<T> implements Iterable<T> {
         return new ArrayIterator<>(array);
     }
 }
+
+// 6a9ac3

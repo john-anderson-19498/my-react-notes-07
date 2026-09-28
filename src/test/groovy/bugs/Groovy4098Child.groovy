@@ -36,3 +36,4 @@ class Groovy4098Child extends Groovy4098Parent {
     }
 
 }
+

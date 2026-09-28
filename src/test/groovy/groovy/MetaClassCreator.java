@@ -32,3 +32,5 @@ public class MetaClassCreator extends MetaClassRegistry.MetaClassCreationHandle 
         return super.createNormalMetaClass(theClass, registry);
     }
 }
+
+// 32ce33

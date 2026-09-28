@@ -160,3 +160,4 @@ class RTTest2 extends RTTest1 {
 
     String getEight() { "eight" }
 }
+

@@ -167,3 +167,5 @@ public class IndexedPropertyASTTransformation extends AbstractASTTransformation 
         return prefix + capitalize(fNode.getName());
     }
 }
+
+// 83712e

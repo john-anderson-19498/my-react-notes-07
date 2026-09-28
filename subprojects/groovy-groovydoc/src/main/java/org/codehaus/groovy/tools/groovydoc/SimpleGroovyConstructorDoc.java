@@ -35,3 +35,5 @@ public class SimpleGroovyConstructorDoc extends SimpleGroovyExecutableMemberDoc 
         super(name, belongsToClass);
     }
 }
+
+// 645ab1

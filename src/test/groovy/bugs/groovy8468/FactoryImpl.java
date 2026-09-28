@@ -30,3 +30,5 @@ public class FactoryImpl implements Factory {
     System.out.println(array);
   }*/
 }
+
+// 870294

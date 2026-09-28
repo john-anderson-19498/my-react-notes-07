@@ -223,3 +223,4 @@ final class ClosureComposeTest {
         '''
     }
 }
+

@@ -697,3 +697,5 @@ public abstract class CodeVisitorSupport implements GroovyCodeVisitor {
     public void visitBytecodeExpression(BytecodeExpression expression) {
     }
 }
+
+// 9e1a74

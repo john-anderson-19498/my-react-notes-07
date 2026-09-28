@@ -71,3 +71,5 @@ public enum StaticTypesMarker {
     /** marks a method-reference ({@code ::}) argument type so overload selection prefers a functional-interface parameter over a {@code Closure} parameter: as a call argument a method reference is coerced only to a functional interface, so a {@code Closure} overload does not apply (unlike assignment, where {@code Closure<?> c = Foo::bar} is valid) */
     METHOD_REFERENCE_TYPE
 }
+
+// d01b45

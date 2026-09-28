@@ -33,3 +33,4 @@ final class ThrowStatementTest {
         assert stmt.text == 'throw new java.lang.Throwable(oops)' // TODO: quoted string
     }
 }
+

@@ -40,3 +40,4 @@ final class Groovy3721 extends CompilableTestSupport {
         '''
     }
 }
+

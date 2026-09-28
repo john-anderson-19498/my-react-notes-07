@@ -175,3 +175,4 @@ final class MockingExampleTests {
         // end::emc5[]
     }
 }
+

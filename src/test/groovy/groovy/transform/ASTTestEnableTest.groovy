@@ -62,3 +62,4 @@ final class ASTTestEnableTest {
         assert error.message.contains('test closure was evaluated')
     }
 }
+

@@ -123,3 +123,4 @@ final class Groovy9236 {
         assert guessedClassNameList.every(n -> !classNamesShouldAvoidToGuess.contains(n))
     }
 }
+

@@ -33,3 +33,4 @@ final class MethodDeclarationTest  extends CompilableTestSupport {
         """
     }
 }
+

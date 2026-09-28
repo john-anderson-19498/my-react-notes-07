@@ -72,3 +72,4 @@ class GroovySystemRegistryTest extends SystemTestSupport {
         assert console.hasVariable('result')
     }
 }
+

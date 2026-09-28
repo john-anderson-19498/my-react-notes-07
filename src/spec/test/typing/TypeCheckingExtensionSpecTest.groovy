@@ -648,3 +648,4 @@ new DelegateTest().delegate()
         static void doesNotExist(String self) {}
     }
 }
+

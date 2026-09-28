@@ -237,3 +237,5 @@ public class SemanticPredicates {
         return afterAnnotations == FOR || afterAnnotations == WHILE || afterAnnotations == DO;
     }
 }
+
+// 67107e

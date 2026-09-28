@@ -107,3 +107,5 @@ public interface MetaMember {
 
     // getDeclaringClass()->Class cannot be included because MetaMethod declares getDeclaringClass()->CachedClass
 }
+
+// f97917

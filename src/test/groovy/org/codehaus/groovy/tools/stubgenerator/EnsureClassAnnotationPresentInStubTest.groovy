@@ -50,3 +50,4 @@ class EnsureClassAnnotationPresentInStubTest extends StringSourcesStubTestCase {
         assert classes['bar.Bar'].annotations[0].type.toString() == 'foo.Foo'
     }
 }
+

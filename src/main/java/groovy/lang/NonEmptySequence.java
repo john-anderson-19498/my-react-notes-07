@@ -63,3 +63,5 @@ public class NonEmptySequence extends Sequence {
         return 1;
     }
 }
+
+// b139c0

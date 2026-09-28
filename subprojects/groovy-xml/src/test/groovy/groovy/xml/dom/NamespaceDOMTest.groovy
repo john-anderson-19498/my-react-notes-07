@@ -118,3 +118,4 @@ final class NamespaceDOMTest extends TestXmlSupport {
         assertXmlEquals(expected2, XmlUtil.serialize(root))
     }
 }
+

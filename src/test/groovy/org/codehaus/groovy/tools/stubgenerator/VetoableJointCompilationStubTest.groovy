@@ -103,3 +103,4 @@ final class VetoableJointCompilationStubTest extends StringSourcesStubTestCase {
         assert constrained.value == 10
     }
 }
+

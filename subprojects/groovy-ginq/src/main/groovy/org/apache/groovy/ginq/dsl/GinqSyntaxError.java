@@ -73,3 +73,5 @@ public class GinqSyntaxError extends AssertionError {
         return column;
     }
 }
+
+// 621521

@@ -224,3 +224,4 @@ final class MixinAnnotationTest {
 //        "changed"
 //    }
 }
+

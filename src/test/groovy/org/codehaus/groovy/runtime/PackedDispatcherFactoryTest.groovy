@@ -166,3 +166,4 @@ final class PackedDispatcherFactoryTest {
         assertEquals('checked, undeclared', thrown.message)
     }
 }
+

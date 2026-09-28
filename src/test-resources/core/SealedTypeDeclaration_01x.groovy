@@ -33,3 +33,4 @@ def shapeIAnnotations = ShapeI.class.annotations
 assert 1 == shapeIAnnotations.size()
 Sealed sealedAnnotation = (Sealed) shapeIAnnotations[0]
 assert [Circle.class, Rectangle.class] == sealedAnnotation.permittedSubclasses()
+

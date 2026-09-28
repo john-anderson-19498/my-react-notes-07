@@ -32,3 +32,4 @@ final class Groovy2557 {
         assertEquals(['a', 'b', 'c'], list)
     }
 }
+

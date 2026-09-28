@@ -193,3 +193,4 @@ final class StrictLocalM2ResolverTest {
         new File(dir, "${mod}-${rev}.pom").text = pom.toString()
     }
 }
+

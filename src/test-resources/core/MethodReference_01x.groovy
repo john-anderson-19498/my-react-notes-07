@@ -117,3 +117,4 @@ Supplier foo = this::<String>chars
 assert foo() == 'foo'
 Function sz = ArrayList::<Integer>size
 assert sz([1, 2, 3, 4]) == 4
+

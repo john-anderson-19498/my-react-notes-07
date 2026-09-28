@@ -42,3 +42,4 @@ final class Groovy3876 {
         assert "$a" as Integer == -1000
     }
 }
+

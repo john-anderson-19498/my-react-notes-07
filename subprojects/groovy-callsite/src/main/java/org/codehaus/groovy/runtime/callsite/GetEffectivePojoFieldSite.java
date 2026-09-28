@@ -50,3 +50,5 @@ class GetEffectivePojoFieldSite extends AbstractCallSite {
         return effective.getProperty(receiver);
     }
 }
+
+// 23c3b7

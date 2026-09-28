@@ -35,3 +35,5 @@ public class DefaultPropertyReader implements PropertyReader {
         return InvokerHelper.getPropertySafe(owner, propertyName);
     }
 }
+
+// 77338a

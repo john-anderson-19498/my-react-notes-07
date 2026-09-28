@@ -53,3 +53,4 @@ class NamedTupleTest {
         assert err.message.toString().contains('elements(size: 3) and names(size: 2) should have the same size')
     }
 }
+

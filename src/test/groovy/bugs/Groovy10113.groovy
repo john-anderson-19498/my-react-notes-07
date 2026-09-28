@@ -112,3 +112,4 @@ final class Groovy10113 {
         assert err.message =~ /Cycle detected: a cycle exists in the type hierarchy between B and A/
     }
 }
+

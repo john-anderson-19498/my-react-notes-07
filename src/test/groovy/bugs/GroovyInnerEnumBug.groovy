@@ -54,3 +54,4 @@ class GroovyInnerEnumBug {
         public static MyEnum[] myenums = [a, b, c];
     }
 }
+

@@ -38,3 +38,5 @@ public interface GroovydocHolder<T> {
      */
     T getInstance();
 }
+
+// 0f252b

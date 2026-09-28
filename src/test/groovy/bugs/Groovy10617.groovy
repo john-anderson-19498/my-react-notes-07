@@ -33,3 +33,4 @@ final class Groovy10617 extends AbstractBytecodeTestCase {
         assert !bytecode.hasSequence(['INVOKEDYNAMIC cast(Ljava/lang/Object;)Ljava/lang/String;'])
     }
 }
+

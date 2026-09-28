@@ -233,3 +233,5 @@ public class StructuredSyntaxHandler extends DefaultHandler {
         super.startElement(uri, localName, qName, attributes);
     }
 }
+
+// 8f7b5e

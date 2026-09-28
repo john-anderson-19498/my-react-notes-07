@@ -637,3 +637,4 @@ class CharSequenceValueTest {
         SOME_VALUE, ANOTHER_VALUE
     }
 }
+

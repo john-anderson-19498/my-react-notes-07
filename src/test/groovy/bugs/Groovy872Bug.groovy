@@ -44,3 +44,4 @@ class MyCalendar {
     cal.set ( Calendar.DAY_OF_MONTH , 1 )
   }
 }
+

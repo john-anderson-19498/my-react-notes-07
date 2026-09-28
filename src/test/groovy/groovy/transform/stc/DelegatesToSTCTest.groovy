@@ -870,3 +870,4 @@ class DelegatesToSTCTest extends StaticTypeCheckingTestCase {
         'Closure parameter with resolve strategy OWNER_FIRST passed to method with resolve strategy DELEGATE_FIRST'
     }
 }
+

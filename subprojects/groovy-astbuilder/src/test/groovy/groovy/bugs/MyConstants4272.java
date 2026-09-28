@@ -29,3 +29,5 @@ import org.codehaus.groovy.transform.GroovyASTTransformationClass;
 @Target({ElementType.TYPE})
 @GroovyASTTransformationClass({"groovy.bugs.MyConstantsASTTransformation4272"})
 public @interface MyConstants4272 {}
+
+// 1e3724

@@ -20,3 +20,4 @@ package groovy.bugs.groovyA144
 
 String result = new X().m()
 assert result == 'XT'
+

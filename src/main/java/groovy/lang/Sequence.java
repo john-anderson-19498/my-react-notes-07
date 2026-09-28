@@ -301,3 +301,5 @@ public class Sequence extends ArrayList implements GroovyObject {
         }
     }
 }
+
+// ed1fee

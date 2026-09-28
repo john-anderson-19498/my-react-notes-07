@@ -42,3 +42,5 @@ public interface Template {
      */
     Writable make(Map binding);
 }
+
+// 6b1340

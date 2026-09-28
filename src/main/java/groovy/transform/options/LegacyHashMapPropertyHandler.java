@@ -119,3 +119,5 @@ public class LegacyHashMapPropertyHandler extends ImmutablePropertyHandler {
         return createLegacyConstructorStatementMapSpecial(fNode);
     }
 }
+
+// 3457c6

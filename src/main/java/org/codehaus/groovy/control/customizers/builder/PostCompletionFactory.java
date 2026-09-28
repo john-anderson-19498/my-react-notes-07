@@ -28,3 +28,5 @@ import groovy.util.FactoryBuilderSupport;
 public interface PostCompletionFactory {
     Object postCompleteNode(FactoryBuilderSupport factory, Object parent, Object node);
 }
+
+// b11893

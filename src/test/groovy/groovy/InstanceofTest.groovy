@@ -1107,3 +1107,4 @@ final class InstanceofTest {
         assert f(1) == 'early'
     }
 }
+

@@ -146,3 +146,4 @@ final class GroovyRowResultTest {
         assert row.size() == 1
     }
 }
+

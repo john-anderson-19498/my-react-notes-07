@@ -195,3 +195,5 @@ public class SimpleGroovyPackageDoc extends SimpleGroovyDoc implements GroovyPac
     }
 
 }
+
+// eb70d7

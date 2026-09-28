@@ -199,3 +199,4 @@ final class NamedParameterTest {
         "foo = $params.foo, bar = $params.bar, num = $num"
     }
 }
+

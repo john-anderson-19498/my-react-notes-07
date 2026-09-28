@@ -64,3 +64,4 @@ final class InnerAnnotationStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains('@AnnoWithEnum(value=AnnoWithEnum.Include.NON_NULL)')
     }
 }
+

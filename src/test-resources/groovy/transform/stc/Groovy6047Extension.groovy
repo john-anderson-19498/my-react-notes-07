@@ -22,3 +22,4 @@ methodNotFound { receiver, name, argumentList, argTypes, call ->
         typeCheckingVisitor.findMethodsWithGenerated(receiver, 'elements')
     }
 }
+

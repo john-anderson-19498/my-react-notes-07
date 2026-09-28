@@ -56,3 +56,4 @@ class BadGenericsExpansionOnInnerClassStubsTest extends StringSourcesStubTestCas
         assert stubSource.contains('public static <T> AbstractProcessingQueue<java.util.List<T>> createQueue2(java.util.List<groovy.lang.Closure<T>> closures, java.util.List<AbstractProcessingQueue.ItemGenerator2> generators)')
     }
 }
+

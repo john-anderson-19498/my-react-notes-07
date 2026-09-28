@@ -41,3 +41,4 @@ final class SubscriptOnStringArrayBug extends TestSupport {
         assert array[1] == 'two'
     }
 }
+

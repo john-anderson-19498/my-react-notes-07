@@ -92,3 +92,4 @@ final class Groovy9270 {
         assert err.message =~ / Cannot perform instanceof check against type parameter T/
     }
 }
+

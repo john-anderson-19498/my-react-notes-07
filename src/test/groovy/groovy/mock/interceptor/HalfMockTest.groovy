@@ -153,3 +153,4 @@ class Baz {
 class Bar extends Baz {
 
 }
+

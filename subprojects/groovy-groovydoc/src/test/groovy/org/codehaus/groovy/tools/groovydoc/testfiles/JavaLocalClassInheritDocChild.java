@@ -25,3 +25,5 @@ public class JavaLocalClassInheritDocChild extends JavaLocalClassInheritDocBase 
         return null;
     }
 }
+
+// 5616a1

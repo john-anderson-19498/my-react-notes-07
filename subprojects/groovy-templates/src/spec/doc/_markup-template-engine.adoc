@@ -828,3 +828,4 @@ include::../test/MarkupTemplateEngineSpecTest.groovy[tags=typechecked_inlined_te
 An additional interest of using type checked models is that performance should improve. By telling the type checker what are the expected types,
 you also let the compiler generate optimized code for that, so if you are looking for the best performance, consider using type checked templates.
 
+

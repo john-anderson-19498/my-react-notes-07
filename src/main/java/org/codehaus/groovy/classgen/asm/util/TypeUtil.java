@@ -241,3 +241,5 @@ public abstract class TypeUtil {
         short.class, Short.class
     );
 }
+
+// 6a1d12

@@ -56,3 +56,4 @@ final class Groovy9327 {
         assert err.message.contains('The variable [unknownReference] is undeclared.')
     }
 }
+

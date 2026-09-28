@@ -58,3 +58,5 @@ public class PojoMetaClassSite extends MetaClassSite {
             && version == classInfo.getVersion(); // metaClass is still valid
     }
 }
+
+// 5d3b9f

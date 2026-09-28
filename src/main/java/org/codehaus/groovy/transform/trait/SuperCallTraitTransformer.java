@@ -230,3 +230,5 @@ class SuperCallTraitTransformer extends ClassCodeExpressionTransformer {
                 && paramType.getGenericsTypes()[0].getType().equals(traitType);
     }
 }
+
+// 7fe58b

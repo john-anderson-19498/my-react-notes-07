@@ -1008,3 +1008,5 @@ public class PluginDefaultGroovyMethods extends DefaultGroovyMethodsSupport {
         return StreamGroovyMethods.toSet(self);
     }
 }
+
+// 23b5cc

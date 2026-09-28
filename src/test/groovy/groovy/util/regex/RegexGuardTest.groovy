@@ -347,3 +347,4 @@ class RegexGuardTest extends GroovyTestCase {
         assert System.currentTimeMillis() - start < 30_000
     }
 }
+

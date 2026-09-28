@@ -35,3 +35,5 @@ public class MockGroovyObject extends GroovyObjectSupport {
     }
 
 }
+
+// 2f6abf

@@ -213,3 +213,5 @@ public interface GeneratedDispatcher {
         return new ConstantCallSite(MethodHandles.constant(type.returnType(), factory.invoke()));
     }
 }
+
+// 92bc04

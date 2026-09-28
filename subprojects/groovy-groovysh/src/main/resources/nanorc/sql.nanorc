@@ -47,3 +47,4 @@ STRING:   "`(\\.|[^\\`])*`"
 COMMENT:  "\-\-.*$"
 WHITESPACE: "[[:space:]]+$"
 WARNING:    "	+ +| +	+"
+

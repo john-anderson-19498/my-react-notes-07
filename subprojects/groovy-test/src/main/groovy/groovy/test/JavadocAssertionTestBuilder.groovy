@@ -296,3 +296,4 @@ class JavadocAssertionTestBuilder {
         return new GroovyClassLoader().parseClass(testCode)
     }
 }
+

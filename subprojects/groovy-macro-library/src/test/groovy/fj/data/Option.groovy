@@ -49,3 +49,4 @@ final class None<A> extends Option<A> {
     boolean defined() { false }
     A get() { throw new NoSuchElementException() }
 }
+

@@ -31,3 +31,5 @@ function insert_result_links() {
         }
 
 $('document').ready(insert_result_links);
+
+// 1f0a0b

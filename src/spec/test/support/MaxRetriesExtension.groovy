@@ -42,3 +42,4 @@ class MaxRetriesExtension {                                     // <1>
     }
 }
 // end::instance_extension[]
+

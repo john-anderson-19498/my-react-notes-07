@@ -446,3 +446,4 @@ class PurityChecker extends GroovyTypeCheckingExtensionSupport.TypeCheckingDSL {
         }
     }
 }
+

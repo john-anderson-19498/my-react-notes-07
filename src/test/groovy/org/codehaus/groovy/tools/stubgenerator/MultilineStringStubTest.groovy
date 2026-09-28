@@ -46,3 +46,4 @@ class MultilineStringStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains('public static final java.lang.String FOO = "Bar\\nBaz";')
     }
 }
+

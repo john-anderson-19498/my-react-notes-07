@@ -426,3 +426,5 @@ public class SimpleTemplateEngine extends TemplateEngine {
         this.escapeBackslash = escapeBackslash;
     }
 }
+
+// 4bd62f

@@ -75,3 +75,5 @@ public class WritableFile extends File implements Writable {
         return out;
     }
 }
+
+// 6fa225

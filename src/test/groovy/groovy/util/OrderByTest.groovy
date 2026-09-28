@@ -83,3 +83,4 @@ class TestPerson implements Comparable {
         "${first} ${last}".compareTo("${o.first} ${o.last}")
     }
 }
+

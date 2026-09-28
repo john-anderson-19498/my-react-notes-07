@@ -39,3 +39,4 @@ class TestCaseBug extends TestCase {
     }
 
 }
+

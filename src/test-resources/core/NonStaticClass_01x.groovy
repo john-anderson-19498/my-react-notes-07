@@ -66,3 +66,4 @@ assert 'Daniel' == Y.getXName()
 assert 'Daniel' == Y.getXName2()
 assert 'Daniel' == Y.getXName3()
 assert 'Daniel' == Y.getXName4()
+

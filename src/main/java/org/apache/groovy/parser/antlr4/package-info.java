@@ -21,3 +21,5 @@
  * ANTLR4-based parser for Groovy language. Provides lexical analysis, syntax analysis, and Abstract Syntax Tree (AST) generation from Groovy source code. Key components include lexer, parser, listener, and visitor patterns. This is the primary parser used in Groovy 3.0+.
  */
 package org.apache.groovy.parser.antlr4;
+
+// 49b8db

@@ -54,3 +54,5 @@ public class NonSealedASTTransformation extends AbstractASTTransformation {
         }
     }
 }
+
+// 74ffb5

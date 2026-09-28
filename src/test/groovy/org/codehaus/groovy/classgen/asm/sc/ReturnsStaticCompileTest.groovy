@@ -25,3 +25,4 @@ import groovy.transform.stc.ReturnsSTCTest
  */
 final class ReturnsStaticCompileTest extends ReturnsSTCTest implements StaticCompilationTestSupport {
 }
+

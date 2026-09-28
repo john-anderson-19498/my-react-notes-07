@@ -41,3 +41,4 @@ class PropertyExpressionTest {
         assert 'foo*?.bar' == property.text
     }
 }
+

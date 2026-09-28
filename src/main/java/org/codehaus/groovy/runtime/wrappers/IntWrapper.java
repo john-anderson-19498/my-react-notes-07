@@ -32,3 +32,5 @@ public class IntWrapper extends PojoWrapper {
         super(wrapped, int.class);
     }
 }
+
+// 6415b5

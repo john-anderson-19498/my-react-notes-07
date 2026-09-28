@@ -27,3 +27,4 @@ final class PrintlnLoadsAConstantTest extends AbstractBytecodeTestCase {
         assert compile(''' println "true" ''').hasSequence(['LDC "true"'])
     }
 }
+

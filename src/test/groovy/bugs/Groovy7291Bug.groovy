@@ -102,3 +102,4 @@ class Groovy7291Bug {
     }
 
 }
+

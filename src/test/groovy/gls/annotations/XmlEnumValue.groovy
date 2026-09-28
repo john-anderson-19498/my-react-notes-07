@@ -28,3 +28,4 @@ import java.lang.annotation.Target
 public @interface XmlEnumValue {
     String value()
 }
+

@@ -44,3 +44,4 @@ final class Groovy2706 {
         assert counter == 0
     }
 }
+

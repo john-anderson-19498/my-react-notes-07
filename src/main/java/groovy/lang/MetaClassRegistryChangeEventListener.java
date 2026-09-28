@@ -38,3 +38,5 @@ public interface MetaClassRegistryChangeEventListener extends EventListener{
      */
     void updateConstantMetaClass(MetaClassRegistryChangeEvent cmcu);
 }
+
+// ea532c

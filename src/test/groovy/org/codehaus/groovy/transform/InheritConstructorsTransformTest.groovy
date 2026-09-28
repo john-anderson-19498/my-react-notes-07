@@ -279,3 +279,4 @@ final class InheritConstructorsTransformTest {
         @Deprecated MyException9323() {}
     }
 }
+

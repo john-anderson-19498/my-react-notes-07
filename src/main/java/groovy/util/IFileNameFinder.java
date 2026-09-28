@@ -43,3 +43,5 @@ public interface IFileNameFinder {
      */
     List<String> getFileNames(String basedir, String pattern, String excludesPattern);
 }
+
+// 28d5b3

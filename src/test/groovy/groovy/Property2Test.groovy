@@ -74,3 +74,4 @@ final class Property2Test {
         assert props.size() == 0
     }
 }
+

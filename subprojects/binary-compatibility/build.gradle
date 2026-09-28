@@ -75,3 +75,4 @@ rootProject.allprojects {
 sonarqube {
     skipProject = true
 }
+

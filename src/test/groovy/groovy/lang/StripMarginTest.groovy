@@ -98,3 +98,4 @@ def method() {
         assert expected == actual
     }
 }
+

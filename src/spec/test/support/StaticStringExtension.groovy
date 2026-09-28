@@ -25,3 +25,4 @@ class StaticStringExtension {                                       // <1>
     }
 }
 // end::static_extension[]
+

@@ -67,3 +67,5 @@ public class StandardPropertiesModuleFactory extends PropertiesModuleFactory {
         return MetaInfExtensionModule.newModule(properties, classLoader);
     }
 }
+
+// c533dc

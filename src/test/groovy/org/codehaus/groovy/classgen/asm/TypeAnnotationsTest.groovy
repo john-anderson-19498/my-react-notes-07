@@ -430,3 +430,4 @@ final class TypeAnnotationsTest extends AbstractBytecodeTestCase {
         ])
     }
 }
+

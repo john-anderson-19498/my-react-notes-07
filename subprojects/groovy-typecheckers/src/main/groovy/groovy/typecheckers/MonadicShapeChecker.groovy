@@ -277,3 +277,4 @@ class MonadicShapeChecker extends GroovyTypeCheckingExtensionSupport.TypeCheckin
         false
     }
 }
+

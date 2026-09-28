@@ -57,3 +57,4 @@ final class PositionConfigureUtilsTest {
         assert node.lastColumnNumber == 5
     }
 }
+

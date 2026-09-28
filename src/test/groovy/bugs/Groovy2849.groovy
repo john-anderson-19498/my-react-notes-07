@@ -46,3 +46,4 @@ final class Groovy2849 {
         return c2()
     }
 }
+

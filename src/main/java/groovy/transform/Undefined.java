@@ -71,3 +71,5 @@ public final class Undefined {
      */
     public static boolean isUndefinedException(ClassNode other) { return EXCEPTION.class.getName().equals(other.getName()); }
 }
+
+// e933c5

@@ -54,3 +54,5 @@ public class LambdaWriter extends ClosureWriter {
         return super.getClosureSharedVariables(expression);
     }
 }
+
+// 2fa342

@@ -91,3 +91,4 @@ class NegateListsTest {
         domain.collect(f) == -((-domain).collect(f))
     }
 }
+

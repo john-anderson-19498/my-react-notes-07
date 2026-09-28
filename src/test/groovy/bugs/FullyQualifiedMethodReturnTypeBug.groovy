@@ -32,3 +32,4 @@ final class FullyQualifiedMethodReturnTypeBug {
         return "hey"
     }
 }
+

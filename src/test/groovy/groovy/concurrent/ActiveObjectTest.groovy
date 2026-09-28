@@ -185,3 +185,4 @@ final class ActiveObjectTest {
         '''
     }
 }
+

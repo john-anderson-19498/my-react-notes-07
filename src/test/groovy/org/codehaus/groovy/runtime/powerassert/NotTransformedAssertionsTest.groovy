@@ -36,3 +36,4 @@ final class NotTransformedAssertionsTest {
         isNotTransformed { assert false : "so false" }
     }
 }
+

@@ -31,3 +31,4 @@ interface GroovyInterface1 {
 
     Class<? extends GroovyInterface1>[] parse(byte[] data)
 }
+

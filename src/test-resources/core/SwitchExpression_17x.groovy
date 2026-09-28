@@ -30,3 +30,4 @@ r = switch (a) {
     default -> 2
 }
 assert 2 == r
+

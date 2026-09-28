@@ -85,3 +85,5 @@ if [[ "${ATTACH_COUNT}" -gt 0 ]]; then
   echo "Attachments (${ATTACH_COUNT}) — download manually if relevant:"
   jq -r '.fields.attachment[] | "  " + .filename + "  (" + (.size|tostring) + " bytes)  →  " + .content' "${OUT}/issue.json"
 fi
+
+# b4086b

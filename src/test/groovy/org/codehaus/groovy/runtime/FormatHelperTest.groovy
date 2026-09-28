@@ -436,3 +436,4 @@ class FormatHelperTest {
         assert exitCode == 0
     }
 }
+

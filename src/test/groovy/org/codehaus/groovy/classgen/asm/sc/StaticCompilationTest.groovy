@@ -1064,3 +1064,4 @@ import static groovy.test.GroovyAssert.shouldFail
         assert err.message =~ /Cannot assign value of type java.lang.Object to variable of type java.lang.Number/
     }
 }
+

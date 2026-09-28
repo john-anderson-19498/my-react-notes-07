@@ -21,3 +21,5 @@
  * Dynamic Groovy Methods (DGM) implementation. Core runtime methods added to standard Java classes.
  */
 package org.codehaus.groovy.runtime.dgmimpl;
+
+// b69dbc

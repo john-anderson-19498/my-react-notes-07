@@ -1442,3 +1442,4 @@ class NioExtensionsTest extends Specification {
         e.cause instanceof java.nio.file.NoSuchFileException
     }
 }
+

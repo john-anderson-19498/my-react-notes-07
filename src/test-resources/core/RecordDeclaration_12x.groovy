@@ -43,3 +43,4 @@ def p2 = new Point(0, 20)
 assert 0 == p2.x()
 assert 20 == p2.y()
 assert 'BLUE' == p2.color()
+

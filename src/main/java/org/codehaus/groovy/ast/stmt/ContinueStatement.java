@@ -65,3 +65,5 @@ public class ContinueStatement extends Statement {
         visitor.visitContinueStatement(this);
     }
 }
+
+// ea8d6c

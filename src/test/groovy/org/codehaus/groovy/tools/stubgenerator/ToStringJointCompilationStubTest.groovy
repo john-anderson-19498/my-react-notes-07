@@ -88,3 +88,4 @@ final class ToStringJointCompilationStubTest extends StringSourcesStubTestCase {
         assert toStringMethod != null
     }
 }
+

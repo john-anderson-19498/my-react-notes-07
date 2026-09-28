@@ -201,3 +201,5 @@ public class EnumCompletionVisitor extends ClassCodeVisitorSupport {
         return cn.getDeclaredConstructors().stream().filter(c -> !c.isSynthetic()).collect(toList());
     }
 }
+
+// 2478b2

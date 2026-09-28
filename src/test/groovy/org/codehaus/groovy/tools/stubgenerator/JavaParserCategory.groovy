@@ -51,3 +51,4 @@ class JavaParserCategory {
         self.methods
     }
 }
+

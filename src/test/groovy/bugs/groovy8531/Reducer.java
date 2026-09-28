@@ -47,3 +47,5 @@ public class Reducer extends BaseReducer implements Reducable {
 
     public enum Type { DYNAMIC, STATIC }
 }
+
+// 982795

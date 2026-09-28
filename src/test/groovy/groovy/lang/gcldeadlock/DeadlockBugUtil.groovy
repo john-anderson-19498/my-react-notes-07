@@ -21,3 +21,4 @@ package groovy.lang.gcldeadlock
 class DeadlockBugUtil {
     def plus(a, b) { return a + b }
 }
+

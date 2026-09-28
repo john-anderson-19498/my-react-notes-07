@@ -65,3 +65,5 @@ public class MissingClassException extends GroovyRuntimeException {
         return type;
     }
 }
+
+// 6acdf6

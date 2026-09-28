@@ -110,3 +110,5 @@ public interface GroovyPackageDoc extends GroovyDoc {
      */
     String getRelativeRootPath(); // not in JavaDoc API
 }
+
+// 302d9f

@@ -453,3 +453,4 @@ class TernaryOperatorSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

@@ -38,3 +38,4 @@ final class Groovy4169Bug extends CompilableTestSupport {
         """
     }
 }
+

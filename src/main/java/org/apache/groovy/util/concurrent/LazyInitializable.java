@@ -57,3 +57,5 @@ public interface LazyInitializable {
      */
     void setInitialized(boolean initialized);
 }
+
+// 3f6bd9

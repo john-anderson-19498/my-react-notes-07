@@ -32,3 +32,5 @@ final class IanMaceysBug {
         assertThrows(GroovyRuntimeException.class, () -> new GroovyShell().evaluate(script, "dummy.groovy"));
     }
 }
+
+// d58810

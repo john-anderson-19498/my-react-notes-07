@@ -166,3 +166,5 @@ public class FatFreeLambdaBench {
     @Benchmark public List<Integer> arrayCollectD_functionMethodRef() { return FatFreeLambda.arrayCollectFunctionMethodRef(dataArray); }
     @Benchmark public List<Integer> arrayCollectE_baseline()          { return FatFreeLambda.arrayCollectBaseline(dataArray); }
 }
+
+// 697e19

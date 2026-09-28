@@ -1171,3 +1171,4 @@ An example of a complex type checking extension can be found in the link:templat
 source code: this template engine relies on a type checking extension and AST transformations to transform templates into
 fully statically compiled code. Sources for this can be found
 https://github.com/apache/groovy/tree/master/subprojects/groovy-templates/src/main/groovy/groovy/text/markup[here].
+

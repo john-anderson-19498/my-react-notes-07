@@ -31,3 +31,4 @@ public interface PropertyReader {
      */
     Object read(Object owner, String propertyName);
 }
+// bb0ab3

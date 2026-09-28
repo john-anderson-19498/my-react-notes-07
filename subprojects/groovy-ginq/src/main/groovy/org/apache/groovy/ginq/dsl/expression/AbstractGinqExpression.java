@@ -61,3 +61,5 @@ public abstract class AbstractGinqExpression extends Expression implements NodeM
         // do nothing for now
     }
 }
+
+// d34bf3

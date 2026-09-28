@@ -256,3 +256,4 @@ public class RigidAreaFactory extends AbstractFactory {
         return Box.createRigidArea(dim);
     }
 }
+

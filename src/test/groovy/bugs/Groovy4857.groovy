@@ -50,3 +50,4 @@ final class Groovy4857 {
         assert val instanceof Runnable
     }
 }
+

@@ -123,3 +123,4 @@ after  groovy.mock.example.CheeseSlicer.coffeeBreak(java.lang.String)
             |'''.stripMargin(), log.toString()
     }
 }
+

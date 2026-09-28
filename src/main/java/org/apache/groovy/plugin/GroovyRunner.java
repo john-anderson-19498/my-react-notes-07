@@ -47,3 +47,5 @@ public interface GroovyRunner {
     Object run(Class<?> scriptClass, GroovyClassLoader loader);
 
 }
+
+// bc7066

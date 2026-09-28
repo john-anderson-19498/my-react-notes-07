@@ -332,3 +332,4 @@ class CharScannerTest {
         assertArrayEquals((Object[]) expected, (Object[]) actual)
     }
 }
+

@@ -61,3 +61,4 @@ final class Groovy7620 {
         assert err.message =~ /The method 'java.lang.Object getFoo\(\)' is already defined in class 'D'/
     }
 }
+

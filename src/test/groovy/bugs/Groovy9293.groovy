@@ -296,3 +296,4 @@ final class Groovy9293 {
         assert err.message =~ /No such property: superField for class: b.B/
     }
 }
+

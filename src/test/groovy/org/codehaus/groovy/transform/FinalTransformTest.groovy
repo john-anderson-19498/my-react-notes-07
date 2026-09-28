@@ -126,3 +126,4 @@ final class FinalTransformTest {
         assert err =~ /Error during Final processing: cannot modify a constructor/
     }
 }
+

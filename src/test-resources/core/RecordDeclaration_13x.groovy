@@ -28,3 +28,4 @@ def apple = new Fruit('Apple', 11.6)
 assert 'APPLE' == apple.name()
 assert 13.92 == apple.price()
 
+

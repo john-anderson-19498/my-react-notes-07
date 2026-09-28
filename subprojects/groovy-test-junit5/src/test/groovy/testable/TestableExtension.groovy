@@ -39,3 +39,4 @@ class TestableExtension implements BeforeAllCallback, BeforeEachCallback {
         testNames.clear()
     }
 }
+

@@ -286,3 +286,5 @@ public class JName1Test extends TestCase {
         assertTrue(((Closure) obj.getMetaClass().getAttribute(obj, "x")).call() == newX3.call());
     }
 }
+
+// 076888

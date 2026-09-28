@@ -232,3 +232,4 @@ class StatementReplacerTest {
         new BooleanExpression(new ConstantExpression(value))
     }
 }
+

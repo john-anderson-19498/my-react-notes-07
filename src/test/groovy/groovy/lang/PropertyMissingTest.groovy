@@ -146,3 +146,4 @@ class PMTest3 {
         foo = "${name}-${value}"
     }
 }
+

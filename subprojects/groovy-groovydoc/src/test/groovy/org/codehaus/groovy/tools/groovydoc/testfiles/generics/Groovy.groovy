@@ -51,3 +51,4 @@ trait Groovy<N extends Number & Comparable<? extends Number>> {
         0
     }
 }
+

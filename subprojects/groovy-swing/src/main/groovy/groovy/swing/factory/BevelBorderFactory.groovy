@@ -79,3 +79,4 @@ class BevelBorderFactory extends SwingBorderFactory {
         return BorderFactory.createBevelBorder(type);
     }
 }
+

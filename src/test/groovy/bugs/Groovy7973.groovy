@@ -102,3 +102,4 @@ final class Groovy7973 {
         assertScript '@groovy.transform.CompileStatic\n' + SCRIPT2
     }
 }
+

@@ -41,3 +41,4 @@ class ImmutableWithJointCompilationStubTest extends StringSourcesStubTestCase {
         assert !stubSource.matches(/(?ms).*public\s+Foo4825\s*\(\s*\)\s*\{\s*\}.*/)
     }
 }
+

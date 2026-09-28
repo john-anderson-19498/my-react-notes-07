@@ -81,3 +81,4 @@ TestScripttestTraitWithCompileStaticAndCoercedClosure0.groovy: 33: [Static type 
         '''
     }
 }
+

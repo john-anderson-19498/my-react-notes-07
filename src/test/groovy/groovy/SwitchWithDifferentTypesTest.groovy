@@ -157,3 +157,4 @@ class SwitchWithDifferentTypesTest {
         fail("value: " + value + " should not match the default switch clause")
     }
 }
+

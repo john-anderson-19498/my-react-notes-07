@@ -39,3 +39,4 @@ class ClosureCloneTest {
         assert value == 12
     }  
 }
+

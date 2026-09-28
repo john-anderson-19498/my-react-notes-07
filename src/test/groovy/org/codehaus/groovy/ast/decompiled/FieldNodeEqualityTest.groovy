@@ -38,3 +38,4 @@ final class FieldNodeEqualityTest {
         assert nodes2.contains(fn2)
     }
 }
+

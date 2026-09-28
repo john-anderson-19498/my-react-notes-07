@@ -42,3 +42,4 @@ abstract class GroovySwingTestCase extends GroovyTestCase {
     }
 
 }
+

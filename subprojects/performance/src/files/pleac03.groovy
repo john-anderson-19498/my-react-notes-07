@@ -371,3 +371,4 @@ class MailHopDelta {
 
 assert '\n' + new MailHopDelta(sampleMessage).process() == expected
 //----------------------------------------------------------------------------------
+

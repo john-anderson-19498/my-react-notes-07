@@ -36,3 +36,5 @@
  * @since 1.0
  */
 package org.codehaus.groovy.classgen;
+
+// 79e451

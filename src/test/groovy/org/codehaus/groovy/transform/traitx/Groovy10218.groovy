@@ -41,3 +41,4 @@ final class Groovy10218 {
         assert ex.message.contains('[Static type checking] - Cannot find matching method B#bar()')
     }
 }
+

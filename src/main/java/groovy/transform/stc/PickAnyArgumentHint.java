@@ -75,3 +75,5 @@ public class PickAnyArgumentHint extends SingleSignatureClosureHint {
         return new ClassNode[]{type};
     }
 }
+
+// d22458

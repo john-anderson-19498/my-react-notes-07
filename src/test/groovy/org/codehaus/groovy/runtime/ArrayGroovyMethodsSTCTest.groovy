@@ -355,3 +355,4 @@ final class ArrayGroovyMethodsSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

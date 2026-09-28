@@ -32,3 +32,4 @@ final class GenericsStaticCompileTest extends GenericsSTCTest implements StaticC
         super.testPlusInClosure2()
     }
 }
+

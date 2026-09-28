@@ -160,3 +160,5 @@ public class MethodRankHelperTest extends TestCase {
         assertEquals("No suggestion", 0, MethodRankHelper.getConstructorSuggestionString(TempClass.class, new Object[]{null, null, null, null, null}).length());
     }
 }
+
+// 7cd9b2

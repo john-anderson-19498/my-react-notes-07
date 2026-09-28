@@ -44,3 +44,5 @@ public final class revcomp {
         System.out.write(buf);
     }
 }
+
+// 2bcef4

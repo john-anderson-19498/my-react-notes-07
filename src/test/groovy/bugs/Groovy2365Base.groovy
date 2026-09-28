@@ -48,3 +48,4 @@ abstract class Groovy2365Base {
         dir.absolutePath
     }
 }
+

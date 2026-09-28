@@ -30,3 +30,4 @@ def coreLogic(int x) {
 def teardown() {
     println "also outside"
 }
+

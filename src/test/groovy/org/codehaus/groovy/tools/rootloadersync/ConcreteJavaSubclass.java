@@ -24,3 +24,5 @@ public class ConcreteJavaSubclass extends AbstractGroovySuperclass {
       return "string from subclass";
    }
 }
+
+// d3e653

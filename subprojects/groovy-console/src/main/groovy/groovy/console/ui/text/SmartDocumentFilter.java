@@ -543,3 +543,5 @@ public class SmartDocumentFilter extends DocumentFilter {
         return renderRange;
     }
 }
+
+// 8f51cd

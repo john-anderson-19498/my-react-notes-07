@@ -121,3 +121,4 @@ class StreamingSAXBuilderTest {
         assert visited == expected
     }
 }
+

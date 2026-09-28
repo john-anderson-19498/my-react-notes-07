@@ -61,3 +61,5 @@ public class DoubleArrayIterator implements Iterator<Double> {
         throw new UnsupportedOperationException("Remove not supported for arrays");
     }
 }
+
+// 4d5350

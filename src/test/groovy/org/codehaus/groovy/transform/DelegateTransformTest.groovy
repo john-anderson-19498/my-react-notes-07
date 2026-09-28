@@ -1315,3 +1315,4 @@ class CompiledClass8825 {
 class DelegateMap {
     protected final @Delegate Map props = [x:'123']
 }
+

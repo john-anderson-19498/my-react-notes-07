@@ -44,3 +44,4 @@ class PropertyWithCustomSetterHavingReturnTypeStubTest extends StringSourcesStub
         assert !stubJavaSourceFor('foo.SetterWithReturn4646').contains('void setFoo(java.lang.String ')
     }
 }
+

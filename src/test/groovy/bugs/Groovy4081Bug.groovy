@@ -39,3 +39,4 @@ final class Groovy4081Bug extends CompilableTestSupport {
         """
     }
 }
+

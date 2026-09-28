@@ -58,3 +58,5 @@ public class MBeanTest extends GroovyTestCase {
         assertEquals("(rw) java.lang.String Location", object.describeAttribute("Location"));
     }
 }
+
+// dafe77

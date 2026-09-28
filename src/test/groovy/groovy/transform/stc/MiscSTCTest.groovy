@@ -537,3 +537,4 @@ class MiscSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

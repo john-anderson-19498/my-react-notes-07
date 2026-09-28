@@ -184,3 +184,5 @@ public class GroovydocManager {
         throw new GroovyBugError("node can not be found: " + node.getText()); // The exception should never be thrown!
     }
 }
+
+// 54e3ad

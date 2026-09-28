@@ -48,3 +48,5 @@ public final class MetaClassConstant<T> {
         return impl.pickMethod(name, parameters);
     }
 }
+
+// bd2be8

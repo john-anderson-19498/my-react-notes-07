@@ -68,3 +68,4 @@ final class Groovy3726 {
         assertFalse Modifier.isTransient(barSetter.modifiers)
     }
 }
+

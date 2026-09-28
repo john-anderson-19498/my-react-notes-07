@@ -823,3 +823,5 @@ public class Groovy extends Java {
         this.contextClassLoader = contextClassLoader;
     }
 }
+
+// 8948cd

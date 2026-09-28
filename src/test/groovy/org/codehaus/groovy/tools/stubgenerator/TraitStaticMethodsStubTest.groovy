@@ -62,3 +62,4 @@ final class TraitStaticMethodsStubTest extends StringSourcesStubTestCase {
         assert  classStub.contains('getGreeting') : 'instance method should appear in implementing class stub'
     }
 }
+

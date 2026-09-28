@@ -22,3 +22,4 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 class Foo implements Bar {}
+

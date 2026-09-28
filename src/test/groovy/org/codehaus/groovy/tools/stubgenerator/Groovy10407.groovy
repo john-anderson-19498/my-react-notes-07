@@ -46,3 +46,4 @@ final class Groovy10407 extends StringSourcesStubTestCase {
         assert stub.contains('super ((java.util.Map<java.lang.String, java.lang.String>)null);')
     }
 }
+

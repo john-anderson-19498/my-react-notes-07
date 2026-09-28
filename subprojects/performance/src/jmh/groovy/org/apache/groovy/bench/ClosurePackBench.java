@@ -169,3 +169,5 @@ public class ClosurePackBench {
         return fixtures[next()].sum(xs);
     }
 }
+
+// 8e498b

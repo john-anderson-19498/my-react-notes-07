@@ -19,3 +19,5 @@
 package bugs;
 
 public class Groovy4104B extends Groovy4104A { }
+
+// 46db95

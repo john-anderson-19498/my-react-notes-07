@@ -39,3 +39,4 @@ final class ClassVariableHidingTest {
         assert bar == 5
     }
 }
+

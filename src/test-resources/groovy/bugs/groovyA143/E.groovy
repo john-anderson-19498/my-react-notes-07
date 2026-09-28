@@ -24,3 +24,4 @@ class E extends C {
 		'string value'
 	}
 }
+

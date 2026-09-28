@@ -105,3 +105,4 @@ class HexTest {
         assert encoded.decodeHex() == testBytes
     }
 }
+

@@ -256,3 +256,4 @@ class WriterAppendTest {
         return expected == new String(buf, charSet)
     }
 }
+

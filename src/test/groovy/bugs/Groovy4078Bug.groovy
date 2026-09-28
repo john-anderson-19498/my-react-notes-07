@@ -53,3 +53,4 @@ class Groovy4078Bug {
         }
     }
 }
+

@@ -61,3 +61,5 @@ public @interface ExternalizeVerifier {
      */
     boolean checkPropertyTypes() default false;
 }
+
+// ca8a36

@@ -24,3 +24,4 @@ class UsesClassesWithFailingStaticInit {
     JavaWithFailingStaticInit getJava() { null }
 
 }
+

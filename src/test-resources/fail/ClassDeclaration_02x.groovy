@@ -27,3 +27,4 @@ class Person {
         if (age < 18) throw new IllegalArgumentException("Invalid age: $age")
     }
 }
+

@@ -30,3 +30,4 @@ final class Groovy3716 {
         assert !ClassHelper.  VOID_TYPE.isDerivedFrom(ClassHelper.OBJECT_TYPE)
     }
 }
+

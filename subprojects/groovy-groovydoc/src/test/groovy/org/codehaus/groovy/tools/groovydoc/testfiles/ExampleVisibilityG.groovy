@@ -39,3 +39,4 @@ class ExampleVisibilityG {
     @PackageScope class C {}
     private class D {}
 }
+

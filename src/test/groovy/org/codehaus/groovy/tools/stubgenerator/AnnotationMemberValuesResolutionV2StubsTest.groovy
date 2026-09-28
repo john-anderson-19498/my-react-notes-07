@@ -63,3 +63,4 @@ final class AnnotationMemberValuesResolutionV2StubsTest extends StringSourcesStu
         }
     }
 }
+

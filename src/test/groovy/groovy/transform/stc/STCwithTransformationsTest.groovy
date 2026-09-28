@@ -77,3 +77,4 @@ final class STCwithTransformationsTest extends StaticTypeCheckingTestCase {
         assert result == 11
     }
 }
+

@@ -76,3 +76,5 @@ public class GroovyClassLoaderDeadlockTest extends TestCase {
         assertEquals("1+1=2", runners[1].getResult());
     }
 }
+
+// cb35f4

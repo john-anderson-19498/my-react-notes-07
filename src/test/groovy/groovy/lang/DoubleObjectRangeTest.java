@@ -40,3 +40,5 @@ public class DoubleObjectRangeTest extends NumberRangeTestCase {
     }
 
 }
+
+// 772f82

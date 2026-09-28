@@ -154,3 +154,4 @@ final class Groovy7276 extends StaticTypeCheckingTestCase implements StaticCompi
         assert astTrees['Outer$Inner$_checkAssertions_closure1'][1].contains('GETFIELD Outer$Inner.variablesToCheck')
     }
 }
+

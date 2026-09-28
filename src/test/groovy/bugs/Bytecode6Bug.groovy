@@ -42,3 +42,4 @@ final class Bytecode6Bug {
         assert i == 2
     }
 }
+

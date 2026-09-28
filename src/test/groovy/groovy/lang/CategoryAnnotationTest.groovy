@@ -371,3 +371,4 @@ final class CategoryAnnotationTest {
         '''
     }
 }
+

@@ -425,3 +425,4 @@ final class WideningCategoriesTest extends GenericsTestCase {
         int compareTo(Pair<L,R> that) { 0 }
     }
 }
+

@@ -372,3 +372,4 @@ the same way as a new public type.
   — user-facing version-numbering scheme.
 - [`subprojects/binary-compatibility/build.gradle`](subprojects/binary-compatibility/build.gradle)
   — exact configuration of the japicmp check.
+

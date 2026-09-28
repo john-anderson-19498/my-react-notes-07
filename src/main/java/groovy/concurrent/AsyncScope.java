@@ -227,3 +227,5 @@ public interface AsyncScope extends AutoCloseable {
         return new DefaultAsyncScope(executor, failFast);
     }
 }
+
+// 602ecc

@@ -72,3 +72,4 @@ class InWhileLoopWrapperTest {
 		assert methodToWrap.code.statements[0].loopBlock.statements[0].statementLabel == InWhileLoopWrapper.LOOP_LABEL
 	}
 }
+

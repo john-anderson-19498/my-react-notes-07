@@ -224,3 +224,4 @@ class ErrorReporterTest {
         assertTrue(output.contains("wrapper"))
     }
 }
+

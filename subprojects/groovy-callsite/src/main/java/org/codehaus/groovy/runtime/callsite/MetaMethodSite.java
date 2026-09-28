@@ -34,3 +34,5 @@ public abstract class MetaMethodSite extends MetaClassSite {
         this.params = params;
     }
 }
+
+// 0e2272

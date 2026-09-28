@@ -51,3 +51,4 @@ final class Groovy_7846 {
         assert cls.withClient { true }
     }
 }
+

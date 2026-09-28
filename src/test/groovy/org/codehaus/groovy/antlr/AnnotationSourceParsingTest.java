@@ -50,3 +50,5 @@ public class AnnotationSourceParsingTest extends GroovyTestCase {
         parse("testMultiLineAttributes", reader);
     }
 }
+
+// 89307f

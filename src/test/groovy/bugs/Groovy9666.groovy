@@ -56,3 +56,4 @@ final class Groovy9666 {
         assert mn.starImports*.text == ['import FOO.BAR*']
     }
 }
+

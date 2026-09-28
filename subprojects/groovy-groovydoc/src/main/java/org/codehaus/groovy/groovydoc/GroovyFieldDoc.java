@@ -54,3 +54,5 @@ public interface GroovyFieldDoc extends GroovyMemberDoc {
      */
     GroovyType type();
 }
+
+// 5f6823

@@ -40,3 +40,4 @@ tasks.withType(Javadoc).configureEach {
     exclude '**/PlatformLoggingMessageLogger.java'
     exclude '**/package-info.java'
 }
+

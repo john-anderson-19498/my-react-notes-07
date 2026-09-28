@@ -50,3 +50,4 @@ class UnAmbigousSuperConstructorCallStubsTest extends StringSourcesStubTestCase 
         assert !stubSource.contains('super (null)')
     }
 }
+

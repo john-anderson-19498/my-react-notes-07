@@ -20,3 +20,5 @@ package org.codehaus.groovy.classgen.asm.sc.support;
 
 public class Groovy6235SupportSub extends Groovy6235Support {
 }
+
+// eac7d4

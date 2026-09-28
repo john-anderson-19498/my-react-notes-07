@@ -61,3 +61,5 @@ public class BooleanArrayIterator implements Iterator<Boolean> {
         throw new UnsupportedOperationException("Remove not supported for arrays");
     }
 }
+
+// c2ad6b

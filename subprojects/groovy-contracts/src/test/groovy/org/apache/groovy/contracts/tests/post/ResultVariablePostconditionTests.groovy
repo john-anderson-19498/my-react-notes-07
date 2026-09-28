@@ -57,3 +57,4 @@ class ResultVariable {
         assertEquals null, instance.return_given_argument(null)
     }
 }
+

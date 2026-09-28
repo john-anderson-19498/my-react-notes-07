@@ -65,3 +65,4 @@ class ScrollPaneFactory extends groovy.swing.factory.BeanFactory {
     }
 
 }
+

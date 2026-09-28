@@ -48,3 +48,4 @@ class CallOnThisObject {
         def aLocal
     }
 }
+

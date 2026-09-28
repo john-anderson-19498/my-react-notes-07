@@ -6792,3 +6792,5 @@ public class NumberMathModificationInfo {
         return ((Number) InvokerHelper.invokeMethod(op1, "rightShiftUnsigned", op2)).longValue();
     }
 }
+
+// 3e84ee

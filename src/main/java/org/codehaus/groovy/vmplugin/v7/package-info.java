@@ -21,3 +21,5 @@
  * Java 7 VM plugin. Compatibility layer for Java 7 runtime features.
  */
 package org.codehaus.groovy.vmplugin.v7;
+
+// dcb757

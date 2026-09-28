@@ -128,3 +128,5 @@ public abstract class ConsoleSupport {
      */
     protected abstract void handleException(String text, Exception e);
 }
+
+// bcf5de

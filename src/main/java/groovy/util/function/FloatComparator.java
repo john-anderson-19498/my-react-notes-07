@@ -34,3 +34,5 @@ public interface FloatComparator {
      */
     int compare(float v1, float v2);
 }
+
+// 307872

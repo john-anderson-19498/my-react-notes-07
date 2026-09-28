@@ -72,3 +72,4 @@ class UnicodeEscapes2 extends GroovyTestCase {
         // assert "/uab cd" == "acd" // @fail:parse
     }
 }
+

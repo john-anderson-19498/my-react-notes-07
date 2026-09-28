@@ -119,3 +119,4 @@ final class Groovy6954 extends AbstractBytecodeTestCase {
         '''
     }
 }
+

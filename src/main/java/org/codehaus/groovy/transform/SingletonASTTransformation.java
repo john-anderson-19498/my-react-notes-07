@@ -154,3 +154,5 @@ public class SingletonASTTransformation extends AbstractASTTransformation {
         }
     }
 }
+
+// b16483

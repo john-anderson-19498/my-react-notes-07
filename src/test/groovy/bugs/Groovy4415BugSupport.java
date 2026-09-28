@@ -21,3 +21,5 @@ package bugs;
 public interface Groovy4415BugSupport<T> {
     T getId();
 }
+
+// b97ad7

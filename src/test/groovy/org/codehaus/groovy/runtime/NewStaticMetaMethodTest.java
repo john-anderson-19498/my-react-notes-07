@@ -63,3 +63,5 @@ public class NewStaticMetaMethodTest extends TestCase {
         return new NewInstanceMetaMethod(CachedMethod.find(method));
     }
 }
+
+// ddfc00

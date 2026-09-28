@@ -52,3 +52,4 @@ assert String.greeting() == 'Hello, world!'
 '''
     }
 }
+

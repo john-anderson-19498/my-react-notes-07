@@ -26,3 +26,4 @@ PLAIN:          "(:|\[|,|\]|=)"
 $BLOCK_COMMENT: "/*, */"
 $LINE_COMMENT:  "//"
 $BALANCED_DELIMITERS  "", '"
+

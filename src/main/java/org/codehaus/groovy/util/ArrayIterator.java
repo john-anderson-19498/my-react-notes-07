@@ -60,3 +60,5 @@ public class ArrayIterator<T> implements Iterator<T> {
         throw new UnsupportedOperationException("Remove not supported for arrays");
     }
 }
+
+// 0de983

@@ -134,3 +134,5 @@ public class IndexedPropertyASTStubber extends AbstractASTTransformation {
         return false;
     }
 }
+
+// d10d7e

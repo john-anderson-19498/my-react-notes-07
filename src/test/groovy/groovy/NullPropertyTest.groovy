@@ -29,3 +29,4 @@ class NullPropertyTest {
         assert wensleydale == null
     }
 }
+

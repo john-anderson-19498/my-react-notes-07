@@ -21,3 +21,5 @@
  * Plugin interface and support for Groovy extensions. Enables third-party extensions.
  */
 package org.apache.groovy.plugin;
+
+// 2253b4

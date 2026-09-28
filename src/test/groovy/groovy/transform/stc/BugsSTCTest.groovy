@@ -1269,3 +1269,4 @@ class BugsSTCTest extends StaticTypeCheckingTestCase {
             '[Static type checking] - unexpected named arg: last'
     }
 }
+

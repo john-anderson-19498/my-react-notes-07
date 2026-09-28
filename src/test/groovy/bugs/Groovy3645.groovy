@@ -36,3 +36,4 @@ final class Groovy3645 {
         assert err.message.contains('No signature of static method: bar for class: java.lang.Object')
     }
 }
+

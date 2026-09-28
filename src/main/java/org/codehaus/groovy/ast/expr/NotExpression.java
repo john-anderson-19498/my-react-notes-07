@@ -49,3 +49,5 @@ public class NotExpression extends BooleanExpression {
         visitor.visitNotExpression(this);
     }
 }
+
+// 3249ec

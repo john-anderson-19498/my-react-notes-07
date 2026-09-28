@@ -31,3 +31,5 @@ final class MainTest {
         shell.run(new File("src/test/groovy/groovy/SampleMain.groovy"), new String[]{"A", "B", "C"});
     }
 }
+
+// ac8ab1

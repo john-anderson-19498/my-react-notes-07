@@ -697,3 +697,4 @@ final class JmxTest extends CompilableTestSupport {
         '''
     }
 }
+

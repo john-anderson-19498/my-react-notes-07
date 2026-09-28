@@ -39,3 +39,5 @@ public class InvalidOptionException extends GroovyException {
         super(message);
     }
 }
+
+// 355b2a

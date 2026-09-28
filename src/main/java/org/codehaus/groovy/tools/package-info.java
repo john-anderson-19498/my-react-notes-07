@@ -22,3 +22,5 @@
  * chain.
  */
 package org.codehaus.groovy.tools;
+
+// b4ff8a

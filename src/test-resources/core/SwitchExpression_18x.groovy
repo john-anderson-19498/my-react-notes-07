@@ -24,3 +24,4 @@ switch (a) {
     case String -> { prt() }
 }
 assert 1 == cnt
+

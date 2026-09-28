@@ -157,3 +157,4 @@ class OperatorRenameTransformTest extends GroovyShellTestCase {
     }
 
 }
+

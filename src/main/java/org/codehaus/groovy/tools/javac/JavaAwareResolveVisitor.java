@@ -81,3 +81,5 @@ public class JavaAwareResolveVisitor extends ResolveVisitor {
             getSourceUnit().getAST().putNodeMetaData("require.imports", Boolean.TRUE);
     }
 }
+
+// b1d34a

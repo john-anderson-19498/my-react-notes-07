@@ -293,3 +293,5 @@ public class ListWrapperListModel<E> extends AbstractListModel {
         fireIntervalRemoved(this, fromIndex, toIndex);
     }
 }
+
+// 38e08b

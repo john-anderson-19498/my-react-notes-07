@@ -862,3 +862,4 @@ import static groovy.test.GroovyAssert.shouldFail
         assert err =~ /No signature of method.* is applicable for argument types: \(ArrayList\)/
     }
 }
+

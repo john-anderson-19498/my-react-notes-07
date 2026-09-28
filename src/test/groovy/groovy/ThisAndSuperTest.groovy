@@ -543,3 +543,4 @@ class TestForSuperHelper2 extends TestForSuperHelper1 {
     def closureFieldAccessUsingImplicitThis = {x -> aField = x}
     def closureFieldAccessUsingExplicitThis = {x -> this.aField = x}
 }
+

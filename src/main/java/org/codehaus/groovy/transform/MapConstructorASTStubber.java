@@ -93,3 +93,5 @@ public class MapConstructorASTStubber extends AbstractASTTransformation {
         }
     }
 }
+
+// b6c754

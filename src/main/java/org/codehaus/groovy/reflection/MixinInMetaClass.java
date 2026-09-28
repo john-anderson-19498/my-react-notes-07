@@ -236,3 +236,5 @@ public class MixinInMetaClass {
         return mixinClass.hashCode();
     }
 }
+
+// 3d163b

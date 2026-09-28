@@ -40,3 +40,5 @@ public class ObjectArrayGetAtMetaMethod extends ArrayGetAtMetaMethod {
         return objects[normaliseIndex((Integer) arguments[0], objects.length)];
     }
 }
+
+// 5df665

@@ -36,3 +36,5 @@ public class CustomGroovyClassLoader extends GroovyClassLoader {
         return gsh.evaluate(scriptText);
     }
 }
+
+// 3f428d

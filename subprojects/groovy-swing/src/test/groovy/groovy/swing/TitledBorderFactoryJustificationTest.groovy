@@ -59,3 +59,4 @@ class TitledBorderFactoryJustificationTest extends GroovySwingTestCase {
         }
     }
 }
+

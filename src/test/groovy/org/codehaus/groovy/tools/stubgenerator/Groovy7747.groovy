@@ -63,3 +63,4 @@ final class Groovy7747 extends StringSourcesStubTestCase {
         assert !stub.matches('abstract.*enum')
     }
 }
+

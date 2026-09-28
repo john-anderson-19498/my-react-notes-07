@@ -228,3 +228,5 @@ public class GinqAstBaseVisitor extends CodeVisitorSupport implements GinqAstVis
         return expression.accept(this);
     }
 }
+
+// 819a64

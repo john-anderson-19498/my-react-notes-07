@@ -29,3 +29,4 @@ final class Groovy7542Bug extends StaticTypeCheckingTestCase {
         assert [20].collect { it << 2 } == [80]
     }
 }
+

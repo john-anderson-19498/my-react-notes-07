@@ -94,3 +94,5 @@ public class CompilationFailedException extends GroovyRuntimeException {
     }
 
 }
+
+// 79fc0f

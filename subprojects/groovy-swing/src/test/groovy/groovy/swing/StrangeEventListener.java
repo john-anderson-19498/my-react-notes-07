@@ -32,3 +32,5 @@ public interface StrangeEventListener extends EventListener {
     void somethingChanged(PropertyChangeEvent changeEvent);
 
 }
+
+// b87480

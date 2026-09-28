@@ -84,3 +84,4 @@ final class Groovy9790 {
         assert err.message =~ /Expected type int for lambda parameter: s/
     }
 }
+

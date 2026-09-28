@@ -28,3 +28,5 @@
  * </p>
  */
 package groovy.util.logging;
+
+// 312fd4

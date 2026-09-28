@@ -25,3 +25,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface MyType {
     Class value();
 }
+
+// e6d364

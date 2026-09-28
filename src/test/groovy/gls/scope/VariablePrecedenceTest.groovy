@@ -62,3 +62,4 @@ class VariablePrecedenceTest {
         assert this.method() == CLASS_METHOD_STR
     }
 }
+

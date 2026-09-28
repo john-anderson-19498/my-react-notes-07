@@ -43,3 +43,4 @@ final class Groovy7052 extends StringSourcesStubTestCase {
         assert stub.contains('interface Foo')
     }
 }
+

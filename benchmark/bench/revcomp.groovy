@@ -66,3 +66,4 @@ while ((read = System.in.read(line)) != -1) {
     buf.write(line, last, read - last)
 }
 buf.reverse()
+

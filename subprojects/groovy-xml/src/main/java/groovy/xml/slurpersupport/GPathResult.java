@@ -785,3 +785,5 @@ public abstract class GPathResult extends GroovyObjectSupport implements Writabl
         };
     }
 }
+
+// c33a8e

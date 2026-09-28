@@ -126,3 +126,5 @@ public final class Configurator {
         return assertionConfiguration.get(null);
     }
 }
+
+// ef47af

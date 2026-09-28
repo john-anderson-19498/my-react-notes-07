@@ -45,3 +45,4 @@ final class Groovy3817 extends CompilableTestSupport {
         '''
     }
 }
+

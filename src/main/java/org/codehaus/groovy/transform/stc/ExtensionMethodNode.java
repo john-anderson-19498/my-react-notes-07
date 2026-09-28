@@ -59,3 +59,5 @@ public class ExtensionMethodNode extends MethodNode {
         return isStaticExtension;
     }
 }
+
+// b99aa2

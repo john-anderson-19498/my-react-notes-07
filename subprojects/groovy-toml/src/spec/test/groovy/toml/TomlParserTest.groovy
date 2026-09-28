@@ -221,3 +221,4 @@ windowStart = 07:32:00
         assert parsed.windowStart instanceof String
     }
 }
+

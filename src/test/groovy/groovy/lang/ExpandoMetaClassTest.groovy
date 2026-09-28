@@ -936,3 +936,4 @@ final class ExpandoMetaClassTest {
     static class EMCT_Static {
     }
 }
+

@@ -31,3 +31,5 @@ public interface CompilationUnitAware {
      */
     void setCompilationUnit(CompilationUnit unit);
 }
+
+// a1394a

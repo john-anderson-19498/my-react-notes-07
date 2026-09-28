@@ -590,3 +590,4 @@ final class PurityCheckerTest {
         '''
     }
 }
+

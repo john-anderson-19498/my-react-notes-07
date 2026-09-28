@@ -620,3 +620,4 @@ final class TypeCheckingExtensionsTest extends StaticTypeCheckingTestCase {
             'extension script should not inherit the enclosing compilation customizers'
     }
 }
+

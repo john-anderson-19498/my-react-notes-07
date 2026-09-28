@@ -63,3 +63,4 @@ class MetaClassPropertyTest {
 
 class MCPTest1 {
 }
+

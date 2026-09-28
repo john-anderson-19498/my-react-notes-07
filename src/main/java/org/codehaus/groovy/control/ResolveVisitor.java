@@ -1779,3 +1779,5 @@ public class ResolveVisitor extends ClassCodeExpressionTransformer {
         }
     }
 }
+
+// 1eaa92

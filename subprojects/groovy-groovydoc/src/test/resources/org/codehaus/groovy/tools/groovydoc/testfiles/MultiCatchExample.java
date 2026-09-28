@@ -26,3 +26,5 @@ public class MultiCatchExample {
         try { } catch(NumberFormatException | NullPointerException e) {}
     }
 }
+
+// 3901a2

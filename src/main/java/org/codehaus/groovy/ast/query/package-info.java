@@ -26,3 +26,5 @@
  * @since 6.0.0
  */
 package org.codehaus.groovy.ast.query;
+
+// 617a95

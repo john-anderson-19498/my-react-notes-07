@@ -243,3 +243,4 @@ final class InheritConstructorsJointCompilationStubTest extends StringSourcesStu
         assert reversedClass.newInstance() != null
     }
 }
+

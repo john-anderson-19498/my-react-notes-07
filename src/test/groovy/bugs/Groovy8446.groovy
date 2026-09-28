@@ -55,3 +55,4 @@ final class Groovy8446 {
         assert err.message =~ /void\[\] is an invalid type|void is not allowed here/
     }
 }
+

@@ -43,3 +43,4 @@ final class Groovy10034 extends AbstractBytecodeTestCase {
         ], offset)
     }
 }
+

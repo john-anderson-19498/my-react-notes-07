@@ -941,3 +941,4 @@ include::../test/TraitsSpecificationTest.groovy[tags=prefix_postfix,indent=0]
 
 A workaround is to use the `+=` operator instead.
 
+

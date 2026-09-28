@@ -67,3 +67,5 @@ public abstract class Utilities
     private static String eol = System.lineSeparator();
 
 }
+
+// a83bb4

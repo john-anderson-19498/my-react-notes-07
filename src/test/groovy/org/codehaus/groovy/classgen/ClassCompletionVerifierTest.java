@@ -309,3 +309,5 @@ final class ClassCompletionVerifierTest {
         return stringWriter.toString();
     }
 }
+
+// 37af1c

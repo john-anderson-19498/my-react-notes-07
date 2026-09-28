@@ -33,3 +33,4 @@ class ClassLoaderBug {
         println("Called method")
     }
 }
+

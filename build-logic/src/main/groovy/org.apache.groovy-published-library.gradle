@@ -892,3 +892,4 @@ cyclonedxDirectBom {
     xmlOutput.unsetConvention()
     jsonOutput = "build/reports/cyclonedx/${project.name}.json"
 }
+

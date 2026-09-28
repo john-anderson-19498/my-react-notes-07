@@ -46,3 +46,4 @@ class Groovy4966Bug {
     }
 }
 
+

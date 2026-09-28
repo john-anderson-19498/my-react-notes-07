@@ -508,3 +508,5 @@ public class DelegateASTTransformation extends AbstractASTTransformation {
         List<ClassNode> excludeTypes;
     }
 }
+
+// ebb15d

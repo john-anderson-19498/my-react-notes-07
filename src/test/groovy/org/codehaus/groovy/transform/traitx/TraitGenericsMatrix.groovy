@@ -394,3 +394,4 @@ class TraitGenericsMatrix {
             "row12: bounded param + generic super-trait binding + generic fields must compose (got ${r})"
     }
 }
+

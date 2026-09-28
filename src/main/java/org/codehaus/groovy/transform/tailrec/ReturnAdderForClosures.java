@@ -49,3 +49,5 @@ public class ReturnAdderForClosures extends CodeVisitorSupport {
         super.visitClosureExpression(expression);
     }
 }
+
+// 098194

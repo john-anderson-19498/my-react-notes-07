@@ -80,3 +80,4 @@ final class FileTreeBuilderTest {
          // end::shorthand_syntax_assert[]
     }
 }
+

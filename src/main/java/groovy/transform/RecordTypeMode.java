@@ -40,3 +40,5 @@ public enum RecordTypeMode {
      */
     AUTO
 }
+
+// 47c303

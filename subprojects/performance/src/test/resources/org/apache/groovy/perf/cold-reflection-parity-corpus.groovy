@@ -232,3 +232,4 @@ class PogoCat {
     static String greet(Pogo self) { 'CAT' }
     static int echoInt(Pogo self, int x) { x }
 }
+

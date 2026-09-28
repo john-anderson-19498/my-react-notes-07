@@ -50,3 +50,5 @@ public class nsieve
       System.out.println("Primes up to " + padNumber(m, 8) + " " + padNumber(nsieve(m,flags), 8));
    }
 }
+
+// 1caef0

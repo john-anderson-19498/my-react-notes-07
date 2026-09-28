@@ -447,3 +447,5 @@ public class GroovyAssert {
         return result;
     }
 }
+
+// 741def

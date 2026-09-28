@@ -63,3 +63,5 @@ final class RunGroovyTest extends TestSupport {
         object.invokeMethod("testLastExpressionIsSimple", null);
     }
 }
+
+// 48ae31

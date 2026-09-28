@@ -28,3 +28,4 @@ public class IncorrectGenericsUsage {
         x = (ArrayList) z;
     }
 }
+// 1a58fa

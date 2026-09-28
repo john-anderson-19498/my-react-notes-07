@@ -47,3 +47,4 @@ final class InterceptionThroughMetaClassTest {
     }
 }
 // end::meta_class_interception[]
+

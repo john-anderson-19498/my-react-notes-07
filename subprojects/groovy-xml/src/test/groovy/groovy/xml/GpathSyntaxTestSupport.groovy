@@ -449,3 +449,4 @@ class GpathSyntaxTestSupport {
         return node.getClass().name.contains('Element')
     }
 }
+

@@ -34,3 +34,4 @@ final class AssignmentsStaticCompileTest extends STCAssignmentTest implements St
         assert !bytecode.contains('ScriptBytecodeAdapter.setGroovyObjectProperty') : '"c.i += 10" should use setter, not dynamic property'
     }
 }
+

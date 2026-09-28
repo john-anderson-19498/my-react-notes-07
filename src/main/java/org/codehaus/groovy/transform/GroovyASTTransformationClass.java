@@ -42,3 +42,5 @@ public @interface GroovyASTTransformationClass {
     String[] value() default {};
     Class[] classes() default {};
 }
+
+// fb835d

@@ -339,3 +339,4 @@ class GroovyClassLoaderTestCustomPhaseOperation extends GroovyClassLoader {
         }
     }
 }
+

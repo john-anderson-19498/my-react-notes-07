@@ -47,3 +47,4 @@ println ''
 println initialLength
 println codeLength
 println seq.length()
+

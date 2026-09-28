@@ -38,3 +38,4 @@ class XmlSlurperFactory {
         new XmlSlurper(*args)
     }
 }
+

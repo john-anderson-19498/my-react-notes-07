@@ -789,3 +789,5 @@ public class Java8 implements VMPlugin {
     }
 
 }
+
+// 142b7f

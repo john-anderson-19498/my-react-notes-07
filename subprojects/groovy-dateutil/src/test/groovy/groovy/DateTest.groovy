@@ -369,3 +369,4 @@ class DateTest {
         assertEquals '1970-04-04', aprilFour.format('yyyy-MM-dd')
     }
 }
+

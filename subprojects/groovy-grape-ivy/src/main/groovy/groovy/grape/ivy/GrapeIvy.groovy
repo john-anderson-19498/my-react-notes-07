@@ -1025,3 +1025,4 @@ class IvyGrabRecord {
     /** Whether transitive dependencies should be resolved. */
     boolean transitive
 }
+

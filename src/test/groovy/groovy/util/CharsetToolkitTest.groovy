@@ -419,3 +419,4 @@ class CharsetToolkitTest {
         assertEquals(StandardCharsets.US_ASCII, toolkit.getCharset())
     }
 }
+

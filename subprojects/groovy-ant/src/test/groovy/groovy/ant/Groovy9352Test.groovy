@@ -117,3 +117,4 @@ final class Groovy9352Test extends AntTestCase {
         }
     }
 }
+

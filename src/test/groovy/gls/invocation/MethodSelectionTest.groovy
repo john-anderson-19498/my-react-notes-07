@@ -422,3 +422,4 @@ final class MethodSelectionTest extends CompilableTestSupport {
         }
     }
 }
+

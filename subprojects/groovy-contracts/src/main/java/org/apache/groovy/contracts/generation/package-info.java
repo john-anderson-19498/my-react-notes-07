@@ -21,3 +21,5 @@
  * Code generation and transformation utilities for producing runtime contract validation code.
  */
 package org.apache.groovy.contracts.generation;
+
+// 4154ec

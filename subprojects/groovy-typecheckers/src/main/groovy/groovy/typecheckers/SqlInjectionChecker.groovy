@@ -283,3 +283,4 @@ class SqlInjectionChecker extends GroovyTypeCheckingExtensionSupport.TypeCheckin
         exp instanceof VariableExpression ? exp.name : exp.text
     }
 }
+

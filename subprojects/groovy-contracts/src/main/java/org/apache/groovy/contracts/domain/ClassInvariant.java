@@ -51,3 +51,5 @@ public class ClassInvariant extends Assertion<ClassInvariant> {
         super(blockStatement, booleanExpression);
     }
 }
+
+// 7bd443

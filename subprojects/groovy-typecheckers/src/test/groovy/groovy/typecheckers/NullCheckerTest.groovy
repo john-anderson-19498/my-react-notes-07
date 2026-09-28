@@ -2471,3 +2471,4 @@ final class NullCheckerTest {
         '''
     }
 }
+

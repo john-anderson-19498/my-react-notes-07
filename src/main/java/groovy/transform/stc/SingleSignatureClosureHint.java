@@ -55,3 +55,5 @@ public abstract class SingleSignatureClosureHint extends ClosureSignatureHint {
         return Collections.singletonList(getParameterTypes(node, options, sourceUnit, compilationUnit, usage));
     }
 }
+
+// 20dc92

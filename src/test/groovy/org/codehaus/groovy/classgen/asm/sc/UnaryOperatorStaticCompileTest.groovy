@@ -50,3 +50,4 @@ final class UnaryOperatorStaticCompileTest extends UnaryOperatorSTCTest implemen
         '''
     }
 }
+

@@ -29,3 +29,4 @@ final class Groovy3335 {
         assert Integer.class.toString()
     }
 }
+

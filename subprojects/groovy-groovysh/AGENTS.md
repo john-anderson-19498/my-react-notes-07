@@ -40,3 +40,4 @@ For AI-tooling guardrails over the conventions in
   user-facing reference.
 - [`LICENSE`](LICENSE) — provenance for the BSD-licensed
   vendored files.
+

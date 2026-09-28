@@ -76,3 +76,5 @@ public @interface VisibilityOptions {
     Visibility constructor() default Visibility.UNDEFINED;
 //    Visibility field() default Visibility.UNDEFINED;
 }
+
+// 8507ae

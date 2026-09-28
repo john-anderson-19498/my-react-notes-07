@@ -78,3 +78,4 @@ class Groovy4415Bug {
     }
 }
 
+

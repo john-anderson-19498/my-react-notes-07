@@ -44,3 +44,5 @@ public class UsedVariableTracker implements VariableReplacedListener {
 
     private final Set<String> usedVariableNames = new LinkedHashSet<>();
 }
+
+// 5322f0

@@ -38,3 +38,4 @@ class Groovy4202Bug {
 }
 
 class Foo4202 { }
+

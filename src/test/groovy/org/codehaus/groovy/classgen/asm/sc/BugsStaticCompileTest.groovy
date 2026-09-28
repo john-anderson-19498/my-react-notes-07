@@ -1614,3 +1614,4 @@ final class BugsStaticCompileTest extends BugsSTCTest implements StaticCompilati
         '''
     }
 }
+

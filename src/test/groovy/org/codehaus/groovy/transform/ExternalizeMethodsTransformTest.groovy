@@ -65,3 +65,4 @@ class ExternalizeMethodsTransformTest extends GroovyShellTestCase {
     }
 
 }
+

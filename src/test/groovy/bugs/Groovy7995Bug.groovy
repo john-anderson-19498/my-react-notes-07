@@ -45,3 +45,4 @@ class Groovy7995Bug{
     }
 
 }
+

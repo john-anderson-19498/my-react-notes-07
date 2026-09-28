@@ -1555,3 +1555,5 @@ class FactoryInterceptorMetaClass extends DelegatingMetaClass {
         }
     }
 }
+
+// 579ca0

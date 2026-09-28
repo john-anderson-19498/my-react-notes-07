@@ -150,3 +150,4 @@ final class Groovy8609Bug {
         assert err.message.contains('Cannot call A#getFirstRecord(java.util.ArrayList<java.util.HashMap<java.lang.String, java.lang.Integer>>) with arguments [java.util.ArrayList<java.util.HashMap<java.lang.StringBuffer, java.lang.Integer>>]')
     }
 }
+

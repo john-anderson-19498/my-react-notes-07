@@ -98,3 +98,4 @@ class ExecuteTest_LinuxSolaris {
     assert process.in.text.trim ( ) == "1"
    }
 }
+

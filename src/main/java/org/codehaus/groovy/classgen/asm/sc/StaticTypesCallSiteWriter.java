@@ -888,3 +888,5 @@ public class StaticTypesCallSiteWriter extends CallSiteWriter {
         controller.getSourceUnit().addError(new SyntaxException(message, receiver));
     }
 }
+
+// 354ee2

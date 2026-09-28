@@ -21,3 +21,5 @@
  * Methods and operations for runtime macro evaluation and AST node manipulation.
  */
 package org.codehaus.groovy.macro.methods;
+
+// 868b4c

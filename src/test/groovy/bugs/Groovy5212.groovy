@@ -60,3 +60,4 @@ final class Groovy5212 {
         assert !(stub =~ /final/)
     }
 }
+

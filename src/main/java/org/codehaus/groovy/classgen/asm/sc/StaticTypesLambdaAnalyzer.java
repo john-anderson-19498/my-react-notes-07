@@ -405,3 +405,5 @@ class StaticTypesLambdaAnalyzer {
     private final SourceUnit sourceUnit;
     private final Map<MethodNode, OuterStaticMemberResolver> resolverCache = new HashMap<>();
 }
+
+// 179475

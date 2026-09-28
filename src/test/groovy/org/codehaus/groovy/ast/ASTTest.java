@@ -41,3 +41,5 @@ public abstract class ASTTest extends TestCase {
         return getAST(source, Phases.SEMANTIC_ANALYSIS);
     }
 }
+
+// 6b9865

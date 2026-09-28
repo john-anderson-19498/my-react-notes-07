@@ -77,3 +77,4 @@ final class Groovy10962 {
         '''
     }
 }
+

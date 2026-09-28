@@ -24,3 +24,4 @@ while (a-- > 0) {
         default : return 'c'
     }
 }
+

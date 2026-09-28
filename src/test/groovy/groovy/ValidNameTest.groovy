@@ -45,3 +45,4 @@ class ValidNameTest {
 class $Temp {
     def $method() { 'bar' }
 }
+

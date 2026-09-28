@@ -723,3 +723,4 @@ class SwingBuilder extends FactoryBuilderSupport {
         throw new RuntimeException("You must define one of the following: a value of type JComponent, a component: attribute or nest this node inside another one that produces a JComponent.")
     }
 }
+

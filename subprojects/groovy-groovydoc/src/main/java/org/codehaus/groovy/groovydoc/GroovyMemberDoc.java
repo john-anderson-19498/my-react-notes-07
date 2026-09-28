@@ -29,3 +29,5 @@ public interface GroovyMemberDoc extends GroovyProgramElementDoc {
      */
     boolean isSynthetic();
 }
+
+// 83585b

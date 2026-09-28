@@ -41,3 +41,4 @@ class ClassWithClosureInAnnotation {
 @interface GroovyConditional {
     Class value()
 }
+

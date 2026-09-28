@@ -20,3 +20,4 @@ package groovy.bugs.groovy7799
 
 interface EE {
 }
+

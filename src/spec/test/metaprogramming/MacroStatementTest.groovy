@@ -130,3 +130,4 @@ class AddMethodWithMacrosASTTransformation extends AbstractASTTransformation {
     }
 }
 // end::basicWithMacro[]
+

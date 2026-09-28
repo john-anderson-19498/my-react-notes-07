@@ -125,3 +125,5 @@ public class GroovyPrintStream extends PrintStream {
     }
 
 }
+
+// 871f6b

@@ -20,3 +20,4 @@ package gls.annotations
 
 @ConstAnnotation(ints = Integer.MAX_VALUE)
 class Child2 extends Base3278 {}
+

@@ -21,3 +21,5 @@
  * ASM-based helpers that support Groovy bytecode generation in the core class generator.
  */
 package org.codehaus.groovy.classgen.asm;
+
+// e4a78d

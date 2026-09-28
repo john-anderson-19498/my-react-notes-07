@@ -479,3 +479,5 @@ public final class IndyInvalidation {
         BULK_INVALIDATIONS.set(0);
     }
 }
+
+// 3f5712

@@ -180,3 +180,5 @@ public class OldVariableGenerationUtility {
                 && wrapperType.implementsInterface(ClassHelper.make("java.lang.Cloneable"));
     }
 }
+
+// bfc9ca

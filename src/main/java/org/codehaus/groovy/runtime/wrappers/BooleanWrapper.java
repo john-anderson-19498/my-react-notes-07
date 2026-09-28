@@ -32,3 +32,5 @@ public class BooleanWrapper extends PojoWrapper {
         super(wrapped ? Boolean.TRUE : Boolean.FALSE, boolean.class);
     }
 }
+
+// c8da3c

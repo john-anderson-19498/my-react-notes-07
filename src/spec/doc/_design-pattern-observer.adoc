@@ -104,3 +104,4 @@ Here, methods like `addPropertyChangeListener` perform the same role as `registe
 There is a `firePropertyChange` method corresponding to `notifyAll`/`notifyObservers` in previous examples but Groovy adds that
 automatically here, so it isn't visible in the source code. There is also a `propertyChange` method that corresponds
 to the `update` method in previous examples, though again, that isn't visible here.
+

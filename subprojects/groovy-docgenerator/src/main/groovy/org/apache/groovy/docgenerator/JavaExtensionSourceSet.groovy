@@ -631,3 +631,4 @@ final class ParsedUnit {
     File file
     CompilationUnit compilationUnit
 }
+

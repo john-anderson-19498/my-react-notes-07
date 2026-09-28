@@ -984,3 +984,4 @@ final class SyntaxErrorTest {
 
     private static final String SCRIPT_ZIP_PATH = "${TestUtils.RESOURCES_PATH}/groovy-2.5.0/groovy-2.5.0-SNAPSHOT-20160921-allscripts.zip"
 }
+

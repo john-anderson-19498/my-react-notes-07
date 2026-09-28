@@ -20,3 +20,4 @@ package groovy.test.suite
 
 // used for testing ScriptTestCaseAdapter usage with AllTestSuite
 assert true
+

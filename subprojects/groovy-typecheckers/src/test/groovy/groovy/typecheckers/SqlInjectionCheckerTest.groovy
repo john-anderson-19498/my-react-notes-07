@@ -183,3 +183,4 @@ final class SqlInjectionCheckerTest {
         '''
     }
 }
+

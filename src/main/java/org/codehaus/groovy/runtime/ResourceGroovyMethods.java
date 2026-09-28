@@ -2786,3 +2786,5 @@ public class ResourceGroovyMethods extends DefaultGroovyMethodsSupport {
         return buffer.toString();
     }
 }
+
+// f77f4c

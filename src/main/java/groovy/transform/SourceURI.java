@@ -59,3 +59,5 @@ public @interface SourceURI {
      */
     boolean allowRelative() default false;
 }
+
+// 3c84bf

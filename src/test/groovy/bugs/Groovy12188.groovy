@@ -100,3 +100,4 @@ final class Groovy12188 {
         assert err.message.contains('someValue')
     }
 }
+

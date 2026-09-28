@@ -32,3 +32,5 @@ public class ShortWrapper extends PojoWrapper {
         super(wrapped, short.class);
     }
 }
+
+// 4c94d4

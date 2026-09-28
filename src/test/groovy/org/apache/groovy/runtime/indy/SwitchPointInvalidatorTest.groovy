@@ -207,3 +207,4 @@ final class SwitchPointInvalidatorTest {
         seen.each { SwitchPoint sp -> assertFalse(sp.hasBeenInvalidated()) }
     }
 }
+

@@ -108,3 +108,4 @@ final class Groovy2556 {
         assertEquals  2, arr[getCount()]
     }
 }
+

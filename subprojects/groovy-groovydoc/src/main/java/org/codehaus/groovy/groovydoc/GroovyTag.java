@@ -38,3 +38,5 @@ public interface GroovyTag {
      */
     String text();
 }
+
+// 88a2a0

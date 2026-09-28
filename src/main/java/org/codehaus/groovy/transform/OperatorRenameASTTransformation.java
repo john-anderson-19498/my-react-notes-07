@@ -247,3 +247,5 @@ public class OperatorRenameASTTransformation extends ClassCodeExpressionTransfor
     }
 
 }
+
+// 3e4b85

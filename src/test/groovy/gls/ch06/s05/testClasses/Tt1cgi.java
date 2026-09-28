@@ -47,3 +47,5 @@ public class Tt1cgi extends Tt1c implements GroovyObject {
         this.metaClass.setProperty(this, property, newValue);
     }
 }
+
+// bbeecc

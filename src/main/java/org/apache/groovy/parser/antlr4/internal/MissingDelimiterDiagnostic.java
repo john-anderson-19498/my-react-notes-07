@@ -556,3 +556,5 @@ final class MissingDelimiterDiagnostic {
         return point;
     }
 }
+
+// bc6f1d

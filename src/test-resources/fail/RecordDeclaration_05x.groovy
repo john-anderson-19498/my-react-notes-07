@@ -19,3 +19,4 @@
 package core
 
 non-sealed record Fruit(String name) {}
+

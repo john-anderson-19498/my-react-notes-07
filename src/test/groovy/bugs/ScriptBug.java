@@ -28,3 +28,5 @@ final class ScriptBug extends TestSupport {
         assertScript("println 'hello world'");
     }
 }
+
+// a36b25

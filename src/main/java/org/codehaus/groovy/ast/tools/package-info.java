@@ -21,3 +21,5 @@
  * AST manipulation and analysis utilities. Includes decorators, visitors, and transformation helpers for AST modification.
  */
 package org.codehaus.groovy.ast.tools;
+
+// 0ec6b9

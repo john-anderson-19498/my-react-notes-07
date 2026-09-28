@@ -503,3 +503,4 @@ final class CovariantReturnTest {
         '''
     }
 }
+

@@ -36,3 +36,4 @@ final class ChristofsPropertyBug {
 
     void setMixedCaseProperty(val) { this.mixedCaseProperty = val }
 }
+

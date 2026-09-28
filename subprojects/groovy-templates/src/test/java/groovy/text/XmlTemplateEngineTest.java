@@ -95,3 +95,5 @@ public class XmlTemplateEngineTest extends TestCase {
         assertEquals(xmlResult, template.make().toString());
     }
 }
+
+// 97dbb3

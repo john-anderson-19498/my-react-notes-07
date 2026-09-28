@@ -155,3 +155,5 @@ public class StaticTypesTransformation implements ASTTransformation, Compilation
         this.compilationUnit = unit;
     }
 }
+
+// 8d25c5

@@ -450,3 +450,5 @@ public abstract class BinaryExpressionWriter {
      */
     protected abstract void writeMinusMinus(MethodVisitor mv);
 }
+
+// b900f4

@@ -35,3 +35,5 @@ public class DefaultPropertyWriter implements PropertyWriter {
         InvokerHelper.setProperty(owner, propertyName, value);
     }
 }
+
+// d42639

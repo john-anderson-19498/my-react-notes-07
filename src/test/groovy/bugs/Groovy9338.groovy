@@ -56,3 +56,4 @@ final class Groovy9338 {
         assert err.message =~ /Cannot call \w+#meth\(java.lang.Class<\? super java.lang.CharSequence>\) with arguments \[java.lang.Class<\?>\]/
     }
 }
+

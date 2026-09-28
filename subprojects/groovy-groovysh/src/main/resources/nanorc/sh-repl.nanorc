@@ -29,3 +29,4 @@ FUNCTION: "\<(cat|chmod|chown|cp|env|grep|install|ln|make|mkdir|mv|rm|sed|tar|to
 COMMENT:  "^([[:space:]])*#.*$"
 $BLOCK_COMMENT:       "/*, */"
 $BALANCED_DELIMITERS: "", '"
+

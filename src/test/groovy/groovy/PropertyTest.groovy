@@ -893,3 +893,4 @@ final class PropertyTest {
         def normalProperty = 2
     }
 }
+

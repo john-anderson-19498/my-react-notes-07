@@ -30,3 +30,4 @@ class LexicalTranslation1 extends GroovyTestCase {
     //todo: test that we have a stream of tokens (RI is antlr specific...)
 }
 
+

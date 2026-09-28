@@ -78,3 +78,5 @@ public class FloatFloatArrayColumnIterator implements Iterator<float[]> {
         throw new UnsupportedOperationException("Remove not supported for arrays");
     }
 }
+
+// 74b27e

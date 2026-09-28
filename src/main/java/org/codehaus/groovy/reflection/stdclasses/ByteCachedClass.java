@@ -82,3 +82,5 @@ public class ByteCachedClass extends NumberCachedClass {
             || classToTransformFrom == Byte.TYPE;
     }
 }
+
+// c191b2

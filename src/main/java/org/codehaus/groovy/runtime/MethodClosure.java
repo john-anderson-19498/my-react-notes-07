@@ -184,3 +184,5 @@ public class MethodClosure extends Closure {
         throw new UnsupportedOperationException();
     }
 }
+
+// 0e836c

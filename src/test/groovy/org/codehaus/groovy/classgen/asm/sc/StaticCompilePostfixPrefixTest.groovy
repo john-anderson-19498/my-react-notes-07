@@ -122,3 +122,4 @@ final class StaticCompilePostfixPrefixTest extends AbstractBytecodeTestCase {
         ''')
     }
 }
+

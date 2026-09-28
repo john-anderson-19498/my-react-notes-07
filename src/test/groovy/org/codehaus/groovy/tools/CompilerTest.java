@@ -59,3 +59,5 @@ public class CompilerTest extends GroovyTestCase {
     }
 
 }
+
+// 18836d

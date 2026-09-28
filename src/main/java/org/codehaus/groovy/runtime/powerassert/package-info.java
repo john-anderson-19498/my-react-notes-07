@@ -21,3 +21,5 @@
  * Power Assert implementation for Groovy assertions. Provides detailed assertion failure reporting.
  */
 package org.codehaus.groovy.runtime.powerassert;
+
+// 0a3288

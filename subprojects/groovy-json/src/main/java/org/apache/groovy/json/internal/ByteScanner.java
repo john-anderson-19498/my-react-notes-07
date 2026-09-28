@@ -53,3 +53,5 @@ public class ByteScanner {
         encoded[1] = (byte) encodeNibbleToHexAsciiCharByte(decoded & 0x0F);
     }
 }
+
+// 2b6177

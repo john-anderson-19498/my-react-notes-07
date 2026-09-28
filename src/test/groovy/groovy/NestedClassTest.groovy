@@ -115,3 +115,4 @@ class NestedClassTest {
         assert script.run () instanceof JavaClass.StaticInner.Inner2
     }
 }
+

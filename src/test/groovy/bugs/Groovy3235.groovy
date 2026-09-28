@@ -46,3 +46,4 @@ final class Groovy3235 {
         assert d.denormalize() == t
    }
 }
+

@@ -20,3 +20,4 @@
 def foo(String... strs, int i) { println i }
 
 foo("me", "you", 42)
+

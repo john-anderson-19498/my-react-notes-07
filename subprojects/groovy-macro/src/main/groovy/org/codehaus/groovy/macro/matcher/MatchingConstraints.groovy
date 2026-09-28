@@ -43,3 +43,4 @@ class MatchingConstraints {
     final ConstraintPredicate<Token> tokenPredicate
     final ConstraintPredicate<TreeContext> eventually
 }
+

@@ -112,3 +112,4 @@ class ConstantCachingPostconditionTests extends BaseTestClass {
         }
     }
 }
+

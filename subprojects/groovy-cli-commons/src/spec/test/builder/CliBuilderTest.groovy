@@ -51,3 +51,4 @@ usage: groovy Greeter
         assert options.arguments() == ['and', 'some', 'more']
     }
 }
+

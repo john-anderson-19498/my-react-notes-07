@@ -23,3 +23,5 @@ public class TestStaticStringExtension {
         return 42;
     }
 }
+
+// 8cf00c

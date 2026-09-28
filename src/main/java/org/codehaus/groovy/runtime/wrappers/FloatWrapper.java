@@ -32,3 +32,5 @@ public class FloatWrapper extends PojoWrapper {
         super(wrapped, float.class);
     }
 }
+
+// 4e1a18

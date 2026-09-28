@@ -52,3 +52,4 @@ final class Groovy11126 {
         safeName(null)
     }
 }
+

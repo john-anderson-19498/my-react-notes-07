@@ -57,3 +57,5 @@ public class StaticCompilationMopWriter extends MopWriter {
         }
     }
 }
+
+// 4b7390

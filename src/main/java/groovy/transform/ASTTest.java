@@ -80,3 +80,5 @@ public @interface ASTTest {
      */
     Class<? extends /*@ClosureParams(value=FromString.class,options="")*/ Closure<?>> value();
 }
+
+// 922758

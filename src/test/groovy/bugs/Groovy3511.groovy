@@ -48,3 +48,4 @@ final class Groovy3511 {
         assert ex.message.contains(Number.class.name)
     }
 }
+

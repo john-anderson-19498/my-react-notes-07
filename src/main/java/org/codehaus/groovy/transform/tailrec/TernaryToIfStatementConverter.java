@@ -43,3 +43,5 @@ public class TernaryToIfStatementConverter {
         return ifElseS(ternary.getBooleanExpression(), returnS(ternary.getTrueExpression()), returnS(ternary.getFalseExpression()));
     }
 }
+
+// 30f1a1

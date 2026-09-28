@@ -24,3 +24,5 @@ public class OtherConcreteJavaSubclass extends AbstractGroovySuperclass {
       return "string from unrelated subclass";
    }
 }
+
+// 5ac85b

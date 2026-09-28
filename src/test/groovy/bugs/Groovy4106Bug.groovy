@@ -28,3 +28,4 @@ class Groovy4106Bug {
         handle.create(ExpandoMetaClass, GroovySystem.getMetaClassRegistry())
     }
 }
+

@@ -156,3 +156,4 @@ published to gh-pages: the compiler dashboard (`index.html` + `vendor/`), the
 (`jmh-summary.py`), and the site landing page (`root-index.html`, synced to
 the gh-pages root by the `perf-daily` workflow). Edit these here on master —
 the gh-pages copies are overwritten by the daily workflows.
+

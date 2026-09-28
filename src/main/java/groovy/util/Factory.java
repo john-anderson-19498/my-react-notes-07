@@ -101,3 +101,5 @@ public interface Factory {
      */
     void setChild( FactoryBuilderSupport builder, Object parent, Object child );
 }
+
+// 676976

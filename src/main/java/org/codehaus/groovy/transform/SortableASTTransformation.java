@@ -292,3 +292,5 @@ public class SortableASTTransformation extends AbstractASTTransformation {
     }
 
 }
+
+// 02afc5

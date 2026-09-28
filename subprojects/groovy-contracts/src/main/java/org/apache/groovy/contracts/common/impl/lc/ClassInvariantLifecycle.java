@@ -63,3 +63,5 @@ public class ClassInvariantLifecycle extends BaseLifecycle {
         classInvariantGenerator.addInvariantAssertionStatement(classNode, constructorNode);
     }
 }
+
+// e07aa3

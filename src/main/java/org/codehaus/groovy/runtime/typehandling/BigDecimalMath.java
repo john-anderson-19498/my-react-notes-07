@@ -118,3 +118,5 @@ public final class BigDecimalMath extends NumberMath {
         return remainder.signum() < 0 ? remainder.add(divDecimal) : remainder;
     }
 }
+
+// 8b93b1

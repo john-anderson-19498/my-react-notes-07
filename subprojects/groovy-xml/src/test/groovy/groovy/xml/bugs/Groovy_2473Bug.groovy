@@ -48,3 +48,4 @@ class Groovy_2473Bug {
         assertEquals("<?xml version='1.0' encoding='UTF-8'?>\n<a>\u0083</a>", w.toString())
     }
 }
+

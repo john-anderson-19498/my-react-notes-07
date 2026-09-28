@@ -23,3 +23,4 @@ public class ary {
         System.out.println(y[0] + " " + y[n-1]);
     }
 }
+

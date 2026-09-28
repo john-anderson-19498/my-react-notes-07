@@ -43,3 +43,4 @@ class EqualsAndHashCodeTests extends GroovyShellTestCase {
         assertTrue result as boolean
     }
 }
+

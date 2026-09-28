@@ -32,3 +32,4 @@ class MethodCallWithoutParensInStaticMethodBug {
         println 'hello'[1]
     }
 }
+

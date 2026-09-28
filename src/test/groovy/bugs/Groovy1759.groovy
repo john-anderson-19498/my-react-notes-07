@@ -47,3 +47,4 @@ final class Groovy1759 {
         void b() {     }
     }
 }
+

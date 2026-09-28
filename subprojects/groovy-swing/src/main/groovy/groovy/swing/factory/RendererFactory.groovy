@@ -112,3 +112,4 @@ class RendererUpdateFactory extends AbstractFactory {
         return false
     }
 }
+

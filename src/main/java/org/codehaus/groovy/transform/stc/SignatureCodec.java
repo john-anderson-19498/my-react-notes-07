@@ -30,3 +30,5 @@ public interface SignatureCodec {
 
     ClassNode decode(String signature);
 }
+
+// b77c85

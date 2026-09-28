@@ -380,3 +380,5 @@ public class ImmutablePropertyUtils {
         return immutableClasses;
     }
 }
+
+// eb495b

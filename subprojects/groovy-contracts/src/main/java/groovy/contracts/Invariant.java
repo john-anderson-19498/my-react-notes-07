@@ -79,3 +79,5 @@ public @interface Invariant {
      */
     Class value();
 }
+
+// fd9cdf

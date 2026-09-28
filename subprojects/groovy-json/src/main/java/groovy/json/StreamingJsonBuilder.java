@@ -952,3 +952,5 @@ public class StreamingJsonBuilder extends GroovyObjectSupport {
         }
     }
 }
+
+// 03a0e3

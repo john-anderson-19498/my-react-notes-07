@@ -915,3 +915,4 @@ final class InstanceofScopeTest {
         }
     }
 }
+

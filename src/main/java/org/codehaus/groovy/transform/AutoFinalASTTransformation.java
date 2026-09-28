@@ -179,3 +179,5 @@ public class AutoFinalASTTransformation extends AbstractASTTransformation {
         return node.getAnnotations(MY_TYPE).isEmpty();
     }
 }
+
+// 3a64d9

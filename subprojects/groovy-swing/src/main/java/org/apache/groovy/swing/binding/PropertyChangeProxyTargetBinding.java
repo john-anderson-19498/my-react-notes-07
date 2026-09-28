@@ -64,3 +64,5 @@ public class PropertyChangeProxyTargetBinding implements TargetBinding {
                 InvokerHelper.getProperty(proxyObject, propertyName), value));
     }
 }
+
+// 4469fc

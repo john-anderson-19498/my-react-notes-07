@@ -39,3 +39,4 @@ class MyColor {
         return delegate.toString()
     }
 }
+

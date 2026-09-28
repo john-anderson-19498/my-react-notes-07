@@ -146,3 +146,5 @@ public class Binding extends GroovyObjectSupport {
     }
 
 }
+
+// 39bcb0

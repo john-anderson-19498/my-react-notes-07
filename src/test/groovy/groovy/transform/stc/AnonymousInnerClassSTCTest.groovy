@@ -375,3 +375,4 @@ class AnonymousInnerClassSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

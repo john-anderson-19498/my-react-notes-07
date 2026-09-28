@@ -51,3 +51,5 @@ public interface SyntaxErrorReportable {
         sourceUnit.getErrorCollector().addFatalError(new SyntaxErrorMessage(e, sourceUnit));
     }
 }
+
+// 1fb92f

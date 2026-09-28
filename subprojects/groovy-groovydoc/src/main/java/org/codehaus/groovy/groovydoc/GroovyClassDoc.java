@@ -210,3 +210,5 @@ public interface GroovyClassDoc extends GroovyType, GroovyProgramElementDoc {
      */
     String getRelativeRootPath(); // not in Java Doclet API
 }
+
+// f1beef

@@ -2247,3 +2247,5 @@ public class SecureASTCustomizer extends CompilationCustomizer {
         boolean isAuthorized(Statement expression);
     }
 }
+
+// 8a6490

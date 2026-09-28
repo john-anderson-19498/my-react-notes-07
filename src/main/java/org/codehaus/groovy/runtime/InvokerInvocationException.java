@@ -62,3 +62,5 @@ public class InvokerInvocationException extends GroovyRuntimeException {
         return (cause==null)?"java.lang.NullPointerException":cause.toString();
     }
 }
+
+// af7de6

@@ -43,3 +43,5 @@ public class CompileDynamicProcessor extends AnnotationCollectorTransform {
         return Collections.singletonList(node);
     }
 }
+
+// 87ae75

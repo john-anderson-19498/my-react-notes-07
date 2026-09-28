@@ -645,3 +645,5 @@ public interface Awaitable<T> {
         return AsyncSupport.isVirtualThreadsAvailable();
     }
 }
+
+// 52bef3

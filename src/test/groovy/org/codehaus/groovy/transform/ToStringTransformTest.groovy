@@ -560,3 +560,4 @@ class ToStringTransformTest extends GroovyShellTestCase {
     }
 
 }
+

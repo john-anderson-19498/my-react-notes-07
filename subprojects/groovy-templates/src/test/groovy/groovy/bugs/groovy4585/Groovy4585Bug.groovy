@@ -29,3 +29,4 @@ class Groovy4585Bug {
         assert buildXmlContent.contains('<exec dir="${drive}" executable="echo">')
     }
 }
+

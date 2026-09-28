@@ -165,3 +165,4 @@ class LiteralTypesTest {
         assert x == Float.valueOf("3.2e2")
     }
 }
+

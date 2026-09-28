@@ -633,3 +633,5 @@ public class GroovyTypeCheckingExtensionSupport extends AbstractTypeCheckingExte
         }
     }
 }
+
+// b81866

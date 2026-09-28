@@ -32,3 +32,4 @@ final class StaticPrintlnTest extends TestSupport {
         println("called with: " + args)
     }
 }
+

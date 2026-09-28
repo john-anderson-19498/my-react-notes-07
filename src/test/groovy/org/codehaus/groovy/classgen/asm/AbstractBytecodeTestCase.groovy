@@ -350,3 +350,4 @@ class InstructionSequence {
         instructions.join('\n')
     }
 }
+

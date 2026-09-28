@@ -46,3 +46,4 @@ class StubGenerationForConstructorWithOptionalArgsStubsTest extends StringSource
         assert source.contains("this(") // for constructor call in constructor 2, added due to optional arg
     }
 }
+

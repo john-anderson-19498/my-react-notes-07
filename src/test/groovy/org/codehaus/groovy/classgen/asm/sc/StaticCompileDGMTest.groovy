@@ -71,3 +71,4 @@ final class StaticCompileDGMTest extends DefaultGroovyMethodsSTCTest implements 
         '''
     }
 }
+

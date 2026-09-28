@@ -55,3 +55,4 @@
  * </ul>
  */
 package groovy.typecheckers;
+

@@ -92,3 +92,5 @@ public class LoggingHelper {
         owner.log(msg, Project.MSG_DEBUG);
     }
 }
+
+// d51c3a

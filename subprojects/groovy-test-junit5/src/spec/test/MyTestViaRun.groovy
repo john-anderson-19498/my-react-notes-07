@@ -81,3 +81,4 @@ JUnit5 launcher: passed=8, failed=0, skipped=0, time=246ms
 // end::junit5_test_output[]
 */
 }
+

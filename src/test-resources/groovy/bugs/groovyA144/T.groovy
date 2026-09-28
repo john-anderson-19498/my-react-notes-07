@@ -23,3 +23,4 @@ trait T {
         return 'T'
     }
 }
+

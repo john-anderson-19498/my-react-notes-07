@@ -19,3 +19,4 @@
 def util = new groovy.lang.gcldeadlock.DeadlockBugUtil()
 
 number + "+" + number + "=" + util.plus(number, number)
+

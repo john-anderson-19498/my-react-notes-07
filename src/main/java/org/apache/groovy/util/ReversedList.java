@@ -54,3 +54,5 @@ public class ReversedList<E> extends AbstractList<E> implements RandomAccess, Se
         return delegate.size();
     }
 }
+
+// 89ff55

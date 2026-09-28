@@ -34,3 +34,4 @@ class ZoharsBug {
         return a.findAll{b.call(it)}
     }
 }
+

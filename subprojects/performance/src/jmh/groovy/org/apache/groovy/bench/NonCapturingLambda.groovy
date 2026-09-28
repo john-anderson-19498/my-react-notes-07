@@ -70,3 +70,4 @@ class NonCapturingLambda {
         IntStream.rangeClosed(1, n).map((int i) -> i * 2).sum()
     }
 }
+

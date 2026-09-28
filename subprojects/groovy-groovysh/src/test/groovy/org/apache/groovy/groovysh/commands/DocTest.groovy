@@ -51,3 +51,4 @@ class DocTest extends SystemTestSupport {
         assert !thrown.message.empty
     }
 }
+

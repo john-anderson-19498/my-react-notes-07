@@ -79,3 +79,4 @@ class GroovySystemRegistry extends SystemRegistryImpl {
         return command.startsWith("/!") || super.isCommandOrScript(command)
     }
 }
+

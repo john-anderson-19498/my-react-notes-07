@@ -102,3 +102,5 @@ public class MetaClassRegistryChangeEvent extends EventObject {
         return (MetaClassRegistry) source;
     }
 }
+
+// aa5832

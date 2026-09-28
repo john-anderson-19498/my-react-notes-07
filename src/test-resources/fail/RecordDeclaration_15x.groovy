@@ -24,3 +24,4 @@ import java.util.function.BiFunction
 record Rectangle(double length, double width) {
     BiFunction<Double, Double, Double> diagonal = (x, y) -> Math.sqrt(x*x + y*y)
 }
+

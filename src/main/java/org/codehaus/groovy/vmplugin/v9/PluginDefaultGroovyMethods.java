@@ -168,3 +168,5 @@ public class PluginDefaultGroovyMethods extends DefaultGroovyMethodsSupport {
     }
 
 }
+
+// 2be378

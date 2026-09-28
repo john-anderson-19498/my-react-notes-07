@@ -38,3 +38,4 @@ final class ClosureGeneratedTest extends AbstractGeneratedAstTestCase {
         assertMethodIsAnnotated/*AsGenerated*/(closure.getClass(), 'call', Object)
     }
 }
+

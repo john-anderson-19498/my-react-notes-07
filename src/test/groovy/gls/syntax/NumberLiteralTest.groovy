@@ -68,3 +68,4 @@ final class NumberLiteralTest extends CompilableTestSupport {
         '''
     }
 }
+

@@ -98,3 +98,4 @@ class TagLibAdapter {
         throw new MissingMethodException(name, TagLibAdapter, args)
     }
 }
+

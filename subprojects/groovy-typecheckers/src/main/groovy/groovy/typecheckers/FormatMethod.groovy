@@ -46,3 +46,4 @@ import java.lang.annotation.Target
 @interface FormatMethod {
 
 }
+

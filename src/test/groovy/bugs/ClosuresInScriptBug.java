@@ -28,3 +28,5 @@ final class ClosuresInScriptBug extends TestSupport {
         assertScript("a = 1\n [2].each { a = it }\n assert a == 2");
     }
 }
+
+// c20eab

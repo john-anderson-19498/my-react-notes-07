@@ -20,3 +20,4 @@ package groovy.bugs.groovy9866
 
 interface I extends System.Logger {
 }
+

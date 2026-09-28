@@ -51,3 +51,4 @@ class InspectTest extends SystemTestSupport {
         assert out.contains('classProps')
     }
 }
+

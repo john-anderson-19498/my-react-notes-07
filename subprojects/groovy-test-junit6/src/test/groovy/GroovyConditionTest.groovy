@@ -92,3 +92,4 @@ class GroovyConditionTest {
         assertTrue(true)
     }
 }
+

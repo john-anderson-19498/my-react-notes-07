@@ -51,3 +51,5 @@ public class EnsuresAnnotationProcessor extends AnnotationProcessor {
         contract.postconditions().and(methodNode, new Postcondition(blockStatement, booleanExpression, isConstructor));
     }
 }
+
+// 9a09cf

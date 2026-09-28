@@ -66,3 +66,4 @@ class ScriptCacheTest {
         assert groovyClass1.getName() == className
     }
 }
+

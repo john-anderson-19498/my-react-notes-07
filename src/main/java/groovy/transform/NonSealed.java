@@ -37,3 +37,5 @@ import java.lang.annotation.Target;
 @GroovyASTTransformationClass("org.codehaus.groovy.transform.NonSealedASTTransformation")
 public @interface NonSealed {
 }
+
+// 25136a

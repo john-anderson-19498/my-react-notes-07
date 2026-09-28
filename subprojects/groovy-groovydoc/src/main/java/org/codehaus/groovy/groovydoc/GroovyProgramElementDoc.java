@@ -107,3 +107,5 @@ public interface GroovyProgramElementDoc extends GroovyDoc {
      */
     String qualifiedName();
 }
+
+// 343900

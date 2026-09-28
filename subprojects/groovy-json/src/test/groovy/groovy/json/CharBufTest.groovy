@@ -122,3 +122,4 @@ class CharBufTest {
         assert buffer.toString() == '[one,two,three,four'
     }
 }
+

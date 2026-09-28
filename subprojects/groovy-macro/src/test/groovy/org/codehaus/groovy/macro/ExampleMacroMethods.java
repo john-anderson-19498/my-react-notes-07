@@ -50,3 +50,5 @@ public class ExampleMacroMethods {
         return constX(propertyExpression.getPropertyAsString());
     }
 }
+
+// 7718e1

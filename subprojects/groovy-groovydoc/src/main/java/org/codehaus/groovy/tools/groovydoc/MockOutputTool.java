@@ -122,3 +122,5 @@ public class MockOutputTool implements OutputTool {
         return "dirs:" + outputAreas + ", files:" + output.keySet();
     }
 }
+
+// 43e5b7

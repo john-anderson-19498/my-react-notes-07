@@ -267,3 +267,4 @@ class WorkingWithDateTimeTypesTest extends GroovyTestCase {
         assert 1 == date5 - date6
     }
 }
+

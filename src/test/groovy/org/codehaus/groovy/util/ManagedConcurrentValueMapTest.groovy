@@ -39,3 +39,4 @@ final class ManagedConcurrentValueMapTest {
         assert map.@internalMap.size() == 0
     }
 }
+

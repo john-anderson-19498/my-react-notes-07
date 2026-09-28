@@ -104,3 +104,4 @@ final class ClassTagSpecTest extends StaticTypeCheckingTestCase {
         assert lenient
     }
 }
+

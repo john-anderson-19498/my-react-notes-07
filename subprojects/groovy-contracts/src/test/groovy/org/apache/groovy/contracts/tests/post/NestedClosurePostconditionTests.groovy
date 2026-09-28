@@ -71,3 +71,4 @@ class A {
         assert a.incIndexed([1, 2, 3]) == [2, 3, 4]
     }
 }
+

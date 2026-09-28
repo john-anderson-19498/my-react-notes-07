@@ -25,3 +25,4 @@ def a = new AtomicInteger(0)
 
 inc a
 assert 1 == a.get()
+

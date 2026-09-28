@@ -414,3 +414,5 @@ public class CharSequenceValue implements Value, CharSequence {
         return buffer[startIndex];
     }
 }
+
+// c319b3

@@ -96,3 +96,5 @@ public class GroovyCompiledScript extends CompiledScript {
     }
 
 }
+
+// 0261fa

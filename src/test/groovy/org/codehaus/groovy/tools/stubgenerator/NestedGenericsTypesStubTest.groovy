@@ -47,3 +47,4 @@ class NestedGenericsTypesStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains('java.util.List<java.util.List<java.lang.String>> getManyStringLists()')
     }
 }
+

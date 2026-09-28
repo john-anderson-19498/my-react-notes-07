@@ -38,3 +38,5 @@ public class TypedOption<T> extends HashMap<String, T> {
         return (T) super.get("defaultValue");
     }
 }
+
+// 73a1a8

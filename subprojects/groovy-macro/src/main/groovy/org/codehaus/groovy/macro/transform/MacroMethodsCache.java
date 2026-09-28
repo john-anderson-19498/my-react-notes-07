@@ -80,3 +80,5 @@ final class MacroMethodsCache extends AbstractExtensionMethodCache {
         return m -> m.getName();
     }
 }
+
+// 5fbdb9

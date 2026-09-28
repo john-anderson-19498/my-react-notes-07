@@ -267,3 +267,4 @@ class MarkupTemplateTypeCheckingExtension extends GroovyTypeCheckingExtensionSup
         }
     }
 }
+

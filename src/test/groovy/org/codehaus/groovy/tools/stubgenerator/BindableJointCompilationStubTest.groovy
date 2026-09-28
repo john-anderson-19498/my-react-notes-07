@@ -97,3 +97,4 @@ final class BindableJointCompilationStubTest extends StringSourcesStubTestCase {
         assert watched.propertyChangeListeners.length == 0
     }
 }
+

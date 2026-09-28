@@ -37,3 +37,4 @@ public class SubclassingInGroovyTest{
       instance.addNote("abcd");
    }
 }
+

@@ -469,3 +469,4 @@ class LogFormatterSpy extends Formatter {
         return record.message
     }
 }
+

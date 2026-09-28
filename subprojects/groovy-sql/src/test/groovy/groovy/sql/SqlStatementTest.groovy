@@ -63,3 +63,4 @@ class SqlStatementTest extends GroovyTestCase {
         sql.execute 'DELETE from EMPTY'
     }
 }
+

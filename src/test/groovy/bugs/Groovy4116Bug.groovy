@@ -54,3 +54,4 @@ final class Groovy4116Bug {
         assert err.message =~ /The method foo should be public as it implements the corresponding method from interface I4116/
     }
 }
+

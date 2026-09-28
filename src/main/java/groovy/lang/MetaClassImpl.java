@@ -4270,3 +4270,5 @@ out:    if (metaClass instanceof MetaClassImpl metaClassImpl) {
         this.permissivePropertyAccess = permissivePropertyAccess;
     }
 }
+
+// 448f2c

@@ -59,3 +59,4 @@ final class MethodCallsStaticCompilationTest extends MethodCallsSTCTest implemen
         assert astTrees['Foo$Bar$Baz'][1].contains('INVOKEVIRTUAL Foo.d ()I')
     }
 }
+

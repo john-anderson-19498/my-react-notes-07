@@ -38,3 +38,4 @@ class GinqTestRig {
         return result
     }
 }
+

@@ -17,3 +17,4 @@
  *  under the License.
  */
 def foo = new double[][5]
+

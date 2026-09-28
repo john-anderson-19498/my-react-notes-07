@@ -60,3 +60,4 @@ final class Groovy11226 extends StringSourcesStubTestCase {
         assert stub.contains('@groovy.transform.Generated() public  foo.Bar getBar() { return null; }')
     }
 }
+

@@ -50,3 +50,4 @@ final class AutoImplementWithJointCompilationStubTest extends StringSourcesStubT
         assert main.runGroovyClass()
     }
 }
+

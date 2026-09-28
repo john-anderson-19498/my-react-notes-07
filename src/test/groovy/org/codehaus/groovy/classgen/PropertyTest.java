@@ -85,3 +85,5 @@ final class PropertyTest extends TestSupport {
         assertSetProperty(bean, "bar", "newValue");
     }
 }
+
+// 4055f4

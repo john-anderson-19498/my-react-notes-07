@@ -28,3 +28,4 @@ final class AnnotationCollectorReflectionTest {
         assert innerNames.contains('bugs.groovy10121.SomeCollectedAnnotations$CollectorHelper')
     }
 }
+

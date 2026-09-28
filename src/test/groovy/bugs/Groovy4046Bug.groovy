@@ -33,3 +33,4 @@ class Groovy4046Bug {
 }
 
 enum MyEnum4046 { A, B, C }
+

@@ -47,3 +47,5 @@ public class ReadOnlyPropertyException extends MissingPropertyException {
         super("Cannot set read-only property: " + property + " for class: " + classname);
     }
 }
+
+// 78284c

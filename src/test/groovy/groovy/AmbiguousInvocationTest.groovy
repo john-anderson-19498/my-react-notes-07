@@ -53,3 +53,4 @@ class AmbiguousInvocationTest {
         assert "int args" == dummy2.foo("bar", (Integer) 1, (Integer) 2)
     }
 }
+

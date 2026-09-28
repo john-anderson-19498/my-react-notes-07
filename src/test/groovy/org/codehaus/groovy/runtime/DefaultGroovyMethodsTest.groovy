@@ -343,3 +343,4 @@ class DefaultGroovyMethodsTest extends GroovyTestCase {
         assert result.contains("at org.codehaus.groovy.runtime.DefaultGroovyMethodsTest.testThrowableAsString(DefaultGroovyMethodsTest.groovy:")
     }
 }
+

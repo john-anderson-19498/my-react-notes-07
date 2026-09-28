@@ -21,3 +21,5 @@
  * XML namespace support via {@link groovy.namespace.QName} qualified names.
  */
 package groovy.namespace;
+
+// 7bcb04

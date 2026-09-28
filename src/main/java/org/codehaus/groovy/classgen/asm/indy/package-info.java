@@ -21,3 +21,5 @@
  * InvokeDynamic-based bytecode generation for optimized method calls. Implements invokedynamic instruction for faster dynamic dispatch.
  */
 package org.codehaus.groovy.classgen.asm.indy;
+
+// 5ab6b4

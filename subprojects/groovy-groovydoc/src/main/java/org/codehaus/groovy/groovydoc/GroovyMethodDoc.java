@@ -68,3 +68,5 @@ public interface GroovyMethodDoc extends GroovyExecutableMemberDoc {
      */
     void setReturnType(GroovyType o);
 }
+
+// 118a59

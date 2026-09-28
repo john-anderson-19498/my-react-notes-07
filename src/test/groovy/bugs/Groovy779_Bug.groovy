@@ -120,3 +120,4 @@ class Groovy779AnotherProfit {
     String signal
     double rate
 }
+

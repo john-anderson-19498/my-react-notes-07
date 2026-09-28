@@ -38,3 +38,4 @@ class XmlParserFactory {
         new XmlParser(*args)
     }
 }
+

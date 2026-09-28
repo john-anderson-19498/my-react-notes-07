@@ -58,3 +58,5 @@ public class ObjectCachedClass extends CachedClass {
         return true;
     }
 }
+
+// 4e4cc9

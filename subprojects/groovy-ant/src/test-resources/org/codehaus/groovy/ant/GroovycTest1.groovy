@@ -23,3 +23,4 @@ class GroovycTest1 {
     ( new File ( 'build/classes/groovy/test/org/codehaus/groovy/ant/GroovycTest1_Result.txt' ) ).write ( 'OK.' )
   }
 }
+

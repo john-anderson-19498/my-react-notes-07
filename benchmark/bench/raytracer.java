@@ -110,3 +110,5 @@ public final class raytracer {
         (new raytracer()).run(Integer.parseInt(args[0]), 6, 4);
     }
 }
+
+// 4e5416

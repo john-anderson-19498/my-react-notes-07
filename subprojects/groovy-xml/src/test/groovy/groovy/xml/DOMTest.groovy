@@ -99,3 +99,4 @@ final class DOMTest extends TestXmlSupport {
         */
     }
 }
+

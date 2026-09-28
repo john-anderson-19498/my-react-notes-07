@@ -20,3 +20,4 @@ package core
 
 // can't explicitly extend a class
 record Fruit(String name, double price) extends Object {}
+

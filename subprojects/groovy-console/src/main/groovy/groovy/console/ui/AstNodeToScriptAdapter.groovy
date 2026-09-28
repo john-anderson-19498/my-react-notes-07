@@ -1436,3 +1436,4 @@ class AstNodeToScriptVisitor implements CompilationUnit.IPrimaryClassNodeOperati
         return true
     }
 }
+

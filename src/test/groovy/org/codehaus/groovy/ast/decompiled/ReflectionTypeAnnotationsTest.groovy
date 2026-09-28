@@ -102,3 +102,4 @@ final class ReflectionTypeAnnotationsTest {
         type.typeAnnotations.collect { ((ConstantExpression) it.getMember('value')).text }
     }
 }
+

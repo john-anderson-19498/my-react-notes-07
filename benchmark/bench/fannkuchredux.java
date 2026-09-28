@@ -180,3 +180,5 @@ public final class fannkuchredux implements Runnable
         printResult( n, res, chk );
     }
 }
+
+// 17f80c

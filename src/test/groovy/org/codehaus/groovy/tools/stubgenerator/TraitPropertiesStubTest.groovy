@@ -63,3 +63,4 @@ final class TraitPropertiesStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains('void setFoo(boolean value)')
     }
 }
+

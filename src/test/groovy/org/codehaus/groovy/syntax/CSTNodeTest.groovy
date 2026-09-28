@@ -366,3 +366,4 @@ class CSTNodeTest {
         assertTrue(reduction.matches(Types.PLUS, Types.MINUS, Types.STAR, Types.DIVIDE, Types.MOD))
     }
 }
+

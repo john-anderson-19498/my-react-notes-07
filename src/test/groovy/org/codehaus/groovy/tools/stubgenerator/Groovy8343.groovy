@@ -51,3 +51,4 @@ final class Groovy8343 extends StringSourcesStubTestCase {
         // We are just testing that the above compiles ok and using stub test to create the correct conditions
     }
 }
+

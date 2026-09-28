@@ -167,3 +167,4 @@ class GroovyFilterTests {
         assert '$/foo\n/bar//\n$/' ==~ GroovyFilter.SLASHY_QUOTES
     }
 }
+

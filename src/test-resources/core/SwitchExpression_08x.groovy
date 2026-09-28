@@ -40,3 +40,4 @@ result = switch(a) {
     case 6, 8 -> { yield 'a' }
 }
 assert null == result
+

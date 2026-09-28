@@ -52,3 +52,4 @@ final class Groovy7482 extends StringSourcesStubTestCase {
         assert !stub.contains('getProperty')
     }
 }
+

@@ -106,3 +106,4 @@ class MyMapClassWithReadOnlyProperties extends HashMap {
     private static final String classVar = 'class var'
     private final int instanceVar = 77
 }
+

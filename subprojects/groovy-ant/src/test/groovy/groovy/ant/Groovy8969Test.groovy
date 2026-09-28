@@ -67,3 +67,4 @@ class Groovy8969Test extends AntTestCase {
         }
     }
 }
+

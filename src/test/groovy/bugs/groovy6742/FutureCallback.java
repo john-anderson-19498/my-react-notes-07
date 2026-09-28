@@ -22,3 +22,5 @@ package bugs.groovy6742;
 public interface FutureCallback<V> {
     void onSuccess(V result);
 }
+
+// b054f4

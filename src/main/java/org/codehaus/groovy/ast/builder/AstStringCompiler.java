@@ -92,3 +92,5 @@ public class AstStringCompiler {
         return "Script" + System.nanoTime();
     }
 }
+
+// caf12b

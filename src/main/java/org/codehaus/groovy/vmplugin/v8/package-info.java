@@ -21,3 +21,5 @@
  * Java 8 VM plugin. Compatibility layer for Java 8 features (lambdas, streams).
  */
 package org.codehaus.groovy.vmplugin.v8;
+
+// 5bc8e9

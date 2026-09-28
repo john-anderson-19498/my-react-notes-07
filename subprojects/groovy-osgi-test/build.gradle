@@ -40,3 +40,4 @@ test {
     systemProperty 'groovy.bundle.path', groovyJar.absolutePath
     systemProperty 'groovy.json.bundle.path', jsonJar.absolutePath
 }
+

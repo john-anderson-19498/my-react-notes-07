@@ -39,3 +39,5 @@ public class ValueBound<U extends Comparable<? super U>> extends AbstractBound<U
         super(lower, upper);
     }
 }
+
+// bbbf18

@@ -90,3 +90,4 @@ class CheckingVisitor extends ClassCodeVisitorSupport {
         ve
     }
 }
+

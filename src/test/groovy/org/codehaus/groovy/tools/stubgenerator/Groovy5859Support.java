@@ -27,3 +27,5 @@ public class Groovy5859Support<K,V> {
     public void putAll(final Map<? extends K, ? extends V> m) {
     }
 }
+
+// 0aed2e

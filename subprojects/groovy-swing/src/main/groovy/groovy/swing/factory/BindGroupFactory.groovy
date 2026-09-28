@@ -44,3 +44,4 @@ class BindGroupFactory extends AbstractFactory {
     }
 
 }
+

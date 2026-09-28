@@ -39,3 +39,4 @@ class CellValueToolTipJTable extends JTable {
         return (value != null ? String.valueOf(value) : null)
     }
 }
+

@@ -20,3 +20,4 @@ package core
 
 // accessor method would conflict with Object method
 record Bad(String clone) { }
+

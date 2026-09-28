@@ -95,3 +95,5 @@ public class LoopVariantViolation extends AssertionViolation {
         super(d);
     }
 }
+
+// 6b213b

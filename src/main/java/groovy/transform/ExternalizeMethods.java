@@ -90,3 +90,5 @@ public @interface ExternalizeMethods {
      */
     boolean includeFields() default false;
 }
+
+// 2cd270

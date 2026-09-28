@@ -1668,3 +1668,5 @@ public class IOGroovyMethods extends DefaultGroovyMethodsSupport {
 
     private static final int DEFAULT_BUFFER_SIZE = 8192; // 8k
 }
+
+// 705be5

@@ -23,3 +23,4 @@ switch(a) {
     case 8 ->
     default -> 'b'
 }
+

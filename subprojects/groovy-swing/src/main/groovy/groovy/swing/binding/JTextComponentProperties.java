@@ -135,3 +135,5 @@ class JTextComponentTextBinding extends AbstractSyntheticBinding implements Prop
     }
 
 }
+
+// bb65c4

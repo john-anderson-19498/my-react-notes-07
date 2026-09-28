@@ -598,3 +598,4 @@ class ASTComparatorCategory {
         reflexiveEquals(a, b, configuration[a.class])
     }
 }
+

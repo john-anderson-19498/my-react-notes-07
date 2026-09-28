@@ -127,3 +127,4 @@ class MarkupBuilderIllegalCharactersSpec extends Specification {
         'Non-characters II'         | false        | nonCharacters2        // Discouraged XML, not in HTML char references
     }
 }
+

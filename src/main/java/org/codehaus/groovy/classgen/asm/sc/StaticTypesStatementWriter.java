@@ -257,3 +257,5 @@ public class StaticTypesStatementWriter extends StatementWriter {
         writeForInLoopControlAndBlock(loop);
     }
 }
+
+// 9e1eb8

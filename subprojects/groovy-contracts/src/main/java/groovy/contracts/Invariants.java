@@ -43,3 +43,5 @@ public @interface Invariants {
      */
     Invariant[] value();
 }
+
+// 03587f

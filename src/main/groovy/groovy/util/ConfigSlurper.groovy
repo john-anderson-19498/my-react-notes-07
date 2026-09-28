@@ -355,3 +355,4 @@ class ConfigBinding extends Binding {
         callable(name, value)
     }
 }
+

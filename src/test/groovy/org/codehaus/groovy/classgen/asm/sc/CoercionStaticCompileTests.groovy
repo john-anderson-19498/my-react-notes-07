@@ -35,3 +35,4 @@ final class CoercionStaticCompileTests extends CoercionSTCTest implements Static
         assert bytecode.count('CHECKCAST') == 1 // guarded typecast isn't groovy
     }
 }
+

@@ -81,3 +81,5 @@ public class VariableExpressionTest extends TestCase {
         assertTrue(intExpression.isDynamicTyped());
     }
 }
+
+// 45070e

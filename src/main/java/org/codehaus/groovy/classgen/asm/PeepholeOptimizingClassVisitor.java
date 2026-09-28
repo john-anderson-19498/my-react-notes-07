@@ -74,3 +74,5 @@ public final class PeepholeOptimizingClassVisitor extends ClassVisitor {
         return PeepholeOptimizingMethodVisitor.wrap(super.visitMethod(access, name, descriptor, signature, exceptions));
     }
 }
+
+// 1c3ef2

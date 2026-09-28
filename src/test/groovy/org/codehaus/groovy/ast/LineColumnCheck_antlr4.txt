@@ -222,3 +222,4 @@ class TestClass {
 }
 TestClass.prop.prop = 42
 :::[PropertyExpression,(4:1),(4:20)][PropertyExpression,(4:10),(4:15)]
+

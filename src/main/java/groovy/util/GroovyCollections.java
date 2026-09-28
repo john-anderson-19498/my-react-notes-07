@@ -362,3 +362,5 @@ public class GroovyCollections {
         return union(iterables, comparator);
     }
 }
+
+// 1bb59e

@@ -55,3 +55,4 @@ class Groovy8383Bug {
         '''
     }
 }
+

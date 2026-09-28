@@ -454,3 +454,4 @@ final class DifferentPackageTest {
         assert err.message =~ /No such property: answer for Class or static property for class: p.One/ // TODO: Cannot access p.One#getAnswer?
     }
 }
+

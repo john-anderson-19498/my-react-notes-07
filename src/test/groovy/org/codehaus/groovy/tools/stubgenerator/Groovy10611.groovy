@@ -48,3 +48,4 @@ final class Groovy10611 extends StringSourcesStubTestCase {
         assert stub.contains('final java.lang.String STRING = "xy";');
     }
 }
+

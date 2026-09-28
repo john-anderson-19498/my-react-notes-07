@@ -965,3 +965,4 @@ class XFactory extends AbstractFactory {
         builder.@log << child
     }
 }
+

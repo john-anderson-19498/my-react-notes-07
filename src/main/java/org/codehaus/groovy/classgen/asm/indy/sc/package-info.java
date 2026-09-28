@@ -21,3 +21,5 @@
  * Static compilation with InvokeDynamic optimization. Combines static type information with invokedynamic performance benefits.
  */
 package org.codehaus.groovy.classgen.asm.indy.sc;
+
+// 074532

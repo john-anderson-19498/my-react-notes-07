@@ -23,3 +23,4 @@ class Robot {
     Robot move(int qt) { this }
 }
 // end::example_robot_classdef[]
+

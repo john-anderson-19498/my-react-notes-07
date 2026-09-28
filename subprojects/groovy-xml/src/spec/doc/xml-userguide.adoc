@@ -793,3 +793,4 @@ def node = new XmlParser().parseText(xmlString)
 // ... inspect or validate node ...
 def config = new XmlMapper().readValue(XmlUtil.serialize(node), ServerConfig)
 ----
+

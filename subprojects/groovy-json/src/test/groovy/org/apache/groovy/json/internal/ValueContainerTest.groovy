@@ -294,3 +294,4 @@ class ValueContainerTest {
         assertSame(first, second)
     }
 }
+

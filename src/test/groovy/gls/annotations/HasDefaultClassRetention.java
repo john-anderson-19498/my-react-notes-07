@@ -19,3 +19,5 @@
 package gls.annotations;
 
 public @interface HasDefaultClassRetention { }
+
+// dca1cd

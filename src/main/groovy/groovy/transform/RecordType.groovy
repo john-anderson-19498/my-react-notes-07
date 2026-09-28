@@ -89,3 +89,4 @@ import java.lang.annotation.Target
 @Documented @Incubating
 @interface RecordType {
 }
+

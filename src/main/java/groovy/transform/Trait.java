@@ -37,3 +37,5 @@ import java.lang.annotation.Target;
 @GroovyASTTransformationClass("org.codehaus.groovy.transform.trait.TraitASTTransformation")
 public @interface Trait {
 }
+
+// 721407

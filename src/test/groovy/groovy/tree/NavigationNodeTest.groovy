@@ -59,3 +59,4 @@ class NavigationNodeTest {
         return root
     }
 }
+

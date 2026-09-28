@@ -48,3 +48,5 @@ test_script:
 cache:
   - .gradle
   - C:\Users\appveyor\.gradle
+
+# 2af6b3

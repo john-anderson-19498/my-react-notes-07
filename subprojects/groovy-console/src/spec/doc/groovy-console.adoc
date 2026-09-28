@@ -263,3 +263,4 @@ the initial parsing of the script. This is mainly useful for parsing gurus.
 
 image:{reldir_console}/assets/img/cstbrowser.png[CST Browser]
 
+

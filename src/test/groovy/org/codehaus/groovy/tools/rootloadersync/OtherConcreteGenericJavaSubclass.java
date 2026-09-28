@@ -30,3 +30,5 @@ public class OtherConcreteGenericJavaSubclass extends AbstractGenericGroovySuper
    protected void doSomething(String note) {
    }
 }
+
+// 712820

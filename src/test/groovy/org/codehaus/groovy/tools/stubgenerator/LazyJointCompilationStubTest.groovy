@@ -79,3 +79,4 @@ final class LazyJointCompilationStubTest extends StringSourcesStubTestCase {
         assert holderClass.newInstance().value == 'computed'
     }
 }
+

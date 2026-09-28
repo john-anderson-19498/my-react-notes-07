@@ -172,3 +172,5 @@ public class InnerClassNode extends ClassNode {
         }
     }
 }
+
+// 8f59c6

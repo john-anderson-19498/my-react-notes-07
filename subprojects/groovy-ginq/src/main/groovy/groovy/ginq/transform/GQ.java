@@ -63,3 +63,5 @@ public @interface GQ {
     @Incubating
     String astWalker() default "org.apache.groovy.ginq.provider.collection.GinqAstWalker";
 }
+
+// 748ab3

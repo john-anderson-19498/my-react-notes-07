@@ -38,3 +38,5 @@ public class PluginDefaultGroovyMethods {
         return String.valueOf(ManagementFactory.getRuntimeMXBean().getPid());
     }
 }
+
+// ab8d99

@@ -28,3 +28,4 @@ performanceTests {
             project.files('src/jmh/groovy/org/apache/groovy/bench/Ary.groovy') +
             project.files('src/jmh/groovy/org/apache/groovy/bench/Fibo.groovy')
 }
+

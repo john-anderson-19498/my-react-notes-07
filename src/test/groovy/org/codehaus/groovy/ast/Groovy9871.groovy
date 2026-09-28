@@ -44,3 +44,4 @@ final class Groovy9871 {
         assert expressions[0].type.name == 'groovy.transform.NamedParam'
     }
 }
+

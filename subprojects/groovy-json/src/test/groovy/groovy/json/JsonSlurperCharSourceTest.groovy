@@ -33,3 +33,4 @@ class JsonSlurperCharSourceTest extends JsonSlurperTest {
         assert 123.40G == num
     }
 }
+

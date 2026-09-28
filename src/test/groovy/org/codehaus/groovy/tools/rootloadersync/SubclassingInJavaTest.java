@@ -40,3 +40,5 @@ public class SubclassingInJavaTest {
       instance.addNote("abcd");
    }
 }
+
+// 6001d2

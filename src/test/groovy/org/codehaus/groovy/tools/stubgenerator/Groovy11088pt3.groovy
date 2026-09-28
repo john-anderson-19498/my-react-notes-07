@@ -48,3 +48,4 @@ final class Groovy11088pt3 extends StringSourcesStubTestCase {
         assert stub.contains('@java.lang.Deprecated() class D')
     }
 }
+

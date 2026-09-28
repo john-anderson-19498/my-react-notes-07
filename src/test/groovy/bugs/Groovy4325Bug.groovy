@@ -37,3 +37,4 @@ final class Groovy4325Bug extends CompilableTestSupport {
         """
     }
 }
+

@@ -43,3 +43,4 @@ class ClassWithSpockStyleAnnotations {
     Class value() default Object.class
     Class condition() default Object.class
 }
+

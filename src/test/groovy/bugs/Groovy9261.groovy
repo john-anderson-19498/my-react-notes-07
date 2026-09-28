@@ -85,3 +85,4 @@ final class Groovy9261 {
         assert err.message.contains('@ line 4, column 22.')
     }
 }
+

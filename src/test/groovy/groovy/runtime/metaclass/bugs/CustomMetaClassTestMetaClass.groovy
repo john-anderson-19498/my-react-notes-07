@@ -23,3 +23,4 @@ class CustomMetaClassTestMetaClass extends DelegatingMetaClass {
         super(metaClazz)
     }
 }
+

@@ -19,3 +19,4 @@
 class MyClass {
     void field
 }
+

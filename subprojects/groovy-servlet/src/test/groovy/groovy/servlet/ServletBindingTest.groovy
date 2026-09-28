@@ -278,3 +278,4 @@ class OutputStreamStub extends ServletOutputStream {
     @Override
     void setWriteListener(WriteListener writeListener) {}
 }
+

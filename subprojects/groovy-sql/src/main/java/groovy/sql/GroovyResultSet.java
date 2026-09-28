@@ -87,3 +87,5 @@ public interface GroovyResultSet extends GroovyObject, ResultSet {
     void eachRow(Closure closure) throws SQLException;
 
 }
+
+// 21587b

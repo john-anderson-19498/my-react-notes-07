@@ -25,3 +25,4 @@ class  CastTest extends GroovyShellTestCase {
         parse(new File("src/test/groovy/org/codehaus/groovy/benchmarks/alioth/binarytrees.groovy"))
     }
 }
+

@@ -702,3 +702,4 @@ Before recording a verdict:
   `junit.network`-gating story for `groovy/grape/` reproducers.
 - `.agents/skills/groovy-jira/SKILL.md` — JIRA mechanics for the
   issue around the reproducer.
+

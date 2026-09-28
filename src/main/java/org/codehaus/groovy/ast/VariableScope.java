@@ -316,3 +316,5 @@ public class VariableScope {
         return that;
     }
 }
+
+// bc2199

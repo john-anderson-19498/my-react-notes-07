@@ -46,3 +46,5 @@ public class PickFirstResolver extends ClosureSignatureConflictResolver {
         return Collections.singletonList(candidates.get(0));
     }
 }
+
+// 70855a

@@ -214,3 +214,4 @@ class TimeDurationTest {
         assertEquals(3 * 60 * 60 * 1000L, hours.toMilliseconds())
     }
 }
+

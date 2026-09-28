@@ -38,3 +38,4 @@ final class Groovy9572 {
         assert field.isAnnotationPresent(Internal)
     }
 }
+

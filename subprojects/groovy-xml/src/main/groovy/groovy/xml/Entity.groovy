@@ -334,3 +334,4 @@ class Entity implements Buildable {
         builder.unescaped << entity
     }
 }
+

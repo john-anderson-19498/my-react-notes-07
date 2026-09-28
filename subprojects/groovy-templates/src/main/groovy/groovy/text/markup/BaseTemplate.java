@@ -589,3 +589,5 @@ public abstract class BaseTemplate implements Writable {
         return wrt.toString();
     }
 }
+
+// f2bb44

@@ -112,3 +112,5 @@ public class Groovy8008Bug extends TestCase {
         }
     }
 }
+
+// a5f31f

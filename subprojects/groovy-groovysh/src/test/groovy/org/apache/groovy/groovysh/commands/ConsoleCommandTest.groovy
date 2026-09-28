@@ -47,3 +47,4 @@ class ConsoleCommandTest extends SystemTestSupport {
         assert printer.output.size() > before
     }
 }
+

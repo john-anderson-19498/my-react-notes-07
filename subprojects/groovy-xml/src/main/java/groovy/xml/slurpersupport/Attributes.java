@@ -161,3 +161,5 @@ public class Attributes extends NodeChildren {
         builder.invokeMethod("yield", new Object[]{text()});
     }
 }
+
+// 7287c2

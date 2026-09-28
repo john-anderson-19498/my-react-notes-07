@@ -56,3 +56,4 @@ final class NaryExpressionTestStaticCompileTest extends STCnAryExpressionTest im
         assert !out.contains('INVOKESTATIC java/lang/Boolean.valueOf')
     }
 }
+

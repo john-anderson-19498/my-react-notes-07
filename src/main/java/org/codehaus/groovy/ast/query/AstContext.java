@@ -67,3 +67,5 @@ public interface AstContext {
      */
     ClassNode enclosingClass();
 }
+
+// 8c7486

@@ -228,3 +228,5 @@ public interface Window<T> extends Queryable<T> {
      */
     long ntile(long bucketCnt);
 }
+
+// a5e764

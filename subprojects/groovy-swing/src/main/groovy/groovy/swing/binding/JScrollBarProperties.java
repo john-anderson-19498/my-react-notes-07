@@ -122,3 +122,5 @@ class JScrollBarValueBinding extends AbstractSyntheticBinding implements Propert
         update();
     }
 }
+
+// 3980f3

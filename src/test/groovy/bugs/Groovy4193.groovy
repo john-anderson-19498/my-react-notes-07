@@ -31,3 +31,4 @@ final class Groovy4193 {
         assert imp.text != null // no NPE
     }
 }
+

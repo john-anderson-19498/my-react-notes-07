@@ -122,3 +122,5 @@ public class MetaInfExtensionModule extends SimpleExtensionModule {
         return new MetaInfExtensionModule(name, version, objectClasses, staticClasses);
     }
 }
+
+// 0810fc

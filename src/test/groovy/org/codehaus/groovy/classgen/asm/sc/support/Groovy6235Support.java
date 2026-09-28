@@ -27,3 +27,5 @@ public class Groovy6235Support {
         return overload("foo");
     }
 }
+
+// 350059

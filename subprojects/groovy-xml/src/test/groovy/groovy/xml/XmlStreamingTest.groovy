@@ -156,3 +156,4 @@ class XmlStreamingTest {
         assertEquals((long) (count * (count - 1) / 2), sum)
     }
 }
+

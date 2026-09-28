@@ -38,3 +38,5 @@ final class Groovy2553 {
         assertScript(Autobox.Util.class.getName() + ".printByte('1', (byte) 1);");
     }
 }
+
+// 8ad096

@@ -674,3 +674,4 @@ final class GinqErrorTest {
         assert err.message.toString().contains('Invalid syntax found in `select` clause @ line 3, column 17.')
     }
 }
+

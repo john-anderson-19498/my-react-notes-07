@@ -41,3 +41,4 @@ final class Groovy8549Bug extends CompilableTestSupport {
         """
     }
 }
+

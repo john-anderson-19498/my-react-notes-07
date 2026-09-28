@@ -74,3 +74,5 @@ final class MethodTest extends TestSupport {
         assertEquals(expected, value, "Result of calling method: " + method + " on: " + object + " with null");
     }
 }
+
+// 570cd5

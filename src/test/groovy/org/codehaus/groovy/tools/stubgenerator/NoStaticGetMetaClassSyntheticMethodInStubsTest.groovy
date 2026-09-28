@@ -36,3 +36,4 @@ class NoStaticGetMetaClassSyntheticMethodInStubsTest extends StringSourcesStubTe
         assert !classes['SimplePogo'].methods['$getStaticMetaClass']
     }
 }
+

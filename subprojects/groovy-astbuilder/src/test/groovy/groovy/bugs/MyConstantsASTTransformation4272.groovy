@@ -46,3 +46,4 @@ class MyConstantsASTTransformation4272 implements ASTTransformation, Opcodes {
                 [] as Parameter[], null, new AstBuilder().buildFromString("return 1")[0]))
     }
 }
+

@@ -248,3 +248,4 @@ class CallSiteInvalidationBench {
         bh.consume(sum)
     }
 }
+

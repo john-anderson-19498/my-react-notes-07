@@ -372,3 +372,5 @@ public class DelegatingMetaClass implements MetaClass, MutableMetaClass, GroovyO
         throw new UnsupportedOperationException();
     }
 }
+
+// 488a1d

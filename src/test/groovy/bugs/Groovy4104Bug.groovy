@@ -34,3 +34,4 @@ class Groovy4104Bug {
         assert mc2.getMaximumNumberOfParameters() == 1
     }
 }
+

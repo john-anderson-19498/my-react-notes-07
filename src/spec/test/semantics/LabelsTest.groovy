@@ -50,3 +50,4 @@ final class LabelsTest {
         // end::break_label[]
     }
 }
+

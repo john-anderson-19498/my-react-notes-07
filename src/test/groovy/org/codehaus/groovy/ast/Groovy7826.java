@@ -41,3 +41,5 @@ public final class Groovy7826 {
     public static class C2<T2 extends C2<T2, T1>, T1 extends C1<T2, T1>> {
     }
 }
+
+// a57c02

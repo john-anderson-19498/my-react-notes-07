@@ -84,3 +84,5 @@ public final class FloatingPointMath extends NumberMath {
         return left.doubleValue();
     }
 }
+
+// 5c518f

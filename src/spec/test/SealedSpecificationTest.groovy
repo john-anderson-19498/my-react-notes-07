@@ -160,3 +160,4 @@ assert forecast.toString() == '[Rainy(expectedRainfall:12), Sunny(expectedTemp:3
 '''
     }
 }
+

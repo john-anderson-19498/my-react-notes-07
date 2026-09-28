@@ -85,3 +85,4 @@ final class Groovy9126 extends AbstractBytecodeTestCase {
             ])
     }
 }
+

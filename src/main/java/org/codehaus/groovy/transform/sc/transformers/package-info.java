@@ -21,3 +21,5 @@
  * Transformers for static compilation. Individual transformation rules for code optimization.
  */
 package org.codehaus.groovy.transform.sc.transformers;
+
+// 57d7af

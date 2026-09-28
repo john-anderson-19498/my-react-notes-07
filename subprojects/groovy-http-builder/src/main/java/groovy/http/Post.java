@@ -37,3 +37,5 @@ public @interface Post {
     /** The URL template, e.g. {@code "/users"}. */
     String value();
 }
+
+// 7f76d6

@@ -41,3 +41,4 @@ class Groovy4009Bug {
         }
     }
 }
+

@@ -62,3 +62,5 @@ public class GetEffectivePogoFieldSite extends AbstractCallSite {
         return !GroovyCategorySupport.hasCategoryInCurrentThread() && receiver instanceof GroovyObject && ((GroovyObject) receiver).getMetaClass() == metaClass;
     }
 }
+
+// 652814

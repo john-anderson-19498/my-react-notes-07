@@ -32,3 +32,4 @@ class InterfaceImplBug implements FooHandler {
         def called = true
     }
 }
+

@@ -21,3 +21,4 @@ package core
 record Fruit(String name) {
     String price
 }
+

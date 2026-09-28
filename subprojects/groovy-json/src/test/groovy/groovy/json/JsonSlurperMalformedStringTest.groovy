@@ -159,3 +159,4 @@ class JsonSlurperMalformedStringTest {
         assertEquals('ef', pair.substring(2), "text after escape for $context")
     }
 }
+

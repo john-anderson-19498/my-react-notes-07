@@ -189,3 +189,4 @@ final class TryCatchTest extends CompilableTestSupport {
         """
     }
 }
+

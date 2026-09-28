@@ -21,3 +21,5 @@
  * Groovy Script Engine (GSE) utilities. Support for script execution engine.
  */
 package org.codehaus.groovy.tools.gse;
+
+// b49e71

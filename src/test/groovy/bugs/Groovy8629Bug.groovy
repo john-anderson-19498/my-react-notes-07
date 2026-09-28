@@ -91,3 +91,4 @@ public class Groovy8629Bug {
         '''
     }
 }
+

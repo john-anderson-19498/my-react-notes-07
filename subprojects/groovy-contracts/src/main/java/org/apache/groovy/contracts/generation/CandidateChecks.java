@@ -162,3 +162,5 @@ public class CandidateChecks {
         return name.startsWith("java.") || (name.startsWith("groovy.") && !name.startsWith("groovy.contracts."));
     }
 }
+
+// 600291

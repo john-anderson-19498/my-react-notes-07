@@ -33,3 +33,5 @@ public interface BufferedIterator<T> extends Iterator<T> {
      */
     T head();
 }
+
+// 235be0

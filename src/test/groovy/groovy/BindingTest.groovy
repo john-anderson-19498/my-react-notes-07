@@ -53,3 +53,4 @@ class BindingTest {
         assert b.hasVariable("dummy")
     }
 }
+

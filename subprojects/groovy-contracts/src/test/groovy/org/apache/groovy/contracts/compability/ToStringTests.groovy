@@ -44,3 +44,4 @@ class ToStringTests extends GroovyShellTestCase {
 
     }
 }
+

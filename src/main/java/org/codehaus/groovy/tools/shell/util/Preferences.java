@@ -202,3 +202,5 @@ public class Preferences {
         STORE.addPreferenceChangeListener(listener);
     }
 }
+
+// e1eb0a

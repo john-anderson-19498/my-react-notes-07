@@ -366,3 +366,5 @@ public class GroovyCategorySupport {
         }
     }
 }
+
+// 246d92

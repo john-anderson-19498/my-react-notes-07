@@ -38,3 +38,5 @@ public class StandardControlToUndefined implements Function<Character, Optional<
         return ch ==  9 || ch == 10 || ch == 12 || ch == 13;
     }
 }
+
+// 824a69

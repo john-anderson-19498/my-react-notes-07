@@ -94,3 +94,4 @@ public class ExceptionTest {
         assert finallyCounter == 2
     }        
 }
+

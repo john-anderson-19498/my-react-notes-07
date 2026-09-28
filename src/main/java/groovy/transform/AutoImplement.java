@@ -129,3 +129,5 @@ public @interface AutoImplement {
      */
     Class code() default Undefined.CLASS.class;
 }
+
+// a15fa6

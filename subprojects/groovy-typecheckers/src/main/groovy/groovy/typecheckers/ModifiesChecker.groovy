@@ -389,3 +389,4 @@ class ModifiesChecker extends GroovyTypeCheckingExtensionSupport.TypeCheckingDSL
         }
     }
 }
+

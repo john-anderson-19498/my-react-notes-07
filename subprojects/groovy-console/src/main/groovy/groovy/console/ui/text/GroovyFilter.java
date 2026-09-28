@@ -334,3 +334,5 @@ public class GroovyFilter extends StructuredSyntaxDocumentFilter {
         }
     }
 }
+
+// 2d2149

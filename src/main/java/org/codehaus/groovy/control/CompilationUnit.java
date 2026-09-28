@@ -1319,3 +1319,5 @@ public class CompilationUnit extends ProcessingUnit {
     public abstract static class PrimaryClassNodeOperation implements IPrimaryClassNodeOperation {
     }
 }
+
+// 4992a1

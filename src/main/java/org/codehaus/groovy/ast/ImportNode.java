@@ -228,3 +228,5 @@ public class ImportNode extends AnnotatedNode {
     public void visit(final GroovyCodeVisitor visitor) {
     }
 }
+
+// 743f5b

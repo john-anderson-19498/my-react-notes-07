@@ -95,3 +95,5 @@ public class Receiver<T> {
         return "Receiver{data=" + data + ", type=" + (object ? "" : "*") + type.toString(false) + "}";
     }
 }
+
+// a03077

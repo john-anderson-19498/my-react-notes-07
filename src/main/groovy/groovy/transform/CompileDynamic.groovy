@@ -37,3 +37,4 @@ import java.lang.annotation.Target
          ElementType.CONSTRUCTOR])
 @interface CompileDynamic {
 }
+

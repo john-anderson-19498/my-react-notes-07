@@ -116,3 +116,5 @@ public class DefaultPropertyHandler extends PropertyHandler {
         return ifS(containsKey, useSetters ? setViaSetterS(name, var) : assignToFieldS(name, var));
     }
 }
+
+// 7c2fe0

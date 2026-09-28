@@ -41,3 +41,4 @@ def mMethod = this.class.getDeclaredMethods().find { it.name == 'm' }
 assert mMethod != null
 assert mMethod.groovydoc.isPresent()
 assert mMethod.groovydoc.content.contains('Top-level method m')
+

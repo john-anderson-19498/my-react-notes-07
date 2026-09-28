@@ -50,3 +50,4 @@ final class Groovy8686 {
         assert err.message =~ /Cannot find matching method java.lang.Object#toLowerCase/
     }
 }
+

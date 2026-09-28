@@ -123,3 +123,4 @@ final class GroovyObjectInheritanceTest extends CompilableTestSupport {
     """
   }
 }
+

@@ -187,3 +187,5 @@ public final class Tuple6<T1, T2, T3, T4, T5, T6> extends Tuple {
         return new Tuple6<>(this);
     }
 }
+
+// 3ddd92

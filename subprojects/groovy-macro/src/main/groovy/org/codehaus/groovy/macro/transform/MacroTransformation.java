@@ -60,3 +60,5 @@ public class MacroTransformation extends MethodCallTransformation implements Com
         return new MacroCallTransformingVisitor(sourceUnit, unit);
     }
 }
+
+// fa7367

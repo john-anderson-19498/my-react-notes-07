@@ -39,3 +39,5 @@ class A_GroovyReflector {
         protected void protectedMethod() {}
     }
 }
+
+// 325a6e

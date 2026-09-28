@@ -28,3 +28,4 @@ result = switch(a) {
     case 6, 8 -> 1.plus 2
 }
 assert 3 == result
+

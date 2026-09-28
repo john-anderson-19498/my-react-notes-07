@@ -65,3 +65,4 @@ final class Groovy10094 {
         assert err.message =~ /Cannot assign value of type java.lang.String to variable of type int/
     }
 }
+

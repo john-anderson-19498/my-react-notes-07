@@ -105,3 +105,4 @@ rootProject.name = 'groovy'
 
 enableFeaturePreview('GROOVY_COMPILATION_AVOIDANCE')
 System.setProperty("sonar.gradle.skipCompile", "true")
+

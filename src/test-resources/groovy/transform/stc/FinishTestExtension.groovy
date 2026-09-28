@@ -21,3 +21,4 @@ finish {
     ClassNode cn = context.source.AST.classes.find { it.name == 'A' }
     cn.putNodeMetaData('finish', true)
 }
+

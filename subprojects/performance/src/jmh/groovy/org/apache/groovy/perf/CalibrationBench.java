@@ -28,3 +28,5 @@ import org.apache.groovy.calibration.AbstractCalibrationBench;
  */
 public class CalibrationBench extends AbstractCalibrationBench {
 }
+
+// 76bbc7

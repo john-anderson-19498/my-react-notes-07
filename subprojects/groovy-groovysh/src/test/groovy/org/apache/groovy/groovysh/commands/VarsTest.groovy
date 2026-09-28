@@ -97,3 +97,4 @@ class VarsTest extends SystemTestSupport {
         assert engine.variables.isEmpty()
     }
 }
+

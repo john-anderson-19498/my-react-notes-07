@@ -76,3 +76,4 @@ final class Groovy3135 {
         assert values.size() == varArgsCount
     }
 }
+

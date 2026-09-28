@@ -36,3 +36,4 @@ final class Groovy9400 {
         assert 1 == script.run()
     }
 }
+

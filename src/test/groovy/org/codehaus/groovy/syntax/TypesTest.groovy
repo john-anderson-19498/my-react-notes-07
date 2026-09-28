@@ -635,3 +635,4 @@ class TypesTest {
         assertFalse(Types.ofType(Types.KEYWORD_CLASS, Types.SYNTHETIC))
     }
 }
+

@@ -29,3 +29,4 @@ class Groovy4029Bug {
         assert m.size() == 1
     }
 }
+

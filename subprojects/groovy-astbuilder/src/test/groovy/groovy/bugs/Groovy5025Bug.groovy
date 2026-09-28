@@ -41,3 +41,4 @@ class Groovy5025Bug {
         }
     }
 }
+

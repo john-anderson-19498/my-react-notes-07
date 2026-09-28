@@ -124,3 +124,4 @@ class NumberRangeTest extends TestCase {
         '''
     }
 }
+

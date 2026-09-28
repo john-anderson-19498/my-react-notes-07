@@ -4285,3 +4285,4 @@ final class TraitASTTransformationTest {
         '''
     }
 }
+

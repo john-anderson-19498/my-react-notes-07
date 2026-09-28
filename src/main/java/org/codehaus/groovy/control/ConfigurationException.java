@@ -72,3 +72,5 @@ public class ConfigurationException extends RuntimeException implements GroovyEx
     }
 
 }
+
+// b4d68f

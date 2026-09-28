@@ -21,3 +21,5 @@ package org.apache.groovy.internal.util;
 public class UnicodeConst {
     public static char ZERO = '\u0000';
 }
+
+// 1b3e52

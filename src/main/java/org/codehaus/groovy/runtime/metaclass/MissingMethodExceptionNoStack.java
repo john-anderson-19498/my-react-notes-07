@@ -67,3 +67,5 @@ public class MissingMethodExceptionNoStack extends MissingMethodException {
         return this;
     }
 }
+
+// 73f01a

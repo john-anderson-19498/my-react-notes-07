@@ -621,3 +621,5 @@ final class LinkedDequeTest {
         assertSame(c, deque.peekLast());
     }
 }
+
+// b533ee

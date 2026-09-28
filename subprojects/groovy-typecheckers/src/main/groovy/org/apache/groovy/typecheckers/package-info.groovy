@@ -21,3 +21,4 @@
  * Custom type checkers for static type checking in Groovy, extending compile-time type validation.
  */
 package org.apache.groovy.typecheckers;
+

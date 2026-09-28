@@ -98,3 +98,4 @@ class Employee {
    String name
    Number salary = 0
 }
+

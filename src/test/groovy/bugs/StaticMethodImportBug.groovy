@@ -32,3 +32,4 @@ class StaticMethodImportBug {
         assert ClassWithStaticMethod.staticMethod()
     }
 }
+

@@ -77,3 +77,5 @@ public class GroovyDocTemplateInfo {
             TEMPLATE_BASEDIR + "classLevel/classDocName.html"
     };
 }
+
+// dcb6d9

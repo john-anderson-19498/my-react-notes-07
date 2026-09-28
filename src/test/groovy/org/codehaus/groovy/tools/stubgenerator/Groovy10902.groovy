@@ -53,3 +53,4 @@ final class Groovy10902 extends StringSourcesStubTestCase {
         assert pojo.n() == 'aB'
     }
 }
+

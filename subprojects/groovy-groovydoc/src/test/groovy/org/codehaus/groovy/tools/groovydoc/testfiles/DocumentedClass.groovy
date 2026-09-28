@@ -22,3 +22,4 @@ package org.codehaus.groovy.tools.groovydoc.testfiles
  * Supposed to be used in GroovyDoc Ant task tests.
  */
 class DocumentedClass {}
+

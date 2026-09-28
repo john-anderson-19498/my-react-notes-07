@@ -229,3 +229,4 @@ class XmlNodePrinterTest {
         assertEquals outtext, writer.toString()
     }
 }
+

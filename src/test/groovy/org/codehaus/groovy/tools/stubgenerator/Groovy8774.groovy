@@ -41,3 +41,4 @@ final class Groovy8774 extends StringSourcesStubTestCase {
         assert piClass.isInterface()
     }
 }
+

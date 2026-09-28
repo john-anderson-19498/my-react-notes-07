@@ -342,3 +342,4 @@ We can illustrate those rules with a few examples:
 ----
 include::../test/SyntaxTest.groovy[tags=number_power,indent=0]
 ----
+

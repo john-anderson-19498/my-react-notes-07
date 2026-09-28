@@ -62,3 +62,4 @@ final class SubscriptOnPrimitiveTypeArrayBug extends TestSupport {
         assert selected == [1100, 1200, 1300]
     }
 }
+

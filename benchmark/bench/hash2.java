@@ -35,3 +35,5 @@ public class hash2 {
                          ((Val)hash2.get("foo_9999")).val + "\n");
     }
 }
+
+// 9e1df1

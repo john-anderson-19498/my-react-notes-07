@@ -33,3 +33,4 @@ final class Groovy3799 {
         assert obj.foos.size() == 2
     }
 }
+

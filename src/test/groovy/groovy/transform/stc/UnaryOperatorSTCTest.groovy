@@ -584,3 +584,4 @@ class UnaryOperatorSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

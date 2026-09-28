@@ -33,3 +33,5 @@ public interface ResourceConnector {
      */
     URLConnection getResourceConnection(String name) throws ResourceException;
 }
+
+// 4fbc52

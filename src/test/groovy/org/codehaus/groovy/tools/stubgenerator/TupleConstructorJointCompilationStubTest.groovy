@@ -252,3 +252,4 @@ final class TupleConstructorJointCompilationStubTest extends StringSourcesStubTe
         assert fo.prop == 0
     }
 }
+

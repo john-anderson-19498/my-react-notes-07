@@ -67,3 +67,4 @@ final class DeclarationExpressionTest {
         assert ast.text == 'def (String one, CharSequence two) = [1, 2]'
     }
 }
+

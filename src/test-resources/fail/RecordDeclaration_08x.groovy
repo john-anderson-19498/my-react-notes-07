@@ -24,3 +24,4 @@ record Person(String name, int age) {
         if (age < 18) throw new IllegalArgumentException("Invalid age: $age")
     }
 }
+

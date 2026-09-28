@@ -39,3 +39,4 @@ tasks.named('test') {
 groovyLibrary {
     optionalModule()
 }
+

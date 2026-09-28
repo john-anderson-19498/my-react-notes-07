@@ -43,3 +43,5 @@ public @interface Sealed {
      */
     Class[] permittedSubclasses() default {};
 }
+
+// 34285e

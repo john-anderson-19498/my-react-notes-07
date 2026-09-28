@@ -21,3 +21,5 @@
  * Bytecode generation utilities for injecting contract checks into compiled classes at the ASM bytecode level.
  */
 package org.apache.groovy.contracts.classgen.asm;
+
+// c541f3

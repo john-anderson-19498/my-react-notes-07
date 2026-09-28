@@ -22,3 +22,4 @@ record Point(int x, int y, String color) {
     final Point {
     }
 }
+

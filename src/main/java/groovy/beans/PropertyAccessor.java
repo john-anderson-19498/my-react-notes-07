@@ -23,3 +23,4 @@ package groovy.beans;
  */
 public interface PropertyAccessor extends PropertyReader, PropertyWriter {
 }
+// 9fee9e

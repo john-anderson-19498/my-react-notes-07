@@ -44,3 +44,4 @@ final class RangesStaticCompileTest extends RangesSTCTest implements StaticCompi
         '''
     }
 }
+

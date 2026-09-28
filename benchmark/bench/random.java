@@ -30,3 +30,5 @@ public class random {
         return( max * (last = (last * IA + IC) % IM) / IM );
     }
 }
+
+// 31c0f8

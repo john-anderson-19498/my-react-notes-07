@@ -21,3 +21,4 @@ incompatibleReturnType { returnStmt, returnType ->
         handled = true
     }
 }
+

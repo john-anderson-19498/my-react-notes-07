@@ -69,3 +69,4 @@ class ButtonOrTextEditor extends AbstractCellEditor implements TableCellEditor {
         editorComponent
     }
 }
+

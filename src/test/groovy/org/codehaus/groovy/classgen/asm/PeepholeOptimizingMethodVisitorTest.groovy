@@ -1590,3 +1590,4 @@ final class PeepholeOptimizingMethodVisitorTest extends AbstractBytecodeTestCase
         constant.toString()
     }
 }
+

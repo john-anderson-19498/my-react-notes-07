@@ -34,3 +34,5 @@ public final class NullProtectionStorage implements ProtectionStorage{
     @Override
     public void touch(final Object key, final Object value) { }
 }
+
+// 75505e

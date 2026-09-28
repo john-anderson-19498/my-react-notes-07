@@ -53,3 +53,4 @@ final class TraitAbstractGetterStubTest extends StringSourcesStubTestCase {
         assert !stub.contains('Pogo getPogo()')
     }
 }
+

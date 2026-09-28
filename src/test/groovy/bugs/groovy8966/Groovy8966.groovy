@@ -34,3 +34,4 @@ final class Groovy8966 {
         '''
     }
 }
+

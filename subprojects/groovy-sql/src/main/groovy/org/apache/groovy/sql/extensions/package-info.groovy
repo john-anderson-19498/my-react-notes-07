@@ -21,3 +21,4 @@
  * Extension methods for SQL operations, providing convenient database query and manipulation utilities.
  */
 package org.apache.groovy.sql.extensions;
+

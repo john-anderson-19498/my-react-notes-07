@@ -2815,3 +2815,4 @@ final class MethodReferenceTest {
             '''
     }
 }
+

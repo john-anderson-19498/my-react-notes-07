@@ -62,3 +62,4 @@ assert AA.class.getConstructor().groovydoc.content.contains('constructor AA')
 assert AA.class.getField('SOME_FIELD').groovydoc.content.contains('field SOME_FIELD')
 assert AA.class.getDeclaredClasses().find {it.simpleName.contains('InnerClass')}.groovydoc.content.contains('class InnerClass')
 assert BB.class.groovydoc.content.contains('annotation BB')
+

@@ -22,3 +22,5 @@ public interface DummyInterface {
 
     void methodWithArrayParam(String[] args);
 }
+
+// 96a3e0

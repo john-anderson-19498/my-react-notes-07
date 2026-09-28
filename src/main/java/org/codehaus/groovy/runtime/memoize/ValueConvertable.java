@@ -34,3 +34,5 @@ public interface ValueConvertable<V1, V2> {
      */
     V2 convertValue(V1 value);
 }
+
+// 532e47

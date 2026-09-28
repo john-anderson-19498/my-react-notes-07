@@ -54,3 +54,4 @@ class DelTest extends SystemTestSupport {
         assert !console.hasVariable('thisVariableDoesNotExist')
     }
 }
+

@@ -24,3 +24,4 @@
 Provides support for converting between Groovy objects and TOML with classes for serialization and parsing.
 
 See link:src/spec/doc/toml-userguide.adoc[toml-userguide.adoc] for detailed documentation.
+

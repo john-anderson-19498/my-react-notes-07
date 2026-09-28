@@ -23,3 +23,5 @@ public interface JdkDynamicProxyServiceBean {
     void setJdkDynamicProxyServiceBean (JdkDynamicProxyServiceBean in);
 }
 
+
+// b1e522

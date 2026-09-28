@@ -41,3 +41,4 @@ final class Groovy3238 {
         assert obj.m(bi) == 'BigInteger' //BigInteger should be chosen over Double, double, BigDecimal, Object, Number
     }
 }
+

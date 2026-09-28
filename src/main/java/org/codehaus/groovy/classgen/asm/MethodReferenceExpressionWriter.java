@@ -45,3 +45,5 @@ public class MethodReferenceExpressionWriter extends MethodPointerExpressionWrit
         super.writeMethodPointerExpression(expression);
     }
 }
+
+// 79947e

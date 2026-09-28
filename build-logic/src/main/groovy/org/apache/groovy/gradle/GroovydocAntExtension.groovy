@@ -60,3 +60,4 @@ class GroovydocAntExtension {
         additionalStylesheets = objects.fileCollection()
     }
 }
+

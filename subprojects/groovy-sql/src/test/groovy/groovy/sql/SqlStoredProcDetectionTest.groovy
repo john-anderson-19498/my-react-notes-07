@@ -70,3 +70,4 @@ class SqlStoredProcDetectionTest {
         assert elapsedMs < 1000, "appearsLikeStoredProc took ${elapsedMs}ms on padded input"
     }
 }
+

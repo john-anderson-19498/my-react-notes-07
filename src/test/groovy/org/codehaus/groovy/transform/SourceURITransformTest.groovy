@@ -54,3 +54,4 @@ final class SourceURITransformTest extends CompilableTestSupport {
 '''
     }
 }
+

@@ -78,3 +78,5 @@ public class SealedCompletionASTTransformation extends AbstractASTTransformation
         anno.addMember("permittedSubclasses", new ListExpression(names));
     }
 }
+
+// 7ee3db

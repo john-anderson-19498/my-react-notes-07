@@ -21,3 +21,4 @@ package org.codehaus.groovy.tools.groovydoc.testfiles
 interface GroovyInterfaceWithMultipleInterfaces extends GroovyInterface1, JavaInterface1, Runnable {
 
 }
+

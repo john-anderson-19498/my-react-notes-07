@@ -25,3 +25,4 @@ import org.junit.runners.Suite
 @Suite.SuiteClasses(JavadocAssertionTestSuite)
 class MainJavadocAssertionTest {
 }
+

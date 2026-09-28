@@ -393,3 +393,5 @@ public class LogASTTransformation extends AbstractASTTransformation implements C
         }
     }
 }
+
+// 5554b9

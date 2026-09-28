@@ -48,3 +48,4 @@ If you need to customize the generated output you can pass a `JsonGenerator` ins
 ----
 include::../test/json/JsonBuilderTest.groovy[tags=json_builder_generator,indent=0]
 ----
+

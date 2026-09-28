@@ -76,3 +76,4 @@ class ASTTransformationCustomizerFactory extends AbstractFactory {
         attributes ? new ASTTransformationCustomizer(attributes, value) : new ASTTransformationCustomizer(value)
     }
 }
+

@@ -457,3 +457,4 @@ class LoopsSTCTest extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

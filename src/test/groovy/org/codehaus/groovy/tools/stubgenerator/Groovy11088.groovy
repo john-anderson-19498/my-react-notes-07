@@ -45,3 +45,4 @@ final class Groovy11088 extends StringSourcesStubTestCase {
         assert stub.contains('@java.lang.Deprecated() static final java.lang.String VALUE = "x";')
     }
 }
+

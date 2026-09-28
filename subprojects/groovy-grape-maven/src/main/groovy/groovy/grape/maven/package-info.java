@@ -23,3 +23,5 @@
  * @since 6.0.0
  */
 package groovy.grape.maven;
+
+// 2e00c4

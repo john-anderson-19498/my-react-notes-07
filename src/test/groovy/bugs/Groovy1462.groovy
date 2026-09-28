@@ -51,3 +51,4 @@ final class Groovy1462 {
         public def 'fooDef'() {}
     }
 }
+

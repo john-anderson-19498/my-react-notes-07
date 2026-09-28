@@ -519,3 +519,4 @@ scaleIconsWithFontAction = action(
         mnemonic: 'I',
         shortDescription: 'Toolbar icons grow/shrink with font size'
 )
+

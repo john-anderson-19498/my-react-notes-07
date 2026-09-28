@@ -39,3 +39,4 @@ class Groovy8026Bug {
         '''
     }
 }
+

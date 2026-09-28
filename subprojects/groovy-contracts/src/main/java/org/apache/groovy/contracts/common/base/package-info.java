@@ -21,3 +21,5 @@
  * Base abstractions and common interfaces for contract specification and validation.
  */
 package org.apache.groovy.contracts.common.base;
+
+// 8e601e

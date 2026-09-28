@@ -470,3 +470,5 @@ public final class CompilerConfigurationTest {
         assertEquals(Phases.ALL, CompilerConfiguration.DEFAULT.getTargetPhase());
     }
 }
+
+// 400b10

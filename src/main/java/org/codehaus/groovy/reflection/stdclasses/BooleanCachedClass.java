@@ -64,3 +64,5 @@ public class BooleanCachedClass extends CachedClass {
               || classToTransformFrom == Boolean.TYPE;
     }
 }
+
+// b7813c

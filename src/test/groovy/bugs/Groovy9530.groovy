@@ -46,3 +46,4 @@ final class Groovy9530 extends AbstractBytecodeTestCase {
         ])
     }
 }
+

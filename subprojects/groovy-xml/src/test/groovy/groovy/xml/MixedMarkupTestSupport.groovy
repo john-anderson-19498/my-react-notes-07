@@ -68,3 +68,4 @@ class MixedMarkupTestSupport {
         return (node instanceof groovy.util.Node)
     }
 }
+

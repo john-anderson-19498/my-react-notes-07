@@ -21,3 +21,5 @@
  * Domain-specific language (DSL) for GINQ, defining the syntax and semantics of GINQ query operations.
  */
 package org.apache.groovy.ginq.dsl;
+
+// bfe090

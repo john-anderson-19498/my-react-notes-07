@@ -167,3 +167,4 @@ final class Groovy4098 {
         assert metaProperty.getProperty(p) == 'four mop'
     }
 }
+

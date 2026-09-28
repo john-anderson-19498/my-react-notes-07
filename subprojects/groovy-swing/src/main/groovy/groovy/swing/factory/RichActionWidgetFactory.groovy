@@ -109,3 +109,4 @@ class RichActionWidgetFactory extends AbstractFactory {
     }
 
 }
+

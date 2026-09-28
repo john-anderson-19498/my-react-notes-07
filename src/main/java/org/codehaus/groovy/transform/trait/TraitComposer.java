@@ -588,3 +588,5 @@ public abstract class TraitComposer {
         return pNode != null;
     }
 }
+
+// 357805

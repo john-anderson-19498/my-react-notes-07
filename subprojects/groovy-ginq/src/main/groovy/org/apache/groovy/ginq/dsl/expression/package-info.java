@@ -21,3 +21,5 @@
  * Expression classes representing query operations in GINQ such as SELECT, FROM, WHERE, GROUP BY, and JOIN clauses.
  */
 package org.apache.groovy.ginq.dsl.expression;
+
+// d3f57c

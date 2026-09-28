@@ -69,3 +69,4 @@ class ComparableFoo {
         return (this.value - anotherFoo.value)
     }
 }
+

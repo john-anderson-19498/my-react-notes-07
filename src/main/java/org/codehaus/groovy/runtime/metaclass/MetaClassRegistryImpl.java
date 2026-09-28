@@ -774,3 +774,5 @@ public class MetaClassRegistryImpl implements MetaClassRegistry {
         }
     }
 }
+
+// 0cc692

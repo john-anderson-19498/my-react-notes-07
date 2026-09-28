@@ -129,3 +129,4 @@ class BeanPathTestB {
     @Bindable Object  bif
     Object qux
 }
+

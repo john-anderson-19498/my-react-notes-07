@@ -148,3 +148,4 @@ class SpreadMapOperatorTest {
         // Call with one usual argument, one named argument, one spread list argument, and one spread map argument
     }
 }
+

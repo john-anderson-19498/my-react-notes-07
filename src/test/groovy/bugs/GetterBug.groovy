@@ -73,3 +73,4 @@ final class GetterBug {
         assert value == "Bob"
     }
 }
+

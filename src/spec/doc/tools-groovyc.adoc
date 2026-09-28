@@ -343,3 +343,4 @@ without adding a dependency onto the normal jar of Groovy.
 Please make sure to go to the https://github.com/groovy/groovy-android-gradle-plugin[plugin homepage] in order to
 find the latest documentation and version.
 
+

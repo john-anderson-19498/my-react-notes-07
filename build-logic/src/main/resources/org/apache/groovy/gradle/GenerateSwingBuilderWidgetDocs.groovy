@@ -359,3 +359,4 @@ println "Generated SwingBuilder widget documentation:"
 println "  Output: ${outFile.absolutePath}"
 println "  Categories: ${groups.size()}"
 println "  Total nodes: ${factories.size()}"
+

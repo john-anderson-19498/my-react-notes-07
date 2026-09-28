@@ -587,3 +587,5 @@ public class DecompiledClassNode extends ClassNode {
         return constructorNodeSupplier.get();
     }
 }
+
+// 5a336c

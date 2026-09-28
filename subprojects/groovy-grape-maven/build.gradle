@@ -40,3 +40,4 @@ groovyLibrary {
 tasks.withType(Javadoc).configureEach {
     exclude '**/package-info.java'
 }
+

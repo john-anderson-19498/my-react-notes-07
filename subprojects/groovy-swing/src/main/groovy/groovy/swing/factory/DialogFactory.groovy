@@ -61,3 +61,4 @@ public class DialogFactory extends groovy.swing.factory.RootPaneContainerFactory
     }
 
 }
+

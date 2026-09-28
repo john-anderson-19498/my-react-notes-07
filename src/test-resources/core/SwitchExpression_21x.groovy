@@ -38,3 +38,4 @@ def meth() {
 }
 
 assert 'hello, Daniel' == meth()
+

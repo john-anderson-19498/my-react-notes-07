@@ -56,3 +56,4 @@ final class Groovy7306 extends StringSourcesStubTestCase {
         assert specialCtorCall.find() && specialCtorCall.group(1) == '(java.lang.Integer)null'
     }
 }
+

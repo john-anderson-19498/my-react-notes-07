@@ -132,3 +132,4 @@ final class NamespaceNodeTest extends TestXmlSupport {
         s.normalize().replaceAll("[\n]", "").replaceAll('[ ]+',' ').replaceAll('> <','><')
     }
 }
+

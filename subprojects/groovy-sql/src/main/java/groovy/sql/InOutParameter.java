@@ -24,3 +24,5 @@ package groovy.sql;
 public interface InOutParameter extends InParameter, OutParameter {
 
 }
+
+// 86af75

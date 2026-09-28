@@ -31,3 +31,5 @@ final class ScriptPrintTest extends TestSupport {
                         + "println('hey'); assert out.output == 'println(hey)', 'value is: ' + out.output\n");
     }
 }
+
+// e8a9d8

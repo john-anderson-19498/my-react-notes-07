@@ -196,3 +196,4 @@ class UserGuideXmlTypedTest {
         // end::roll_your_own[]
     }
 }
+

@@ -241,3 +241,4 @@ class ShortTypeHandlingTest {
         assert ('A' as char) == castToChar(65.9)
     }
 }
+

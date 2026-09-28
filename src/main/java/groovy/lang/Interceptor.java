@@ -49,3 +49,5 @@ public interface Interceptor {
      */
     boolean doInvoke();
 }
+
+// f3976d

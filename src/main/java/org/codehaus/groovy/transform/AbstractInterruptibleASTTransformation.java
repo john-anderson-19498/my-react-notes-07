@@ -232,3 +232,5 @@ public abstract class AbstractInterruptibleASTTransformation extends ClassCodeVi
         super.visitWhileLoop(whileStatement);
     }
 }
+
+// a4c7db

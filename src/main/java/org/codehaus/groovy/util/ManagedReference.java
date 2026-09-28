@@ -75,3 +75,5 @@ public class ManagedReference<T> implements Finalizable {
         ref.clear();
     }
 }
+
+// 88d4d0

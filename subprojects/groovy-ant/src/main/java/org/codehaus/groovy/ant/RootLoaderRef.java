@@ -130,3 +130,5 @@ public class RootLoaderRef extends MatchingTask {
         return taskClasspath.createPath();
     }
 }
+
+// 7e2e34

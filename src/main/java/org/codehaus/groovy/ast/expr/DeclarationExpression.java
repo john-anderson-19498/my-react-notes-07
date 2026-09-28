@@ -224,3 +224,5 @@ public class DeclarationExpression extends BinaryExpression {
         return getLeftExpression() instanceof TupleExpression;
     }
 }
+
+// f7089c

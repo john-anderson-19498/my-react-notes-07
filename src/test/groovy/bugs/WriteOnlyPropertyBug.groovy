@@ -41,3 +41,4 @@ class WriteOnlyBean {
         thing
     }
 }
+

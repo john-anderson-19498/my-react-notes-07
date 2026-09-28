@@ -280,3 +280,5 @@ public final class HiddenClassDefiner {
                 && !host.isHidden();
     }
 }
+
+// 272f31

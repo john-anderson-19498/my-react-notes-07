@@ -44,3 +44,5 @@ public class StaticInitTest extends TestCase {
         assertTrue(failed);
     }
 }
+
+// 15318b

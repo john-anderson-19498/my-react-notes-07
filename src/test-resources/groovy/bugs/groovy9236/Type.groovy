@@ -20,3 +20,4 @@ package groovy.bugs.groovy9236
 
 interface Type {
 }
+

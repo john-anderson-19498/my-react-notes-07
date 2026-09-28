@@ -65,3 +65,4 @@ final class CompileDynamicTest extends StaticTypeCheckingTestCase implements Sta
         '''
     }
 }
+

@@ -196,3 +196,5 @@ public abstract class AbstractFullBinding  implements FullBinding {
         this.reverseConverter = reverseConverter;
     }
 }
+
+// 12a294

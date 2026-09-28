@@ -59,3 +59,5 @@ public class GroovyClass {
         return this.bytes;
     }
 }
+
+// ad5c51

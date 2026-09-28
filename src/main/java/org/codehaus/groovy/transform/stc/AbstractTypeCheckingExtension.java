@@ -610,3 +610,5 @@ public class AbstractTypeCheckingExtension extends TypeCheckingExtension {
         }
     }
 }
+
+// 7bfef6

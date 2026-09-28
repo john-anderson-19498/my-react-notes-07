@@ -22,3 +22,5 @@ public interface EqualityTestInterface extends Comparable<EqualityTestInterface>
     int getId();
     String getValue();
 }
+
+// 0eb72d

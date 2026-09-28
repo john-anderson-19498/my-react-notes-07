@@ -126,3 +126,5 @@ public class SourceURIASTTransformation extends AbstractASTTransformation {
         return uri;
     }
 }
+
+// bf4bb3

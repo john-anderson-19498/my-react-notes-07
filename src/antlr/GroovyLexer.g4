@@ -1017,3 +1017,4 @@ SH_COMMENT
 UNEXPECTED_CHAR
     :   . { require(errorIgnored, "Unexpected character: '" + getText().replace("'", "\\'") + "'", -1, false); }
     ;
+

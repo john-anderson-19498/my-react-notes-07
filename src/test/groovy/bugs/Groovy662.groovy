@@ -88,3 +88,4 @@ class Groovy662_GroovyClass extends HashMap {
         return myProperty
     }
 }
+

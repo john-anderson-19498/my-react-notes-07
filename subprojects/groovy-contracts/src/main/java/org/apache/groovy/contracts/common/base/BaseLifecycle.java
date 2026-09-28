@@ -96,3 +96,5 @@ public abstract class BaseLifecycle implements Lifecycle {
     public void afterProcessingConstructorNode(ProcessingContextInformation processingContextInformation, ClassNode classNode, MethodNode constructorNode) {
     }
 }
+
+// b6996c

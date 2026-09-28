@@ -27,3 +27,4 @@ final class Groovy9911 {
         assert Tuple.tuple(1, [2]) == Tuple.tuple(1, [2])
     }
 }
+

@@ -28,3 +28,4 @@ interface TypeCheckedI{
     @Unparsed List remaining()
 }
 // end::withTypeCheckedInterfaceSpec[]
+

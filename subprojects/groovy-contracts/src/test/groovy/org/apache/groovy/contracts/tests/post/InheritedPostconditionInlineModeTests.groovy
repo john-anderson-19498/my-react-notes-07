@@ -107,3 +107,4 @@ class InheritedPostconditionInlineModeTests extends BaseTestClass {
         '''
     }
 }
+

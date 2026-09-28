@@ -32,3 +32,5 @@ interface IGroovy3560 {}
 class Groovy3560A implements IGroovy3560{}
 
 class Groovy3560B implements IGroovy3560{}
+
+// eace5c

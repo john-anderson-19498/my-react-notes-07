@@ -178,3 +178,5 @@ public class RecordBaseASTStubber extends AbstractASTTransformation {
         }
     }
 }
+
+// 9f96d2

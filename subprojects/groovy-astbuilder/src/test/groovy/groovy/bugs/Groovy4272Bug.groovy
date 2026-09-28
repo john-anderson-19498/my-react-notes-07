@@ -32,3 +32,4 @@ class Groovy4272Bug extends GroovyShellTestCase {
         """
     }
 }
+

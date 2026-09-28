@@ -244,3 +244,5 @@ public final class CurriedClosure<V> extends Closure<V> {
         return this;
     }
 }
+
+// b5ba99

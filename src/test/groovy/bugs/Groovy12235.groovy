@@ -64,3 +64,4 @@ final class Groovy12235 {
         '''
     }
 }
+

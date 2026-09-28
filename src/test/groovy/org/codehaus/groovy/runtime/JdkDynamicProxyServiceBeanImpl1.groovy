@@ -30,3 +30,4 @@ class JdkDynamicProxyServiceBeanImpl1 implements JdkDynamicProxyServiceBean {
         }
     }
 }
+

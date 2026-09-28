@@ -306,3 +306,4 @@ class SqlSubclass extends Sql {
         savedConnection = conn
     }
 }
+

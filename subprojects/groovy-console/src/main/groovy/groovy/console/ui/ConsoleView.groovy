@@ -186,3 +186,4 @@ def dtListener = [
 
 // don't send any return value from the view, all items should be referenced via the bindings
 return null
+

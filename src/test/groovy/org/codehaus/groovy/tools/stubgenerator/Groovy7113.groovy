@@ -64,3 +64,4 @@ final class Groovy7113 extends StringSourcesStubTestCase {
         assert stub.contains('void bar(int x)')
     }
 }
+

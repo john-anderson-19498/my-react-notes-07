@@ -92,3 +92,4 @@ final class Groovy8144_AsmResolveOff extends Groovy8144 {
         ['asmResolving': Boolean.FALSE]
     }
 }
+

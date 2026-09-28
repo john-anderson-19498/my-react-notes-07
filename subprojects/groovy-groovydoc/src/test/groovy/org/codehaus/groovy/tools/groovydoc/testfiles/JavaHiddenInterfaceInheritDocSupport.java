@@ -20,3 +20,5 @@ package org.codehaus.groovy.tools.groovydoc.testfiles;
 
 public abstract class JavaHiddenInterfaceInheritDocSupport implements JavaHiddenInterfaceInheritDoc {
 }
+
+// 9fc46b

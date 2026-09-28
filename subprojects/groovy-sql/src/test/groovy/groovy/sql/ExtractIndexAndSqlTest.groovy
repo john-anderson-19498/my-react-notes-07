@@ -370,3 +370,4 @@ ORDER BY
         assert expected == ExtractIndexAndSql.from(query).newSql
     }
 }
+

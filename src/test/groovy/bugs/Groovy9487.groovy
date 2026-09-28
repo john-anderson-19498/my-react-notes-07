@@ -55,3 +55,4 @@ class MyMetaClass extends MetaClassImpl {
 class HelloWorld {
     static String hello() { 'Hello, world' }
 }
+

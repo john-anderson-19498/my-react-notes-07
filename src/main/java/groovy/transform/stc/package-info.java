@@ -27,3 +27,5 @@
  * </p>
  */
 package groovy.transform.stc;
+
+// 9542ab

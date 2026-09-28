@@ -86,3 +86,4 @@ final class StaticCompileCastOptimizationTest extends StaticTypeCheckingTestCase
         assert bytecode.contains('ANEWARRAY java/lang/String')
     }
 }
+

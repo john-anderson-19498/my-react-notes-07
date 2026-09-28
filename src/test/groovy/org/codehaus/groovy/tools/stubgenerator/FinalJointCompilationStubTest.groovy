@@ -72,3 +72,4 @@ final class FinalJointCompilationStubTest extends StringSourcesStubTestCase {
         // source above and the successful compilation of JavaUser.java.
     }
 }
+

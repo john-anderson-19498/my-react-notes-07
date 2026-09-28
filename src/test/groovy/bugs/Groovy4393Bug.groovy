@@ -28,3 +28,4 @@ class Groovy4393Bug {
         assert Groovy4393BugV1 != null
     }
 }
+

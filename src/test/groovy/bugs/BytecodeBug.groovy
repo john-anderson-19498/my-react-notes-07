@@ -46,3 +46,4 @@ final class BytecodeBug {
         println("hello "+a)
     }
 }
+

@@ -81,3 +81,4 @@ final class FinalAccessTest extends CompilableTestSupport {
         '''
     }
 }
+

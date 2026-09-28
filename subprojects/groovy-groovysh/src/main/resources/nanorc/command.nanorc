@@ -20,3 +20,4 @@ VARIABLE:       ".*="
 PLAIN:          "(\"|'|\.|=|:|\[|,|\])"
 COMMENT:        "(^|\\s+)#.*$"
 $BLOCK_COMMENT: "/*, */"
+

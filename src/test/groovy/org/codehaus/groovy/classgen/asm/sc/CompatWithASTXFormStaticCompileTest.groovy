@@ -39,3 +39,4 @@ final class CompatWithASTXFormStaticCompileTest extends StaticTypeCheckingTestCa
         '''
     }
 }
+

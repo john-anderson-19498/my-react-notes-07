@@ -29,3 +29,4 @@ final class DummyTest {
         assert 1 + 1 == 2
     }
 }
+

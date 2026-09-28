@@ -57,3 +57,4 @@ class TrampolineTest {
         assert 0 == funA.trampoline()(2000)
     }
 }
+

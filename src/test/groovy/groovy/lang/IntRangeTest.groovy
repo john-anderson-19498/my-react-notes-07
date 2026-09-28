@@ -340,3 +340,4 @@ final class IntRangeTest {
         assert !exclusive.containsWithinBounds(4.5)
     }
 }
+

@@ -17,3 +17,4 @@
  *  under the License.
  */
 GString.methods.each { println it.name }
+

@@ -115,3 +115,4 @@ class XmlUtilTest {
       assert ans == '&quot;bread&quot; &amp; &quot;butter&quot;&#13;&#10;&#0;&#31;'
     }
 }
+

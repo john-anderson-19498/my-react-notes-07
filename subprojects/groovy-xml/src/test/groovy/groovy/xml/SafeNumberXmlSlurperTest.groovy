@@ -58,3 +58,4 @@ class SafeNumberXmlSlurperTest {
         assert xml.'**'.find { it.name() == 'someMissingInteger' }?.toInteger() == null
     }
 }
+

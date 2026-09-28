@@ -42,3 +42,4 @@ final class Groovy3405 {
         assert 'foo' == ''.testStaticOneParam()
     }
 }
+

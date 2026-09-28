@@ -23,3 +23,5 @@ public class JavaXImpl extends GroovyXImpl {
         new JavaXImpl();
     }
 }
+
+// 61ffd2

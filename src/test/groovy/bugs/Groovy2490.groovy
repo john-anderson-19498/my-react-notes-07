@@ -38,3 +38,4 @@ final class Groovy2490 {
         static String foo = 'goodbye'
     }
 }
+

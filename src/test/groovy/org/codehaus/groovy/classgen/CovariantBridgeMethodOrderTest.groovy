@@ -67,3 +67,4 @@ final class CovariantBridgeMethodOrderTest {
         assert bridges == ['alpha', 'beta', 'gamma', 'delta', 'epsilon']
     }
 }
+

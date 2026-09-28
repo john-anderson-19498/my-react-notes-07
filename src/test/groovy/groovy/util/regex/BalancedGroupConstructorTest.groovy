@@ -98,3 +98,4 @@ final class BalancedGroupConstructorTest {
         assertSame(child, grandChild.parent)
     }
 }
+

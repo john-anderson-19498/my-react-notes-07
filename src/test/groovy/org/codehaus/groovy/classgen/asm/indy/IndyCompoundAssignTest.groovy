@@ -229,3 +229,4 @@ final class IndyCompoundAssignTest {
         assert err.method == 'plus'
     }
 }
+

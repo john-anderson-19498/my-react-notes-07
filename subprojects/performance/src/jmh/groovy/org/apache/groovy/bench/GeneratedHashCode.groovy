@@ -33,3 +33,4 @@ class GeneratedHashCode {
     String property
 
 }
+

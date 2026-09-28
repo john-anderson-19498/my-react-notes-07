@@ -32,3 +32,4 @@ final class ExpressionStatementTest {
         assert stmt.text == 'new java.lang.Object()'
     }
 }
+

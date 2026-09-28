@@ -52,3 +52,4 @@ class ClosureReturnTest {
         return x > 5
     }
 }
+

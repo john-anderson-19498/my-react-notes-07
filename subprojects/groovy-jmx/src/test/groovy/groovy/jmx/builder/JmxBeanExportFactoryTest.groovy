@@ -568,3 +568,4 @@ final class JmxBeanExportFactoryTest {
         assert bean.info().getOperation('doThreeThings').signature.size() == 3
     }
 }
+

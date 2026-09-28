@@ -23,3 +23,4 @@ class À {
            À p
     static À m() {}
 }
+

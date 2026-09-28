@@ -425,3 +425,5 @@ public class BindableASTTransformation implements ASTTransformation, Opcodes {
                         returnS(callX(fieldX(pcsField), "getPropertyChangeListeners", args(varX("name", ClassHelper.STRING_TYPE))))));
     }
 }
+
+// 73a614

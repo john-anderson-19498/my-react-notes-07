@@ -219,3 +219,4 @@ class ClosureCellEditor extends AbstractCellEditor implements TableCellEditor, T
             return calledMethod?.invoke(this, args)
     }
 }
+

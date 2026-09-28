@@ -38,3 +38,5 @@ public class DefaultFastStringService implements FastStringService {
         return new String(chars);
     }
 }
+
+// e3910d

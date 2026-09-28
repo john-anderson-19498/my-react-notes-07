@@ -49,3 +49,4 @@ final class Groovy9010 {
         assert err.message =~ /(?s)assert 0==1.*false\b/
     }
 }
+

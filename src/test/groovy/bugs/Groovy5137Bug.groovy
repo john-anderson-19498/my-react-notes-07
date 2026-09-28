@@ -47,3 +47,4 @@ class Groovy5137Bug {
         '''
     }
 }
+

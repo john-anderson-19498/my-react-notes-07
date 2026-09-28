@@ -21,3 +21,4 @@ incompatibleAssignment { lhsType, rhsType, expr ->
         handled = true
     }
 }
+

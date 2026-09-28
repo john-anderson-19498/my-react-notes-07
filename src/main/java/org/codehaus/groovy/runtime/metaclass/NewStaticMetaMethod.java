@@ -77,3 +77,5 @@ public class NewStaticMetaMethod extends NewMetaMethod {
         return super.invoke(null, newArguments);
     }
 }
+
+// b9d8b1

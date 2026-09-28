@@ -55,3 +55,4 @@ hello \${name}
         assert s == '\nhello ${name}\n'
     }
 }
+

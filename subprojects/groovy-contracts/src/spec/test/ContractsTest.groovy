@@ -363,3 +363,4 @@ class ContractsTest extends GroovyTestCase {
         new GroovyShell().run(scriptText, 'ScriptSnippet', [] as String[])
     }
 }
+

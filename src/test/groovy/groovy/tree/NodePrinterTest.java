@@ -68,3 +68,5 @@ final class NodePrinterTest extends TestSupport {
         log.info("Logging using JDK 1.4 logging");
     }
 }
+
+// 93ee5e

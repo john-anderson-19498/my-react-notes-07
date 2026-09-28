@@ -50,3 +50,4 @@ final class Groovy11182 {
         new GroovyShell(config).evaluate SCRIPT
     }
 }
+

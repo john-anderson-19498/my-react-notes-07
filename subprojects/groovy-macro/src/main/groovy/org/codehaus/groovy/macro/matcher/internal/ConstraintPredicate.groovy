@@ -36,3 +36,4 @@ interface ConstraintPredicate<T> {
      */
     boolean apply(T a)
 }
+

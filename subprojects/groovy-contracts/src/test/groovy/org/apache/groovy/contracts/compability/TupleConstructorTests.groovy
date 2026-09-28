@@ -37,3 +37,4 @@ class TupleConstructorTests extends GroovyShellTestCase {
     }
 
 }
+

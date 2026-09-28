@@ -36,3 +36,5 @@ public final class XmlAssert {
         assertTrue(diff.similar(), diff::toString);
     }
 }
+
+// 97737f

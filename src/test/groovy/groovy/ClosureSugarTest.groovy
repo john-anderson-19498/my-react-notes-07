@@ -56,3 +56,4 @@ class ClosureSugarTest {
         closure.call();
     }
 }
+

@@ -143,3 +143,4 @@ final class Groovy12247 {
         assert err.message.contains('No signature of method: foo for class: A')
     }
 }
+

@@ -135,3 +135,5 @@ public abstract class AnnotationsTestBase extends GroovyTestCase {
         throw new AssertionError("compilation of script '" + script + "' should have failed, but did not.");
     }
 }
+
+// fb2548

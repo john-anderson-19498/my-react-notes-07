@@ -125,3 +125,4 @@ final class ImmutableJointCompilationStubTest extends StringSourcesStubTestCase 
         assert empty.amount == 0
     }
 }
+

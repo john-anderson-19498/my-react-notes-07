@@ -287,3 +287,4 @@ final class NullObjectTest {
         assert null.metaClass.adaptee === null.getMetaClass().getAdaptee()
     }
 }
+

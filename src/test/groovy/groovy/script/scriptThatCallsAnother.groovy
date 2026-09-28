@@ -22,3 +22,4 @@ script = new GroovyShell()
 script.run(new File("src/test/groovy/script/scriptHelloWorld.groovy"), [])
 
 println("Done")
+

@@ -222,3 +222,5 @@ public interface MetaObjectProtocol {
      */
     void setAttribute(Object object, String attribute, Object newValue);
 }
+
+// 496c01

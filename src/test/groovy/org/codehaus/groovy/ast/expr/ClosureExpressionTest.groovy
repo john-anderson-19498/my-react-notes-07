@@ -65,3 +65,4 @@ final class ClosureExpressionTest {
         assert expression.text == '{ java.util.List<java.lang.String> x -> ... }'
     }
 }
+

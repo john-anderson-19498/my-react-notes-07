@@ -102,3 +102,4 @@ final class PeepholeBytecodeIntegrationTest extends AbstractBytecodeTestCase {
         sequence
     }
 }
+

@@ -90,3 +90,4 @@ class MockSocket extends Socket {
 
     public OutputStream getOutputStream() { return o }
 }
+

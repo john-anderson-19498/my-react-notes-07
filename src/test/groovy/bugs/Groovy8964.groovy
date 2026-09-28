@@ -133,3 +133,4 @@ final class Groovy8964 {
         protected void m(String s) {}
     }
 }
+

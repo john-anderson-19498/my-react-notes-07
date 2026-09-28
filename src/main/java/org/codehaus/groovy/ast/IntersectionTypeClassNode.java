@@ -101,3 +101,5 @@ public final class IntersectionTypeClassNode extends ClassNode {
         return getText();
     }
 }
+
+// 0ca04f

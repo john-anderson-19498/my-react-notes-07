@@ -89,3 +89,4 @@ class GroovyConditionExtension implements ExecutionCondition {
         closure.call() as boolean
     }
 }
+

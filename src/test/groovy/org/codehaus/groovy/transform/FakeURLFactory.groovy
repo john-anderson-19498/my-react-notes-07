@@ -60,3 +60,4 @@ class FakeURLConnection extends URLConnection {
         return new ByteArrayInputStream(content.bytes)
     }
 }
+

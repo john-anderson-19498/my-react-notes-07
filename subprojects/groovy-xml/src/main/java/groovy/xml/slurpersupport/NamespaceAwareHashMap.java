@@ -94,3 +94,5 @@ public class NamespaceAwareHashMap extends HashMap<String, String> {
         return new QName(namespaceTagHints.get(keyString.substring(0, i)).toString(), keyString.substring(i + 1)).toString();
     }
 }
+
+// 066c07

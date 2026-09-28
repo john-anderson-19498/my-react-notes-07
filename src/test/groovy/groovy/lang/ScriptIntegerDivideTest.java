@@ -31,3 +31,5 @@ final class ScriptIntegerDivideTest extends TestSupport {
         assertScript("assert 4.intdiv(3) == 1");
     }
 }
+
+// 7b279b

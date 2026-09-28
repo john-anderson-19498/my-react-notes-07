@@ -56,3 +56,4 @@ class Groovy831_Bug {
     }
 }
 
+

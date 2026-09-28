@@ -24,3 +24,4 @@
 Provides the combined (core + modules) Groovy language documentation and distributions.
 
 See link:src/spec/doc/index.adoc[index.adoc] for the merged asciidoc documentation.
+

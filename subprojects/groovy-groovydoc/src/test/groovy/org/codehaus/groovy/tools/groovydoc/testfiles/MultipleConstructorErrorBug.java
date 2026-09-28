@@ -33,3 +33,5 @@ public class MultipleConstructorErrorBug {
     public MultipleConstructorErrorBug(MultipleConstructorErrorBug parent) {
     }
 }
+
+// 7664d8

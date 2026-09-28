@@ -35,3 +35,4 @@ if (System.properties['os.version'] =~ /6\./) {
     styles.regular[StyleConstants.FontFamily] = fontFamily
     styles[StyleContext.DEFAULT_STYLE][StyleConstants.FontFamily] = fontFamily
 }
+

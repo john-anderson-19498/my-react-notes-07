@@ -37,3 +37,4 @@ final class DefVariableBug {
         assert foo.def == 456
     }
 }
+

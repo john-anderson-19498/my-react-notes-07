@@ -43,3 +43,4 @@ final class Groovy6804Bug extends StaticTypeCheckingTestCase {
         '''
     }
 }
+

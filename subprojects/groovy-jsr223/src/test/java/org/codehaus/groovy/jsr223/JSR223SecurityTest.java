@@ -181,3 +181,5 @@ class CustomCodeVisitorSupport extends CodeVisitorSupport {
             throw new GroovySecurityException("The following code is forbidden in the script: " + call.getText());
     }
 }
+
+// 40bea2

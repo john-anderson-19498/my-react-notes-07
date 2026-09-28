@@ -1323,3 +1323,4 @@ class GroovyCommands extends JlineCommandRegistry implements CommandRegistry {
         }
     }
 }
+

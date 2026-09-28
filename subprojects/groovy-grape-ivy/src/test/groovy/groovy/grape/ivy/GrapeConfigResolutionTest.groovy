@@ -107,3 +107,4 @@ final class GrapeConfigResolutionTest {
         assertNull GrapeIvy.urlAsLocalFile(null)
     }
 }
+

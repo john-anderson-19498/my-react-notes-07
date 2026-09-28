@@ -194,3 +194,4 @@ class AsciiTableMaker {
 
     private AsciiTableMaker() {}
 }
+

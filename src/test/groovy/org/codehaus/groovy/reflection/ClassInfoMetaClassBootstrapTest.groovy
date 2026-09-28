@@ -98,3 +98,4 @@ final class ClassInfoMetaClassBootstrapTest {
     private static final class StrongMetaClassHost {}
     private static final class UnderLockHost {}
 }
+

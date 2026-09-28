@@ -138,3 +138,5 @@ public class TupleConstructorASTStubber extends AbstractASTTransformation {
         addStubConstructor(classNode, ACC_PUBLIC, signature, ClassNode.EMPTY_ARRAY, EmptyStatement.INSTANCE);
     }
 }
+
+// 2e41bc

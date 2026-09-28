@@ -359,3 +359,5 @@ public class NamedVariantASTTransformation extends AbstractASTTransformation {
         return coerce ? asX(type, value) : /*castX(*/value/*)*/;
     }
 }
+
+// 69d04e

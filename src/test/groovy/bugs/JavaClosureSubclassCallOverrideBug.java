@@ -124,3 +124,5 @@ final class JavaClosureSubclassCallOverrideBug {
         assertEquals(3, result.intValue());
     }
 }
+
+// 5c4d06

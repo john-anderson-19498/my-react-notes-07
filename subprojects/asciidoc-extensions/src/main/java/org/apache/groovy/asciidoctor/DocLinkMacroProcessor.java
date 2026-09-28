@@ -86,3 +86,5 @@ public class DocLinkMacroProcessor extends InlineMacroProcessor {
         return createPhraseNode(parent, "anchor", text != null ? (String) text : target, attributes, options);
     }
 }
+
+// 753e9b

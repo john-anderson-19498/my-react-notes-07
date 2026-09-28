@@ -95,3 +95,4 @@ final class ExternalizeMethodsJointCompilationStubTest extends StringSourcesStub
         assert restored.count == 42
     }
 }
+

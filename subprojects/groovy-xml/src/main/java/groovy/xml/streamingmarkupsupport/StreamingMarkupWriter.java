@@ -308,3 +308,5 @@ public class StreamingMarkupWriter extends Writer {
         return this.encodingKnown;
     }
 }
+
+// ac612d

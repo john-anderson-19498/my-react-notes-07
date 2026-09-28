@@ -33,3 +33,4 @@ final class ToStringBug {
         return super.toString() + '[hey]'
     }
 }
+

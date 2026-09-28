@@ -69,3 +69,5 @@ public class MethodFailureTest extends GroovyTestCase {
     }
 
 }
+
+// c709e3

@@ -96,3 +96,5 @@ public class Groovy7538Support {
         assertThat("true").isNotEqualTo("false").isNotEmpty();
     }
 }
+
+// 933cd2

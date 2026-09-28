@@ -20,3 +20,5 @@ import groovy.test.GroovyTestCase;
 
 public abstract class DefaultPackageClassSupport extends GroovyTestCase {
 }
+
+// 95c620

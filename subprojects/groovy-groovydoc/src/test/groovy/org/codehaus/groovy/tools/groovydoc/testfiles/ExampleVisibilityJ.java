@@ -37,3 +37,5 @@ public class ExampleVisibilityJ {
     class C {}
     private class D {}
 }
+
+// b8a635

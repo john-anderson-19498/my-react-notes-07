@@ -40,3 +40,5 @@ public class ConstructorMetaClassSite extends MetaClassSite {
         }
     }
 }
+
+// 5670b2

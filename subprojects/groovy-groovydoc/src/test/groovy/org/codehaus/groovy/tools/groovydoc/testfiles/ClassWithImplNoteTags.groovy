@@ -36,3 +36,4 @@ class ClassWithImplNoteTags {
         return Math.abs(n)
     }
 }
+

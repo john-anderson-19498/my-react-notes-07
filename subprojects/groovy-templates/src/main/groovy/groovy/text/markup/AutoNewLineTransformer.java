@@ -127,3 +127,5 @@ class AutoNewLineTransformer extends ClassCodeVisitorSupport {
         return stmt;
     }
 }
+
+// 5387e3

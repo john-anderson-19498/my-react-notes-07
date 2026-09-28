@@ -19,3 +19,4 @@ package bugs
  */
 
 return 'GROOVY3934Helper script called'
+

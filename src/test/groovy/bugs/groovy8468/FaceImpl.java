@@ -20,3 +20,5 @@ package bugs.groovy8468;
 
 public class FaceImpl implements Face {
 }
+
+// d28c25

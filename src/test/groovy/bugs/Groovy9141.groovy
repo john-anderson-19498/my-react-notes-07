@@ -45,3 +45,4 @@ final class Groovy9141 {
         assert err.message =~ / You cannot define an abstract method\[meth\] in the script. Try removing the 'abstract' /
     }
 }
+

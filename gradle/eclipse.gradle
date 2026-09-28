@@ -129,3 +129,4 @@ if (gradle.startParameter.taskNames.any { it =~ /(?i)eclipse/ }) {
 
     eclipseClasspath.dependsOn(generateGrammarSource)
 }
+

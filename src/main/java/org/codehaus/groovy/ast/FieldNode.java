@@ -284,3 +284,5 @@ public class FieldNode extends AnnotatedNode implements Variable {
         this.name = name;
     }
 }
+
+// 6e9ee3

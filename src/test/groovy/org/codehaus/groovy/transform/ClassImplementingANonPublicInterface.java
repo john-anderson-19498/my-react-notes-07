@@ -25,3 +25,4 @@ package org.codehaus.groovy.transform;
 public class ClassImplementingANonPublicInterface implements NonPublicInterface {
     public String returnConstant() { return CONSTANT; }
 }
+// cf38b7

@@ -38,3 +38,4 @@ class Groovy implements Serializable {
     @NamedVariant
     void annotatedMethod(@NamedParam(required = true) String methodParam) {}
 }
+

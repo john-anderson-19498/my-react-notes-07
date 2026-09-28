@@ -22,3 +22,4 @@ def b = 1
 def c = 2
 def d = 3
 new int[] { a b, c, d }
+

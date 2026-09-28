@@ -87,3 +87,4 @@ class ReflectorLoaderTest {
         assertTrue(ReflectorLoader.getReflectorName(ReflectorLoaderTest).endsWith('_GroovyReflector'))
     }
 }
+

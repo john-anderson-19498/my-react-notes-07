@@ -65,3 +65,4 @@ class ScriptSourcePositionInAstTest {
         """.stripIndent(true)) == [[2, 1], [3, 14]]
     }
 }
+

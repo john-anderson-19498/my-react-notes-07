@@ -21,3 +21,5 @@
  * AST transformation framework for macro compilation and macro-based code generation.
  */
 package org.codehaus.groovy.macro.transform;
+
+// ff1767

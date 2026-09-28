@@ -42,3 +42,4 @@ class InheritDocRichTagChild extends InheritDocRichTagBase {
     @Override
     String transform(String value) throws IOException { value.toLowerCase() }
 }
+

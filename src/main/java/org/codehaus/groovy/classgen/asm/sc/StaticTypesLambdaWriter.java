@@ -634,3 +634,5 @@ public class StaticTypesLambdaWriter extends LambdaWriter implements AbstractFun
     private final StaticTypesClosureWriter staticTypesClosureWriter;
     private final StaticTypesLambdaAnalyzer lambdaAnalyzer;
 }
+
+// 56c539

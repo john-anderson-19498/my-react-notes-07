@@ -32,3 +32,4 @@ class EqualityTest {
         assert classA.equals(classB)
     }
 }
+

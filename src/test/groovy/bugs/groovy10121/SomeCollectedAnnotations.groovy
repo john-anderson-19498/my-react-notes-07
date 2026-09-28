@@ -22,3 +22,4 @@ import groovy.transform.AnnotationCollector
 
 @AnnotationCollector
 @interface SomeCollectedAnnotations { }
+

@@ -34,3 +34,4 @@ final class Groovy5318 {
         assert err.message =~ 'Unexpected input: \'.\''
     }
 }
+

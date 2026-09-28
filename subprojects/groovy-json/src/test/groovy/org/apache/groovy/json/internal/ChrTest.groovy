@@ -485,3 +485,4 @@ class ChrTest {
         assertArrayEquals((Object[]) expected, (Object[]) actual)
     }
 }
+

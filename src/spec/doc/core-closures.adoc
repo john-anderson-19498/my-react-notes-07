@@ -646,3 +646,4 @@ include::../test/ClosuresSpecTest.groovy[tags=trampoline,indent=0]
 It is often practical to be able to use a regular method as a closure. For example, you might want to use the currying
 abilities of a closure, but those are not available to normal methods. In Groovy, you can obtain a closure from any
 method with the link:core-operators.html#method-pointer-operator[method pointer operator].
+

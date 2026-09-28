@@ -61,3 +61,4 @@ class GenericsWithExtendsStubTest extends StringSourcesStubTestCase {
         assert stubSource.contains('<T> void getThings5(java.util.List<? extends java.util.List<T>> arg)')
     }
 }
+

@@ -36,3 +36,4 @@ def r = switch(a) {
 }
 assert 'a' == r
 
+

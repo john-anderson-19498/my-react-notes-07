@@ -575,3 +575,4 @@ final class ClosuresSpecTest {
         // end::trampoline[]
     }
 }
+

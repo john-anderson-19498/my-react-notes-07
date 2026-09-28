@@ -34,3 +34,5 @@ public abstract class BytecodeInstruction {
      */
     public abstract void visit(MethodVisitor mv);
 }
+
+// 3bb59a

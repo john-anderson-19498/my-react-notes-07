@@ -29,3 +29,5 @@ public final class MetaClassHelperTest {
         assertNull(MetaClassHelper.getClassName(null));
     }
 }
+
+// 4a7aa5

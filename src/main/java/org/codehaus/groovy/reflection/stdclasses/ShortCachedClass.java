@@ -85,3 +85,5 @@ public class ShortCachedClass extends NumberCachedClass {
                 || classToTransformFrom == Byte.TYPE;
     }
 }
+
+// ce3e76

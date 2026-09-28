@@ -37,3 +37,4 @@ result = switch(a) {
     default -> 1.plus 5
 }
 assert 3 == result
+

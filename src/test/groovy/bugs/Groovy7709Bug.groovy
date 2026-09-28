@@ -44,3 +44,4 @@ class Groovy7709Bug {
 interface Groovy7709BugY extends GroovyObject {
     int foo()
 }
+

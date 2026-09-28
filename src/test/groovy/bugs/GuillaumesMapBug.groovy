@@ -57,3 +57,4 @@ final class GuillaumesMapBug {
         list.each { map[i++] = it }
     }
 }
+

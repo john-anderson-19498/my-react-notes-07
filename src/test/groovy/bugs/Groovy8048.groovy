@@ -50,3 +50,4 @@ final class Groovy8048 {
         final List items2 = ['foo2']
     }
 }
+

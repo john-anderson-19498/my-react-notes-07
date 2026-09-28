@@ -39,3 +39,4 @@ final class Groovy3658 {
         final String name1, name2
     }
 }
+

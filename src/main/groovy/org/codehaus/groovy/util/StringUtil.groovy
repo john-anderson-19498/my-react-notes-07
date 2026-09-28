@@ -90,3 +90,4 @@ class StringUtil {
         BLOCK * fullChunks + Character.valueOf(FRACTIONAL_OFFSET - remainder as char)
     }
 }
+

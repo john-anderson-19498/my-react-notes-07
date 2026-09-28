@@ -133,3 +133,5 @@ public class ManagedConcurrentValueMapStressTest {
         return internalMap.size();
     }
 }
+
+// b86345

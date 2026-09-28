@@ -330,3 +330,5 @@ public class ToStringASTTransformation extends AbstractASTTransformation {
         return body;
     }
 }
+
+// 2eebcc

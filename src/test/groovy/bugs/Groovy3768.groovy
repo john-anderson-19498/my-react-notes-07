@@ -50,3 +50,4 @@ final class Groovy3768 extends CompilableTestSupport {
         '''
     }
 }
+

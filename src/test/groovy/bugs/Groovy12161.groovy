@@ -315,3 +315,4 @@ final class Groovy12161 extends AbstractBytecodeTestCase {
         }
     }
 }
+

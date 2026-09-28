@@ -297,3 +297,4 @@ final class CombinerCheckerTest {
         assert err.message.contains('non-associative')
     }
 }
+

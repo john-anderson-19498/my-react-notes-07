@@ -38,3 +38,5 @@ public class PackageMarkedExample {
         return "example".equals(key) ? "value" : null;
     }
 }
+
+// 6a2afe

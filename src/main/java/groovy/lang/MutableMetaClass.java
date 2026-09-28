@@ -76,3 +76,5 @@ public interface MutableMetaClass extends MetaClass {
 
     // TODO: Add methods like addMetaConstructor, addMetaAttribute, addMetaAnnotation etc.
 }
+
+// cac6ba

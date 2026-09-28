@@ -168,3 +168,4 @@ class JsonLexerTest {
         assert lexer.nextToken() == null
     }
 }
+

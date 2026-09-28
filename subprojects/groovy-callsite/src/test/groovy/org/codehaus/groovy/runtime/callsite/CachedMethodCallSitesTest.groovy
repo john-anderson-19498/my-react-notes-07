@@ -61,3 +61,4 @@ final class CachedMethodCallSitesTest {
         assert CallSiteGenerator.isCompilable(method)
     }
 }
+

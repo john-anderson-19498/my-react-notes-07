@@ -65,3 +65,5 @@ public class InvokeConstructorTest extends GroovyTestCase {
         }
     }
 }
+
+// 714d83

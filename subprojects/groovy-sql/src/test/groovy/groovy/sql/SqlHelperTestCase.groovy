@@ -112,3 +112,4 @@ class SqlHelperTestCase extends GroovyTestCase {
         return new Sql(ds)
     }
 }
+

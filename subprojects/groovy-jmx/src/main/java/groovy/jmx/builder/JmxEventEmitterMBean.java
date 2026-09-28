@@ -47,3 +47,5 @@ public interface JmxEventEmitterMBean {
      */
     long send(Object data);
 }
+
+// 9d93a5

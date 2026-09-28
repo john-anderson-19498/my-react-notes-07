@@ -28,3 +28,5 @@ public class TestLocalDateTimeExtension {
         return self.compareTo(other.atStartOfDay());
     }
 }
+
+// efc310

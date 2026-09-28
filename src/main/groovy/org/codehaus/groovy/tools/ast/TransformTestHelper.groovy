@@ -141,3 +141,4 @@ class TestHarnessOperation implements CompilationUnit.IPrimaryClassNodeOperation
         this.transform.visit(null, source)
     }
 }
+

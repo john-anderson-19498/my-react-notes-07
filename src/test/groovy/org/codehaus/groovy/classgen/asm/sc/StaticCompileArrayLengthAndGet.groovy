@@ -77,3 +77,4 @@ final class StaticCompileArrayLengthAndGet extends AbstractBytecodeTestCase {
         assert arr[0] == 666
     }
 }
+

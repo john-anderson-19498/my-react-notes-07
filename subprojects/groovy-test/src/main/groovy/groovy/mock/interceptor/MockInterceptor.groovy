@@ -102,3 +102,4 @@ class MockInterceptor implements PropertyAccessInterceptor {
         return false // future versions may allow collaborator method calls depending on state
     }
 }
+

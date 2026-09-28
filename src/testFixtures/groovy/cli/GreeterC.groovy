@@ -37,3 +37,4 @@ class GreeterC {
     List remaining                      // <3>
 }
 // end::annotationClassSpec[]
+

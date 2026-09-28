@@ -39,3 +39,4 @@ class Groovy4958Bug {
         assert beforeVersion == afterVersion
     }
 }
+

@@ -115,3 +115,5 @@ public class PlaceholderVisitor extends ClassCodeVisitorSupport {
         return Boolean.TRUE.equals(node.getNodeMetaData(PLACEHOLDER));
     }
 }
+
+// bcf55c

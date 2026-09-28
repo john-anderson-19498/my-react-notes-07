@@ -24,3 +24,5 @@ package org.codehaus.groovy.dummy;
  */
 public class Groovy8144C extends Groovy8144CBase {
 }
+
+// 1b4e2f

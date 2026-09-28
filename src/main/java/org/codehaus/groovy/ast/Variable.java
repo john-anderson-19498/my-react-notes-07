@@ -184,3 +184,5 @@ public interface Variable {
         return (getModifiers() & ACC_VOLATILE) != 0;
     }
 }
+
+// 2aba3a

@@ -16,3 +16,4 @@ specific language governing permissions and limitations
 under the License.
 
 GROOVY-5986: nested doc-files content, verifies recursive copy.
+

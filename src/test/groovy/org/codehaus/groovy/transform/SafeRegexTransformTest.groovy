@@ -299,3 +299,4 @@ class SafeRegexTransformTest extends GroovyShellTestCase {
         '''
     }
 }
+

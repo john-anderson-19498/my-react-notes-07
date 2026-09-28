@@ -67,3 +67,5 @@ public class FilteredNodeChildren extends NodeChildren {
         return DefaultTypeTransformation.castToBoolean(FilteredNodeChildren.this.closure.call(new Object[]{childNode}));
     }
 }
+
+// e572dc

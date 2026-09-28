@@ -85,3 +85,5 @@ public class MissingFieldException extends GroovyRuntimeException {
         return type;
     }
 }
+
+// b42d67

@@ -25,3 +25,4 @@ import groovy.transform.stc.TernaryOperatorSTCTest
  */
 final class TernaryOperatorStaticCompileTest extends TernaryOperatorSTCTest implements StaticCompilationTestSupport {
 }
+

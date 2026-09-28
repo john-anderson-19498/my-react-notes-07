@@ -729,3 +729,4 @@ authoritative; the YAML mirrors it.
 | `SecureASTCustomizer` javadoc — "isn't intended to be the complete solution of all security issues" | [§9](#9-security-properties-the-project-does-not-provide) false friends |
 | `groovy.xml.FactorySupport` javadoc — secure processing, disallow-doctype, external-entity defaults | [§8 P2](#8-security-properties-the-project-provides) |
 | `groovy.sql.Sql` GString → `PreparedStatement` behaviour | [§8 P1](#8-security-properties-the-project-provides) |
+

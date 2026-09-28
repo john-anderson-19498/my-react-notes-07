@@ -163,3 +163,4 @@ final class PackedClosureDebugMetadataTest {
         [lineCount: lineCount[0], locals: locals, synthetic: synthetic[0], priv: priv[0]]
     }
 }
+

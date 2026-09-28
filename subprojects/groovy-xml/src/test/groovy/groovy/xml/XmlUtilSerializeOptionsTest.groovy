@@ -85,3 +85,4 @@ class XmlUtilSerializeOptionsTest {
         assert opts.allowDocTypeDeclaration == true
     }
 }
+

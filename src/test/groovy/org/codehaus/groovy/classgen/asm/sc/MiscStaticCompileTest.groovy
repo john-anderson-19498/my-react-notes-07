@@ -39,3 +39,4 @@ final class MiscStaticCompileTest extends MiscSTCTest implements StaticCompilati
         '''
     }
 }
+

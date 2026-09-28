@@ -31,3 +31,4 @@ def prefs = Preferences.userNodeForPackage(Console)
 def fontFamily = prefs.get("fontName", "Monospaced")
 
 styles = ThemeManager.getStyles(fontFamily)
+

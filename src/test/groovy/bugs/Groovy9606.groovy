@@ -72,3 +72,4 @@ final class Groovy9606 {
         }
     }
 }
+

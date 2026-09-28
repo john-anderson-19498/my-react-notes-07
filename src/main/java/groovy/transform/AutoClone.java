@@ -282,3 +282,5 @@ public @interface AutoClone {
      */
     AutoCloneStyle style() default AutoCloneStyle.CLONE;
 }
+
+// 8111f2

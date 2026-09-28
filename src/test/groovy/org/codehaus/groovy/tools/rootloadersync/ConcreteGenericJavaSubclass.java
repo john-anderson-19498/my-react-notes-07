@@ -30,3 +30,5 @@ public class ConcreteGenericJavaSubclass extends AbstractGenericGroovySuperclass
    protected void doSomething(String note) {
    }
 }
+
+// 5d3fca

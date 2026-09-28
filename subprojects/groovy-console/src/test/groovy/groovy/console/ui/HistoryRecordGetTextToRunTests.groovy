@@ -75,3 +75,4 @@ class HistoryRecordGetTextToRunTests {
         return shell.run(hr.getTextToRun(true), getClass().simpleName, [])
     }
 }
+

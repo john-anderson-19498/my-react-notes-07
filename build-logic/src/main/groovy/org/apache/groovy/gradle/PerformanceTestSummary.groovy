@@ -86,3 +86,4 @@ class PerformanceTestSummary extends DefaultTask {
         out.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
     }
 }
+

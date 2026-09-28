@@ -152,3 +152,5 @@ public class BinaryDoubleExpressionHelper extends BinaryLongExpressionHelper {
         return true;
     }
 }
+
+// 67e0fd

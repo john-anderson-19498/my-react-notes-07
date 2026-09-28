@@ -42,3 +42,5 @@ public class BigDecimalNumberRangeTest extends NumberRangeTestCase {
     }
 
 }
+
+// 1f9cf4

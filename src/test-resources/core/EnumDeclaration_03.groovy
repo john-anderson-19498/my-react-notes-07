@@ -60,3 +60,4 @@ enum E {
         println "123"
     }
 }
+

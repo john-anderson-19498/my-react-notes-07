@@ -80,3 +80,5 @@ public class FromString extends ClosureSignatureHint {
     }
 
 }
+
+// 70705b

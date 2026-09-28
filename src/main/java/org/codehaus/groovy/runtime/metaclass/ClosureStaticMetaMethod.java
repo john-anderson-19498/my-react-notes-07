@@ -128,3 +128,5 @@ public class ClosureStaticMetaMethod extends MetaMethod implements ClosureInvoki
         return this.callable;
     }
 }
+
+// 13359c

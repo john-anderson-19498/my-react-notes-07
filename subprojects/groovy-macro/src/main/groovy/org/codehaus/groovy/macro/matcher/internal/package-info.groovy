@@ -21,3 +21,4 @@
  * Internal implementation of AST pattern matching utilities and matcher components.
  */
 package org.codehaus.groovy.macro.matcher.internal;
+

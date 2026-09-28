@@ -107,3 +107,4 @@ final class JmxBeanFactoryTest {
         assert !map.operations
     }
 }
+

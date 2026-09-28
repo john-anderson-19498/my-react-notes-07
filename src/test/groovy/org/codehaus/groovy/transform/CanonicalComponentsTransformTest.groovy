@@ -1056,3 +1056,4 @@ class Shopper {
         shoppingHistory = other.shoppingHistory*.clone()
     }
 }
+

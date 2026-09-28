@@ -92,3 +92,5 @@ public final class ParallelScope {
         return Pool.withCurrent(pool, () -> AsyncScope.withScope(pool, body));
     }
 }
+
+// 9b0127

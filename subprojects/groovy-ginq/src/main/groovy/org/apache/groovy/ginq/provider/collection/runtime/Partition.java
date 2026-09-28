@@ -61,3 +61,5 @@ public interface Partition<T> extends Queryable<T> {
         return (Partition<T>) EMPTY_PARTITION;
     }
 }
+
+// 99ea23

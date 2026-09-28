@@ -308,3 +308,4 @@ class SampleSetPropertyChangeListener implements PropertyChangeListener {
         event = evt
     }
 }
+

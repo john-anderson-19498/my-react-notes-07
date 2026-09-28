@@ -52,3 +52,4 @@ final class Groovy10607 extends StringSourcesStubTestCase {
         assert stub.contains(' java.lang.Object m(p.Bar bar) { return null; }')
     }
 }
+

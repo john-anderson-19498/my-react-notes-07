@@ -39,3 +39,4 @@ final class Groovy1617 {
         assert expected == actual
     }
 }
+

@@ -98,3 +98,4 @@ class Groovy8085Bug {
         '''
     }
 }
+

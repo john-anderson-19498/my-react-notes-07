@@ -40,3 +40,5 @@ public class CharacterArrayGetAtMetaMethod extends ArrayGetAtMetaMethod {
         return objects[normaliseIndex((Integer) args[0], objects.length)];
     }
 }
+
+// 1845d0

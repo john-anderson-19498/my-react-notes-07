@@ -93,3 +93,4 @@ rec('map')     { def m = [:]; 40.times { i -> m.k = i }; m.k }
 rec('expando') { def e = new Expando(); 40.times { i -> e.dyn = i }; e.dyn }
 
 print out.toString()
+

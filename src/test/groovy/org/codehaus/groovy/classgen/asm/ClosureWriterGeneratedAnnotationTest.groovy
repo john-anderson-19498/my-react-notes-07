@@ -131,3 +131,4 @@ final class ClosureWriterGeneratedAnnotationTest {
         assert callMethods[0].getParameterTypes() == new Class[] {IntRange, Integer}
     }
 }
+
